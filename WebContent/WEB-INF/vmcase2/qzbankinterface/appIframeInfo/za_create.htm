@@ -39,7 +39,7 @@
 				</table>	
 			</div>
 			<div class="submit">
-		      	<input id="id_save_button" type="button" value="#i18n("button.save")" class="current" />
+		      	<input id="id_save_button" type="button" value="保存" class="current" />
 		        <input type="button" value="返回" class="current" onclick="javascript:history.back();"/>
 	      	</div>
 		</form>	
@@ -56,13 +56,13 @@
 		//保存
 		$("#id_save_button").click(function() {
 			if(submitFlag == 1){
-				alert("请勿重复提交!")
+				alert("等待后台响应,请勿重复提交!")
 				return;
 			}
 			submitFlag = 1;
 			if ($($formName).valid()) {
 				var formjson = $($formName).serialize();
-				var url = "${contextPath}/product/zainformation/insert.json";
+				var url = "${contextPath}/zainformation/zaquery/insert.json";
 				$.ajax({
 					url : url,
 					type : "get",
@@ -70,7 +70,7 @@
 					success : function(data) {
 						if (data.success) {
 							topWin.Dialog.message("保存成功！");
-							window.location.href = "${contextPath}/product/zainformation/browse.page";
+							window.location.href = "${contextPath}/zainformation/zaquery/browse.page";
 						}
 						else{
 							topWin.Dialog.message("保存失败！");

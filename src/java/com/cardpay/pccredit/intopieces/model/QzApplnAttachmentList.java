@@ -28,6 +28,8 @@ public class QzApplnAttachmentList extends BusinessModel {
 	private String docid;
 	private String uploadValue;
 	
+	//private String chkValueNew;
+	
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -112,4 +114,10 @@ public class QzApplnAttachmentList extends BusinessModel {
 	public void setUploadValue(String uploadValue) {
 		this.uploadValue = uploadValue;
 	}
+	/*public String getChkValueNew() {
+		return chkValueNew;
+	}
+	public void setChkValueNew(String chkValueNew) {
+		this.chkValueNew = chkValueNew;
+	}*/
 }

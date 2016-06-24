@@ -20,7 +20,7 @@
 			                  </select>
 			                </span></td>
 							<td>&nbsp;</td>
-							<td>归属客户经理:</td>
+							<td>归属:</td>
 							<td>
 							<input type="hidden" id="parentId" name="parentId" value="$!organization.parentId" />
 							<input type="text" id="userName" name="userName" value="$!organization.userName" readonly="readonly"/></td>
@@ -47,11 +47,10 @@
 		$("#id_save_button").click(function() {
 	        if ($($formName).valid()) {
 	          var formjson = $($formName).serialize();
-	    
+	          
 	          $.get($($formName).attr("action"), formjson, function(data, textStatus, jqXhr) {
 	            if (data.success) {
-	            	parent.addTreeNode();
-	                navigateTo("${contextPath}/manager/belongmap/displayManagerBelong.page?recordId=" + data.recordId+"&parentId=$!organization.parentId&userName=$!organization.userName");
+	            	parent.location.reload();
 	            }
 	          });
 	        }

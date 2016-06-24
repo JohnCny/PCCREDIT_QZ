@@ -4,11 +4,7 @@
 		<menu id="010000" name="home" title="系统首页" url="/home.page" img="images/icon_4.png" operations=""/>
 		<menu id="030000" name="intopieces" title="进件管理" url="" img="images/icon_sys.gif" operations="">
 			<menu id="030010" name="intopiecesquery" title="进件查询" url="/intopieces/intopiecesquery/browse.page" img="" operations="create|addbatch|change|display|import|approveloguser|approvelog|browse|scan"/>
-<<<<<<< HEAD
-			<menu id="030011" name="intopiecesqueryAll" title="进件查询(中心岗)" url="/intopieces/intopiecesqueryAll/browseAll.page" img="" operations="browse"/>
-=======
-			<menu id="030011" name="intopiecesqueryAll" title="进件查询(中心岗)" url="/intopieces/intopiecesqueryAll/browseAll.page" img="" operations="browse|scan"/>
->>>>>>> chinhBy-master
+			<menu id="030011" name="intopiecesqueryAll" title="进件查询(管理岗)" url="/intopieces/intopiecesqueryAll/browseAll.page" img="" operations="browse|scan"/>
 			<!-- <menu id="030070" name="circle" title="申请循环贷款" url="/intopieces/circle/browse.page" img="" operations="create|display|browse"/> -->
 			<!-- <menu id="030080" name="credit" title="申请传统贷款" url="/intopieces/credit/create.page" img="" operations="create|browse"/> 传统贷不在本系统操作 -->
 			<!-- <menu id="030003" name="intopiecessearch" title="查询进件" url="/intopieces/intopiecessearch/search.page" img="" operations="browse"></menu> -->
@@ -16,13 +12,21 @@
 			<menu id="030002" name="intopiecesreceive" title="初审进件" url="/intopieces/intopiecesrecieve/chushen.page" img="" operations="browse|create"></menu>
 			<menu id="030004" name="intopiecesxingzheng1" title="内部审查" url="/intopieces/intopiecesxingzheng1/xingzhengbegin.page" img="" operations="browse|create"></menu>
 			<menu id="030005" name="intopiecesshouxin" title="授信审批" url="/intopieces/intopiecesshouxin/shouxin.page" img="" operations="browse|create"></menu>
-			<menu id="030009" name="intopiecessonelevel" title="一级支行行长审批" url="/intopieces/intopiecesonelevel/onelevel.page" img="" operations="browse|create"></menu>
-			<menu id="030012" name="intopiecestwolevel" title="二级支行行长审批" url="/intopieces/intopiecestwolevel/twolevel.page" img="" operations="browse|create"></menu>
 			<menu id="030006" name="intopieceszhongxin" title="中心复核" url="/intopieces/intopieceszhongxin/zhongxin.page" img="" operations="browse|create"></menu>
-			<menu id="030007" name="intopiecesxindai" title="填写合同信息" url="/intopieces/intopiecesxindai/xindai.page" img="" operations="browse|create"></menu>
 			<menu id="030008" name="intopiecesxingzheng2" title="中心终审" url="/intopieces/intopiecesxingzheng2/xingzhengend.page" img="" operations="browse|create"></menu>
-			<menu id="030013" name="quotafreezeorthaw" title="进件额度冻结/解冻" url="/intopieces/quotafreezeorthaw/browse.page" img="" operations="browse|freeze|thaw|contend"></menu>
-			
+			<menu id="030007" name="intopiecesxindai" title="填写合同信息" url="/intopieces/intopiecesxindai/xindai.page" img="" operations="browse|create"></menu>
+			<menu id="030020" name="intopiecesfangkuan" title="放款" url="/intopieces/intopiecesfangkuan/fangkuan.page" img="" operations="browse|create"></menu>
+			<menu id="030012" name="intopiecestwolevel" title="团队长审批(安居贷)" url="/intopieces/intopiecestwolevel/twolevel.page" img="" operations="browse|create"></menu>
+			<menu id="030009" name="intopiecessonelevel" title="行长审批(安居贷)" url="/intopieces/intopiecesonelevel/onelevel.page" img="" operations="browse|create"></menu>
+			<menu id="030013" name="quotafreezeorthaw1" title="额度冻结/解冻(客户经理)" url="/intopieces/quotafreezeorthaw1/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030014" name="quotafreezeorthaw2" title="额度冻结/解冻审批(团队长)" url="/intopieces/quotafreezeorthaw2/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030015" name="quotafreezeorthaw3" title="额度冻结/解冻审批(评审)" url="/intopieces/quotafreezeorthaw3/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030016" name="quotafreezeorthaw4" title="额度冻结/解冻审批(终审)" url="/intopieces/quotafreezeorthaw4/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030017" name="sxinfo1" title="信息维护申请(客户经理)" url="/intopieces/sxinfo1/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030018" name="sxinfo2" title="信息维护审批(团队长)" url="/intopieces/sxinfo2/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030019" name="sxinfo3" title="信息维护审批(行政)" url="/intopieces/sxinfo3/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030021" name="intopiecesdshtwolevel" title="支行审查岗(贷生活10万)" url="/intopieces/intopiecesdshtwolevel/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030022" name="intopiecesdshonelevel" title="支行负责人(贷生活10万)" url="/intopieces/intopiecesdshonelevel/browse.page" img="" operations="browse|create"></menu>
 			<!-- <menu id="030020" name="applyintopieces" title="申请审批进件" url="/intopieces/applyintopieces/browse.page" img="" operations="create|change|delete|display|browse"></menu> 
 			<menu id="030020" name="applyintopiecewait" title="申请件待审核" url="/intopieces/applyintopiecewait/browse.page" img="" operations="approve|applyapprove|browse"></menu>
 			<menu id="030030" name="applyintopiecesquery" title="申请件上传银联" url="/intopieces/applyintopiecesquery/applyIntopiecesQuery.page" img="" operations="exportupload|display|browse"></menu> 
@@ -48,42 +52,54 @@
 			<menu id="110010" name="afterloancheck" title="贷后检查" url="/afterloan/afterloancheck/browse.page" img="" operations="browse"/>
 			<menu id="110020" name="afterloanapprove" title="贷后检查审核" url="/afterloan/afterloanapprove/approve.page" img="" operations="browse"/>
 			<menu id="110030" name="afterloanremind" title="贷后检查提醒" url="/afterloan/afterloanremind/remind.page" img="" operations="browse"/>
+			<menu id="110040" name="afterloanhistory" title="贷后检查历史" url="/afterloan/afterloanhistory/browse.page" img="" operations="browse"/>
 		</menu>
-		<menu id="050000" name="divisional" title="分案管理" operations=""> 
-			<menu id="050010" name="customerallot" title="客户主管分配" url="/divisional/customerallot/browse.page" img="" operations="distribution|browse"/>
-			<menu id="050011" name="cfccllot" title="卡中心分配（卡中心）" url="/divisional/cfccllot/browse.page" img="" operations="distribution|browse"/>
+		<menu id="120000" name="zainformation" title="专案管理" url="" img="images/icon_sys.gif" operations="">
+			<menu id="120010" name="zaquery" title="专案查询" url="/zainformation/zaquery/browse.page" img="" operations="browse"/>
+			<menu id="120020" name="za1" title="支行审批" url="/zainformation/za1/browse.page" img="" operations="browse"/>
+			<menu id="120030" name="za2" title="零售业务部审批" url="/zainformation/za2/browse.page" img="" operations="browse"/>
+			<menu id="120040" name="za3" title="微贷中心审批" url="/zainformation/za3/browse.page" img="" operations="browse"/>
+		</menu>
+		<menu id="050000" name="divisional" title="客户移交" operations=""> 
+			<menu id="050010" name="customerallot" title="团队长分配" url="/divisional/customerallot/browse.page" img="" operations="distribution|browse"/>
+			<!-- <menu id="050011" name="cfccllot" title="卡中心分配（卡中心）" url="/divisional/cfccllot/browse.page" img="" operations="distribution|browse"/> -->
 			<menu id="050012" name="customeraltransfer" title="移交客户" url="/divisional/customeraltransfer/browse.page" img="" operations="browse"/>
 			<menu id="050013" name="customeralreceive" title="接受客户" url="/divisional/customeralreceive/browse.page" img="" operations="display|browse"/>
 		</menu>
 		<menu id="060000" name="product" title="产品管理" url="" img="images/icon_sys.gif" operations="">
 			<menu id="060010" name="productinformation" title="产品信息" url="/product/productinformation/browse.page" img="" operations="create|change|display|browse|confignodeintopieces|confignodeamountadjustment"/>
-			<menu id="060020" name="productpublic" title="产品发布（卡中心）" url="/product/productpublic/browse.page" img="" operations="approvepass|published|browse"/>
-			<menu id="060030" name="productfilter" title="产品筛选准入规则配置" url="/product/productfilter/browse.page" img="" operations="create|delete|browse"/>
-			<menu id="060040" name="zainformation" title="专案管理" url="/product/zainformation/browse.page" img="" operations="create|delete|browse"/>
+			<!-- <menu id="060020" name="productpublic" title="产品发布（卡中心）" url="/product/productpublic/browse.page" img="" operations="approvepass|published|browse"/> 
+			<menu id="060030" name="productfilter" title="产品筛选准入规则配置" url="/product/productfilter/browse.page" img="" operations="create|delete|browse"/>-->
+			<menu id="060050" name="quotafreezeorthawcfg" title="额度冻结/解冻流程" url="/system/nodeaudit/browse_quotafreezeorthawcfg.page" img="" operations="create|delete|browse"/>
+			<menu id="060060" name="sxinfocfg" title="授信信息维护流程" url="/system/nodeaudit/browse_sxinfocfg.page" img="" operations="create|delete|browse"/>
+			<menu id="060070" name="zainfomationcfg" title="专案申请流程" url="/system/nodeaudit/browse_zainfomationcfg.page" img="" operations="create|delete|browse"/>
 		</menu>
 		<menu id="070000" name="manager" title="客户经理管理" url="" img="images/icon_sys.gif" operations="">
 		    <menu id="070001" name="managercreate" title="客户经理参数配置" url="/manager/managercreate/browse.page" img="" operations="create|change|delete|display|browse"/>
-			<menu id="070002" name="ledgeraccount" title="客户经理台账列表" url="/manager/ledgeraccount/browse.page" img="" operations="change|display|browse"/>
-			<menu id="070003" name="managerPromotionRule" title="客户经理层级信息维护" url="/manager/managerPromotionRule/updatejigz.page" img="" operations="browse|change|create"/>
-			<menu id="070004" name="leveladjustment" title="客户经理级别调整" url="/manager/leveladjustment/browse.page" img="" operations="display|browse"/>
-			<menu id="070005" name="belongmap" title="客户经理从属设置" url="/manager/belongmap/browse.page" img="" operations="create|subturnother|delete|browse"/>
-			<menu id="070006" name="retraining" title="客户经理培训计划列表（卡中心、组长）" url="/manager/retraining/browse.page" img="" operations="create|change|delete|display|browse"/>
+		    <menu id="070005" name="belongmap" title="客户经理从属设置" url="/manager/belongmap/browse.page" img="" operations="create|subturnother|delete|browse"/>
+			<!-- <menu id="070002" name="ledgeraccount" title="客户经理台账列表" url="/manager/ledgeraccount/browse.page" img="" operations="change|display|browse"/> -->
+			<menu id="070003" name="managerPromotionRule" title="客户经理层级信息维护" url="/manager/managerPromotionRule/displayjjgz.page" img="" operations="browse|change|create"/>
+			<!-- <menu id="070004" name="leveladjustment" title="客户经理级别调整" url="/manager/leveladjustment/browse.page" img="" operations="display|browse"/>-->
+			
+			<!-- <menu id="070006" name="retraining" title="客户经理培训计划列表（卡中心、组长）" url="/manager/retraining/browse.page" img="" operations="create|change|delete|display|browse"/>
             <menu id="070007" name="managerrisk" title="所属客户经理警示书" url="/manager/managerrisk/browse.page" img="" operations="create|change|delete|display|browse"/>
             <menu id="070008" name="managerriskcheck" title="客户经理警示书列表" url="/manager/managerriskcheck/browse.page" img="" operations="feedback|display|browse"/>
-            <menu id="070009" name="managerriskcenter" title="创建客户经理警示书（卡中心）" url="/manager/managerriskcenter/browse.page" img="" operations="create|change|delete|display|browse"/>
-		    <menu id="070010" name="managersalary" title="客户经理工资信息列表" url="/manager/managersalary/browse.page" img="" operations="change|browse"/>
+            <menu id="070009" name="managerriskcenter" title="创建客户经理警示书（卡中心）" url="/manager/managerriskcenter/browse.page" img="" operations="create|change|delete|display|browse"/>-->
+		    <menu id="070010" name="managersalary" title="客户经理工资信息列表" url="/manager/managersalary/browse.page" img="" operations="change|browse"/> 
 		    <!--<menu id="070110" name="manageraccountmaintenance" title="客户经理层级参数维护（卡中心）" url="/manager/manageraccountmaintenance/update.page" img="" operations="create|change|delete|display|browse"/>-->	
-		    <menu id="070011" name="assessmentscore" title="所属客户经理评估列表" url="/manager/assessmentscore/browse.page" img="" operations="change|display|browse"/>		    
+		    <!-- <menu id="070011" name="assessmentscore" title="所属客户经理评估列表" url="/manager/assessmentscore/browse.page" img="" operations="change|display|browse"/>		    
 		    <menu id="070012" name="assessmentscorerecord" title="客户经理评估查询" url="/manager/assessmentscorerecord/browse.page" img="" operations="display|browse"/>
 			<menu id="070013" name="weeklyaccount" title="客户经理周报" url="/manager/weeklyaccount/browse.page" img="" operations="change|display|browse"/>
 			<menu id="070014" name="weeklyaccountzuzhang" title="所属客户经理周报列表" url="/manager/weeklyaccountzuzhang/browse.page" img="" operations="change|display|browse"/>
 			<menu id="070015" name="weeklyaccountfuzeren" title="客户经理周报(团队负责人)" url="/manager/weeklyaccountfuzeren/browse.page" img="" operations="change|display|browse"/>
 			<menu id="070016" name="dailyaccount" title="客户经理日报" url="/manager/dailyaccount/browse.page" img="" operations="change|display|browse"/>		    
 			<menu id="070017" name="information" title="信息员信息列表" url="/manager/information/browse.page" img="" operations="create|change|relevancecustomer|assess|browse"/>
-			<menu id="070018" name="informationmaintenance" title="信息员维护计划列表" url="/manager/informationmaintenance/browse.page" img="" operations="create|change|display|browse"/>
+			<menu id="070018" name="informationmaintenance" title="信息员维护计划列表" url="/manager/informationmaintenance/browse.page" img="" operations="create|change|display|browse"/> -->
+			<menu id="070019" name="assessscorerecordpg" title="客户经理评估列表(新)" url="/manager/assessscorerecordpg/browse.page" img="" operations="change|display|browse"/> 
+			<menu id="070020" name="jxbc" title="客户经理绩效补充" url="/manager/jxbc/browse.page" img="" operations="create|change|delete|display|browse"/>	
 			
 		</menu>
-		
+		<!-- 
 		<menu id="081000" name="riskcontrol" title="综合风控管理" operations=""> 
 			<menu id="081001" name="agrcrdxykcuneg" title="银行黑名单客户" url="/riskcontrol/agrcrdxykcuneg/browse.page" img="" operations="change|display|browse"/>
 			<menu id="081002" name="highriskcustomer" title="高风险客户名单" url="/riskcontrol/highriskcustomer/browse.page" img="" operations="display|browse"/>
@@ -91,7 +107,7 @@
 			<menu id="081004" name="riskcustomercardcenter" title="风险客户管理(卡中心)" url="/riskcontrol/riskcustomercardcenter/cardcenterbrowse.page" img="" operations="confirm|refuse|browse"/>
 			<menu id="081005" name="riskcustomercollection" title="客户催收计划列表" url="/riskcontrol/riskcustomercollection/browse.page" img="" operations="create|change|display|browse"/>
 			<menu id="081006" name="riskviewsubcollection" title="所属客户经理催收计划列表" url="/riskcontrol/riskviewsubcollection/browse.page" img="" operations="change|display|browse"/>
-			<!-- <menu id="091003" name="riskcustomersupervisor" title="风险客户管理(机构主管)" url="/riskcontrol/riskcustomersupervisor/supervisorbrowse.page" img="" operations="create|change|delete|display|browse"/>-->
+			<menu id="091003" name="riskcustomersupervisor" title="风险客户管理(机构主管)" url="/riskcontrol/riskcustomersupervisor/supervisorbrowse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="081007" name="riskconsiderations" title="风险事项管理" url="/riskcontrol/riskconsiderations/browse.page" img="" operations="create|change|delete|display|browse|reported"/>
 			<menu id="081008" name="riskreviewprocessmanager" title="风险事项审核流程(客户经理)" url="/riskcontrol/riskreviewprocessmanager/managerbrowse.page" img="" operations="reported|browse"/>
 			<menu id="081009" name="riskreviewprocesscardcenter" title="风险事项审核流程(卡中心)" url="/riskcontrol/riskreviewprocesscardcenter/cardcenterbrowse.page" img="" operations="confirm|refuse|browse|published"/>
@@ -103,32 +119,22 @@
 			<menu id="081015" name="accountabilityrecordcfcc" title="问责记录查询(卡中心)" url="/accountabilitycontrol/accountability/cfccbrowse.page" img="" operations="create|confirmaccountability|confirmreconsider|delete|display|browse"/>
 			<menu id="081020" name="agrcrdxykcuneg" title="黑名单数据资料" url="/riskcontrol/agrcrdxykcuneg/browse.page" img="" operations="change|display|browse"/>
 		</menu>
-		
 		<menu id="090000" name="notificationmessage" title="通知信息" url="" img="images/icon_sys.gif" operations="">
 			<menu id="090010" name="shendaihuimessage" title="审贷会通知" url="/notificationmessage/shendaihuimessage/browse.page" img="" operations="checked|display|browse"/>
 			<menu id="090020" name="trainmessage" title="培训通知" url="/notificationmessage/trainmessage/browse.page" img="" operations="checked|display|browse"/>
 			<menu id="090030" name="inspectscoremessage" title="考察成绩通知" url="/notificationmessage/inspectscoremessage/browse.page" img="" operations="checked|display|browse"/>
 			<menu id="090040" name="notificationmessage" title="其它通知" url="/notificationmessage/notificationmessage/browse.page" img="" operations="checked|display|browse"/>
 		</menu>
-		
+		 -->
 		<menu id="100000" name="report" title="报表统计" url="" img="images/icon_sys.gif" operations="">
-<<<<<<< HEAD
-		    <menu id="100001" name="jfreestatus" title="客户经理进件状态报表" url="/report/cardmanagerdimension/report.page" img="" operations="browse"/>
-		    <menu id="100002" name="jfreeapprove" title="进件流程报表" url="/report/cardmanagerdimension/reportTip.page" img="" operations="browse"/>
-			<menu id="100010" name="cardmanagerdimension" title="客户经理发卡情况统计" url="/report/cardmanagerdimension/browse.page" img="" operations="browse"/>
-			<menu id="100020" name="cardorgdimension" title="支行发卡情况统计" url="/report/cardorgdimension/browse.page" img="" operations="browse"/>
-			<menu id="100030" name="acctmanagerdimension" title="客户经理透支情况统计" url="/report/acctmanagerdimension/browse.page" img="" operations="browse"/>
-			<menu id="100040" name="acctorgdimension" title="支行透支情况统计" url="/report/acctorgdimension/browse.page" img="" operations="browse"/>
-			<menu id="100041" name="intelligentcustomerreport" title="客户信息智能报表" url="/report/intelligentcustomerreport/browse.page" img="" operations="create|change|delete|display|browse"/>
-=======
 		    <menu id="100001" name="circlebilllist" title="贷款借据清单" url="/report/afteraccloanlist/browse.page" img="" operations="browse"/>
-		    <menu id="100002" name="circlebilllistAll" title="贷款借据清单(卡中心)" url="/report/afteraccloanlist/browseAll.page" img="" operations="browse"/>
+		    <menu id="100002" name="circlebilllistAll" title="贷款借据清单(管理岗)" url="/report/afteraccloanlist/browseAll.page" img="" operations="browse"/>
 			<menu id="100010" name="loanoverdue" title="客户逾期清单" url="/report/loanoverdue/browse.page" img="" operations="browse"/>
-			<menu id="100020" name="loanoverdueAll" title="客户逾期清单(卡中心)" url="/report/loanoverdue/browseAll.page" img="" operations="browse"/>
+			<menu id="100020" name="loanoverdueAll" title="客户逾期清单(管理岗)" url="/report/loanoverdue/browseAll.page" img="" operations="browse"/>
 			<menu id="100030" name="afterLoancollect" title="贷款汇总查询" url="/report/afterLoancollect/browse.page" img="" operations="browse"/>
-			<menu id="100040" name="afterLoancollectAll" title="贷款汇总查询(卡中心)" url="/report/afterLoancollect/browseAll.page" img="" operations="browse"/>
+			<menu id="100040" name="afterLoancollectAll" title="贷款汇总查询(管理岗)" url="/report/afterLoancollect/browseAll.page" img="" operations="browse"/>
+			<menu id="100050" name="psNormIntAmt" title="利息计算" url="/report/psNormIntAmt/browse.page" img="" operations="browse"/>
 			<!-- <menu id="100041" name="intelligentcustomerreport" title="客户信息智能报表" url="/report/intelligentcustomerreport/browse.page" img="" operations="create|change|delete|display|browse"/>
->>>>>>> chinhBy-master
 			<menu id="100042" name="intelligentaccountreport" title="客户账户智能报表" url="/report/intelligentaccountreport/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100043" name="postloanmanagementdata" title="贷后管理数据" url="/report/postloanmanagementdata/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100050" name="creditpaymentmanagerdim" title="客户经理用信还款情况统计" url="/report/creditpaymentmanagerdim/browse.page" img="" operations="browse"/>
@@ -155,6 +161,7 @@
 			<menu id="1030900" name="dict" title="数据字典" url="/system/dict/browse.page" img="" operations="create|delete|browse|change" />
 			<menu id="1031000" name="parameter" title="系统参数配置" url="/system/parameter/browse.page" img="" operations="change|browse" />
 <!-- 			<menu id="1030900" name="group" title="用户组管理" url="/system/group/browse.page" img="" operations="display|browse|export" /> -->
+			<menu id="1032000" name="log" title="系统日志查看" url="/system/log/browse.page" img="" operations="change|browse" />
 		</menu>
 		
 	</menu>

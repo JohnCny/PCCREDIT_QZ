@@ -72,8 +72,8 @@
 							<td><input type="radio" name="writtenOff" value="1" #if($!person.writtenOff == '1') checked="checked" #end>&nbsp;是&nbsp;&nbsp;&nbsp;
 								<input type="radio" name="writtenOff" value="0" #if($!person.writtenOff == '0') checked="checked" #end>&nbsp;否 </td>
 							<td></td>
-							<td></td>
-							<td></td>
+							<td><label for="gender">机构变更:</label></td>
+							<td><select name="orgId" id="orgId"></select></td>
 						</tr>
 						<tr>
 							<td>#mi18n("description"):</td>
@@ -189,7 +189,27 @@
 	           });
 	         }
 	       });
-	}); 
+	     
+	   		//获得单位名称
+			searchOrgId();
+	   
+	});
+	 function searchOrgId(){
+		  $.ajax({
+				url : "${contextPath}/system/approvaluser/selectOrgId.json",
+					type : "post",
+					data : {},
+				dataType : "json",
+				 success : function(data) {
+					 $("select[name='orgId'] option").remove();
+					 $("select[name='orgId']").append("<option value=''>请选择</option>");
+					    $.each(data.results,function(index, ele){
+					    	$("select[name='orgId']").append("<option value="+ele.id+">" + ele.name + "</option>");
+					    });
+					}
+				});
+	   }
+		 
 	</script>
 </body>
 

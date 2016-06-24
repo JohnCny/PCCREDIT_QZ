@@ -33,10 +33,12 @@
 </form>	
 <div class="controlbtn">
 #if($!type=="readonly")
+	<a id="id_display_button" class="btn_g" href="javascript:void(0);" title="查看">查看</a>
 	<a class="btn_gr"  onclick="parent.location.href = '${contextPath}${returnUrl}'" title="返回">返回</a>
 	#else
 	<a class="btn_g" href="${contextPath}/intopieces/intopiecesapprove/page4.page?customerId=${customerId}&appId=${appId}" title="新增">新增</a>
 	<a id="id_change_button" class="btn_g" href="javascript:void(0);" title="修改">修改</a>
+	
 	<a id="id_del_button" class="btn_g" href="javascript:void(0);" title="删除">删除</a>
 	<a id="id_back_button" class="btn_gr" href="javascript:void(0);" title="返回">返回</a>
 	#end
@@ -44,15 +46,25 @@
 	<script type="text/javascript">			
 	$(document).ready(function() {
 		if("${type}"=="readonly"){
-			$("input[type='text']").attr("disabled",true);
-			$("input[type='radio']").attr("disabled",true);
+			$("input[type='text']").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
+			//$("input[type='radio']").attr("disabled",true);
 			$("input[type='checkbox']").attr("disabled",true);
-			$("select").attr("disabled",true);
+			$("select").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
 		}
 		$("#id_change_button").click(function() {
 	        if ($(".checkbox :checked").length == 1) {
 	            var rowid = $($(".checkbox :checked")[0]).attr("value");
 	            var url = "${contextPath}/intopieces/intopiecesapprove/update_page4.page?id="+rowid;
+	            window.location.href = url;
+	        } else {
+	            topWin.Dialog.message("请选择一行");
+	        }
+	    });
+		
+		$("#id_display_button").click(function() {
+	        if ($(".checkbox :checked").length == 1) {
+	            var rowid = $($(".checkbox :checked")[0]).attr("value");
+	            var url = "${contextPath}/intopieces/intopiecesapprove/update_page4.page?id="+rowid+"&type=readonly";
 	            window.location.href = url;
 	        } else {
 	            topWin.Dialog.message("请选择一行");

@@ -22,6 +22,12 @@ public class QzApplnZa extends BusinessModel {
 	private String code;
 	private String sug;
 	
+	private String serialnumber;//授信维护 流程序列号 
+	private String processStatus;//授信维护 审批状态
+	
+	private String nodeName;
+	private String quotaProcessId;
+	
 	public String getId() {
 		return id;
 	}
@@ -70,5 +76,28 @@ public class QzApplnZa extends BusinessModel {
 	public void setSug(String sug) {
 		this.sug = sug;
 	}
-
+	public String getSerialnumber() {
+		return serialnumber;
+	}
+	public void setSerialnumber(String serialnumber) {
+		this.serialnumber = serialnumber;
+	}
+	public String getProcessStatus() {
+		return processStatus;
+	}
+	public void setProcessStatus(String processStatus) {
+		this.processStatus = processStatus;
+	}
+	public String getNodeName() {
+		return nodeName;
+	}
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+	public String getQuotaProcessId() {
+		return quotaProcessId;
+	}
+	public void setQuotaProcessId(String quotaProcessId) {
+		this.quotaProcessId = quotaProcessId;
+	}
 }

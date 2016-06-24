@@ -24,6 +24,23 @@ public class MaintenanceFilter extends BaseQueryFilter{
 	private String createWay;
 	private String endResult;
 	private String remarksCreateReason;
+	
+	private Integer dataYear;
+	private Integer dataMonth;
+	
+	
+	public Integer getDataYear() {
+		return dataYear;
+	}
+	public void setDataYear(Integer dataYear) {
+		this.dataYear = dataYear;
+	}
+	public Integer getDataMonth() {
+		return dataMonth;
+	}
+	public void setDataMonth(Integer dataMonth) {
+		this.dataMonth = dataMonth;
+	}
 	public String getId() {
 		return id;
 	}

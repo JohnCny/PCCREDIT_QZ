@@ -21,6 +21,15 @@
                <li>
                 <span>客户编号：<input type="text" id="clientNo" name="clientNo" value="$!result.filter.clientNo" /></span>
               </li>
+              <li>
+                <span>状态：
+                	<select id="status" name="status">
+                	   <option value="全部" #if($!result.filter.status=='全部') selected #end>请选择...</option>
+                       <option value="已提交" #if($!result.filter.status=='已提交') selected #end>已提交</option>
+	                   <option value="已退回" #if($!result.filter.status=='已退回') selected #end>已退回</option>
+	                </select>
+				</span>
+				</li>
               <li class="search_button">
                 <input type="button" value="#i18n('button.browse')" class="search_button_inquiry"
                   title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" onclick="javascript:this.form.submit();"/>
@@ -69,15 +78,25 @@
             </colgroup>
             #foreach ($obj in $result.items)
             <tr>
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!{obj.cusId}@$!{obj.cardId}@$!{obj.taskId}"/></td>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!{obj.cusId}@$!{obj.cardId}@$!{obj.taskId}@$!{obj.fallbackReason}@$!{obj.approveStatus}"/></td>
               <td nowrap="nowrap">$!obj.chineseName</td>
               <td nowrap="nowrap">$!obj.cardId</td>
               <td nowrap="nowrap">$!obj.cusId</td>
+              #if($!obj.checkDescribe != $null)
+              <td nowrap="nowrap" title="$!obj.checkDescribe" >$!obj.checkDescribe</td>
+              #else
               <td nowrap="nowrap">#dictVal("TASK_TYPE",$!obj.taskType)</td>
+              #end
               <td nowrap="nowrap">$!obj.taskCreateDate</td>
               <td nowrap="nowrap">$format.formatNumber(2,$!obj.LoanTotlAmt)</td>
               <td nowrap="nowrap">$format.formatNumber(2,$!obj.loanBalance)</td>
-              <td nowrap="nowrap">#dictVal("APPROVE_STATUS",$!obj.approveStatus)</td>
+              <td nowrap="nowrap">
+				#if($!obj.fallbackReason != $null && $!obj.approveStatus == '0')
+              		已退回
+              	#else
+              		已提交
+              	#end
+			  </td>
             </tr>
             #end
           </table>
@@ -104,10 +123,18 @@
 				var clientNo = getCurrentRowId().split("@")[0];
 				var cardId = getCurrentRowId().split("@")[1];
 				var taskId = getCurrentRowId().split("@")[2];
+				var fallbackReason = getCurrentRowId().split("@")[3];
+				var approveStatus = getCurrentRowId().split("@")[4];
 				if(taskId!=null){
 					var url="${contextPath}/afterloan/afterloancheck/iframe.page?id="+clientNo+"&cardId="+cardId+"&taskId="+taskId+"&type=readonly";
+					if(fallbackReason != null && approveStatus == '0'){
+						url="${contextPath}/afterloan/afterloancheck/iframe.page?id="+clientNo+"&cardId="+cardId+"&taskId="+taskId+"&type=history";
+					}
 					window.location.href = url;
 				}
+			}
+			else{
+				topWin.Dialog.message("请选择一条记录！");
 			}
 		});
 	});

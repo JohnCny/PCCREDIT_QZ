@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cardpay.pccredit.QZBankInterface.model.Circle;
+import com.cardpay.pccredit.QZBankInterface.service.CircleService;
 import com.cardpay.pccredit.customer.constant.CustomerInforConstant;
 import com.cardpay.pccredit.customer.filter.CustomerInforFilter;
 import com.cardpay.pccredit.customer.model.CustomerCareersInformation;
@@ -85,8 +87,9 @@ public class IntoPiecesControl extends BaseController {
 	
 	@Autowired
 	private CustomerInforService customerInforservice;
-	
 
+	@Autowired
+	private CircleService circleService;
 	/**
 	 * 浏览页面
 	 * 
@@ -110,36 +113,10 @@ public class IntoPiecesControl extends BaseController {
 		JRadModelAndView mv = new JRadModelAndView(
 				"/intopieces/intopieces_browse", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
-
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
-	
-	/**
-	 * 查询进件
-	 * 
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "queryResult.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
-	public AbstractModelAndView queryResult(@ModelAttribute IntoPiecesFilter filter,
-			HttpServletRequest request) {
-		filter.setRequest(request);
-		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-		String userId = user.getId();
-		filter.setUserId(userId);
-		QueryResult<IntoPieces> result = intoPiecesService.findintoPiecesByFilter(filter);
-		JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(
-				filter, result);
-		JRadModelAndView mv = new JRadModelAndView(
-				"/intopieces/intopieces_browse", request);
-		mv.addObject(PAGED_RESULT, pagedResult);
-
-		return mv;
-	}
-	
 	
 	/**
 	 * 审核通过进件查询

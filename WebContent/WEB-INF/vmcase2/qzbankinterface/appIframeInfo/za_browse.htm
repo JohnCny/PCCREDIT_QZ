@@ -26,10 +26,12 @@
           <table>
             <colgroup>
               <col width="5%" />
-              <col width="25%" />
-              <col width="20%" />
-              <col width="20%" />
-              <col width="20%" />
+              <col width="15%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
             </colgroup>
             <tr class="title">
               <th nowrap="nowrap"></th>
@@ -37,6 +39,8 @@
               <th nowrap="nowrap">发起时间</th>
               <th nowrap="nowrap">发起人</th>
               <th nowrap="nowrap">专案编号</th>
+              <th nowrap="nowrap">审批状态</th>
+              <th nowrap="nowrap">进度</th>
             </tr>
           </table>
         </div>
@@ -44,18 +48,29 @@
           <table>
             <colgroup>
               <col width="5%" />
-              <col width="25%" />
-              <col width="20%" />
-              <col width="20%"/>
-              <col width="20%"/>
+              <col width="15%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
             </colgroup>
             #foreach ($obj in $result.items)
             <tr>
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!obj.id"/></td>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!{obj.id}_$!{obj.processStatus}"/></td>
               <td nowrap="nowrap">$!obj.name</td>
               <td nowrap="nowrap">$date.format('yyyy-MM-dd', $!obj.initDate)</td>
               <td nowrap="nowrap">$!obj.initiator</td>
               <td nowrap="nowrap">$!obj.code</td>
+              <td nowrap="nowrap">
+	              #if($!obj.processStatus=='audit')已申请
+	              #elseif($!obj.processStatus=='RETURNAPPROVE')退回
+	              #elseif($!obj.processStatus=='refuse')被拒绝
+	              #elseif($!obj.processStatus=='approved')审批结束 
+	              #elseif($!obj.processStatus=='returnedToFirst')退回客户经理
+	              #end
+              </td>
+              <td nowrap="nowrap">$!obj.nodeName</td>
             </tr>
             #end
           </table>
@@ -64,8 +79,10 @@
       <div class="pagebar">
         <div class="controlbtn">
           <a id="id_create_button" class="btn_g" href="javascript:void(0);" >新增</a>
-          <a id="id_change_button" class="btn_g" href="javascript:void(0);" >修改</a>
+          <!-- <a id="id_change_button" class="btn_g" href="javascript:void(0);" >修改</a> -->
+          <a id="id_display_button" class="btn_g" href="javascript:void(0);" >查看</a>
           <a id="id_delete_button" class="btn_g" href="javascript:void(0);" >删除</a>
+          <a id="id_apply_button" class="btn_g" href="javascript:void(0);" >申请准入</a>
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -82,6 +99,7 @@
 		opsObj.formObj = $("#submitForm");
 		opsObj.createUrl = "${modulePath}/create.page";
 		opsObj.changeUrl = "${modulePath}/change.page";
+		opsObj.displayUrl = "${modulePath}/display.page";
 		opsObj.browseUrl = "${modulePath}/browse.page";
 		
 		prepareOperations(opsObj);
@@ -89,16 +107,54 @@
 		$("#id_delete_button").click(function() {
             if ($(".checkbox :checked").length == 1) {
                 var rowid = $($(".checkbox :checked")[0]).attr("value");
+                
+                if(rowid.split("_")[1] == "approved" || rowid.split("_")[1] == "refuse"){
+                	topWin.Dialog.message("审批结束，无法删除！");
+                	return;
+                }
+                
                 Dialog.confirm("确定删除所选行吗？", "提示",
                 function() {
-                	var url = "${modulePath}/delete.json?id="+rowid;
+                	var url = "${modulePath}/delete.json?id="+rowid.split("_")[0];
             		$.ajax({
             			url : url,
             			type : "get",
             			success : function(data) {
             				if (data.success) {
-            					topWin.Dialog.message("保存成功！");
-            					window.location.href = "${contextPath}/product/zainformation/browse.page";
+            					topWin.Dialog.message("删除成功！");
+            					window.location.href = "${contextPath}/zainformation/zaquery/browse.page";
+            				}
+            				else{
+            					topWin.Dialog.message(data.message);
+            			    }
+            			}
+            		});
+                });
+            } else {
+                Dialog.message("请选择一行");
+            }
+        });
+		
+		//申请准入
+		$("#id_apply_button").click(function() {
+            if ($(".checkbox :checked").length == 1) {
+                var rowid = $($(".checkbox :checked")[0]).attr("value");
+                
+                if(rowid.split("_")[1] != "" && rowid.split("_")[1] != "returnedToFirst"){
+                	topWin.Dialog.message("审批结束或审批中，请勿重复提交！");
+                	return;
+                }
+                
+                Dialog.confirm("确定发起申请吗？", "提示",
+                function() {
+                	var url = "${modulePath}/quot_operate.json?id="+rowid.split("_")[0];
+            		$.ajax({
+            			url : url,
+            			type : "get",
+            			success : function(data) {
+            				if (data.success) {
+            					topWin.Dialog.message("申请成功！");
+            					window.location.href = "${contextPath}/zainformation/zaquery/browse.page";
             				}
             				else{
             					topWin.Dialog.message(data.message);

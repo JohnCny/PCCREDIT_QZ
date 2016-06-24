@@ -39,6 +39,15 @@
 		<result property="customerManagerLevel" column="CUSTOMER_MANAGER_LEVEL" />
 	</resultMap>
 	
+	<resultMap id="ResultMap1" type="com.cardpay.pccredit.manager.model.TyManagerAssessment">
+		<result property="id" column="ID" />
+		<result property="customerId" column="CUSTOMER_ID" />
+		<result property="totalScore" column="TOTAL_SCORE" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="customerName" column="CUSTOMER_NAME" />
+	</resultMap>
+	
 	<select id="findManagerAssessmentScoreByFilter" resultMap="ResultMap" 
 		parameterType="com.cardpay.pccredit.manager.filter.ManagerAssessmentScoreFilter">
 		SELECT * FROM
@@ -108,4 +117,98 @@
 		 WHERE mas.id = #{id}
 	</select>
 
+
+<select id="findManagerAssessmentScoreByFilterqz" resultMap="ResultMap1" 
+		parameterType="com.cardpay.pccredit.manager.filter.ManagerAssessmentScoreFilter">
+		SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+					 SELECT mas.*
+					 FROM  ty_manager_assessment mas
+					 WHERE 1=1 
+					<!-- <if test="assessedName != null and assessedName != '' ">
+						<![CDATA[ and mas.customer_name like '%'||#{assessedName}||'%']]>
+					</if> -->
+					<if test="dataYear != null and dataYear != '' ">
+						and mas.year = #{dataYear}
+					</if>
+					<if test="dataMonth != null and dataMonth != '' ">
+						and mas.month = #{dataMonth}
+					</if>
+					<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND mas.customer_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+					<if test="customerManagerId != null and customerManagerId != '' ">
+						AND mas.customer_id = #{customerManagerId}
+					</if>
+					<!-- <if test="subManagerIds != null and subManagerIds.size() > 0 ">
+						and mas.customer_id in
+						<foreach item="item" index="index" collection="subManagerIds" open="("  
+				            separator="," close=")">  
+				            #{item}
+				        </foreach>
+					</if> -->
+					order by mas.CREATE_TIME desc
+  			<![CDATA[		
+					) ROW_
+				WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+			WHERE ROWNUM_ > #{limit}*#{page}
+			]]>
+	</select>
+	
+	<select id="findManagerAssessmentScoreCountByFilterqz" resultType="int" 
+		parameterType="com.cardpay.pccredit.manager.filter.ManagerAssessmentScoreFilter">
+		SELECT count(*)
+					 FROM  ty_manager_assessment mas
+					 WHERE 1=1 
+		 <!-- <if test="assessedName != null and assessedName != '' ">
+						<![CDATA[ and mas.customer_name like '%'||#{assessedName}||'%']]>
+					</if>
+					<if test="dataYear != null and dataYear != '' ">
+						and mas.year = #{dataYear}
+					</if>
+					<if test="dataMonth != null and dataMonth != '' ">
+						and mas.month = #{dataMonth}
+					</if>
+					<if test="subManagerIds != null and subManagerIds.size() > 0 ">
+						and mas.customer_id in
+						<foreach item="item" index="index" collection="subManagerIds" open="("  
+				            separator="," close=")">  
+				            #{item}
+				        </foreach>
+					</if> -->
+					<if test="dataYear != null and dataYear != '' ">
+						and mas.year = #{dataYear}
+					</if>
+					<if test="dataMonth != null and dataMonth != '' ">
+						and mas.month = #{dataMonth}
+					</if>
+					<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND mas.customer_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+					<if test="customerManagerId != null and customerManagerId != '' ">
+						AND mas.customer_id = #{customerManagerId}
+					</if>
+	</select>
+	 
+	<select id="findManagerAssessmentScoreByIdqz" resultMap="ResultMap1">
+		 SELECT mas.*
+		 FROM  ty_manager_assessment mas
+		 WHERE mas.id = #{id}
+	</select>
+	
+	
+	<select id="findJxCountByParam" resultType="int">
+	select count(*) from qz_khjl_tjzl p
+	where 1=1 
+	 and p.year = #{year}
+	 and p.month = #{month}
+	 and p.CUSTMANAGERID = #{managerId}
+	</select>
 </mapper>

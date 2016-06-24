@@ -86,6 +86,16 @@
 		<result property="modifyBy" column="MODIFIED_BY" />
 	</resultMap>
 
+	<resultMap id="ProductStufMap" type="com.cardpay.pccredit.product.model.ProductStuf">
+		<result property="id" column="ID" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productType" column="PRODUCT_TYPE" />
+		<result property="stufIndex" column="STUF_INDEX" />
+		<result property="stufCode" column="STUF_CODE" />
+		<result property="stufName" column="STUF_NAME" />
+		<result property="isUseable" column="IS_USEABLE" />
+	</resultMap>
+	
 	<select id="findPublishedProductsByFilter" resultMap="ResultMap"
 		parameterType="map">
 		SELECT t.* from product_attribute t
@@ -244,4 +254,31 @@
 		WHERE
 		INSTITUTION = #{organizationId}
 </select>
+
+<select id="findStufByProductId" resultMap="ProductStufMap">
+	SELECT *
+		FROM
+		product_stuf
+		WHERE
+		product_id = #{productId}
+		order by stuf_index
+</select>
+
+<select id="findStufById" resultMap="ProductStufMap">
+	SELECT *
+		FROM
+		product_stuf
+		WHERE
+		id = #{stufId}
+</select>
+
+<select id="findMaxStufByProductId" resultMap="ProductStufMap">
+	SELECT *
+		FROM
+		product_stuf
+		WHERE
+		product_id = #{productId}
+		and stuf_index = (select max(stuf_index) from product_stuf WHERE product_id = #{productId})
+</select>
+
 </mapper>

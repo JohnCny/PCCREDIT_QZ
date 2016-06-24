@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cardpay.pccredit.afterloan.filter.AfterLoanCheckFilter;
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.afterloan.service.AfterloanCheckService;
+import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
 import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
+import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 
 /** 
@@ -44,9 +47,9 @@ public class AfterLoanCheckApproveController extends BaseController{
 	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView approve(@ModelAttribute AfterLoanCheckFilter filter,HttpServletRequest request){
 		filter.setRequest(request);
-//		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-//		String userId = user.getId();
-//		filter.setUserId(userId);
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		String userId = user.getId();
+		filter.setUserId(userId);
 		QueryResult<AfterLoaninfo> result = afterloanCheckService.findAfterLoanCheckTaskToByFilter(filter);
 		JRadPagedQueryResult<AfterLoaninfo> pagedResult = new JRadPagedQueryResult<AfterLoaninfo>(
 				filter, result);

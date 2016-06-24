@@ -1,5 +1,6 @@
 package com.cardpay.pccredit.product.web;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,7 @@ import com.cardpay.pccredit.product.model.ProductFilterMap;
 import com.cardpay.pccredit.product.model.ProductMaintain;
 import com.cardpay.pccredit.product.model.ProductMarketingRules;
 import com.cardpay.pccredit.product.model.ProductRewardIncentive;
+import com.cardpay.pccredit.product.model.ProductStuf;
 import com.cardpay.pccredit.product.model.ProductsAgencyAssociation;
 import com.cardpay.pccredit.product.service.ProductFilterService;
 import com.cardpay.pccredit.product.service.ProductService;
@@ -62,6 +64,30 @@ import com.wicresoft.util.web.RequestHelper;
  * 
  * @version $Id:$
  */
+/**    
+* @Title: ProductController.java  
+* @Package com.cardpay.pccredit.product.web  
+* @Description: TODO(用一句话描述该文件做什么)  
+* @author tanwh    
+* @date 2016年4月29日 上午10:45:09  
+* @version V1.0    
+*/
+/**    
+* @Title: ProductController.java  
+* @Package com.cardpay.pccredit.product.web  
+* @Description: TODO(用一句话描述该文件做什么)  
+* @author tanwh    
+* @date 2016年4月29日 下午2:52:54  
+* @version V1.0    
+*/
+/**    
+* @Title: ProductController.java  
+* @Package com.cardpay.pccredit.product.web  
+* @Description: TODO(用一句话描述该文件做什么)  
+* @author tanwh    
+* @date 2016年4月29日 下午2:52:57  
+* @version V1.0    
+*/
 @Controller
 @RequestMapping("/product/productinformation/*")
 @JRadModule("product.productinformation")
@@ -1919,4 +1945,121 @@ public class ProductController extends BaseController {
 		return returnMap;
 	}
 
+	/** 
+	* @Title: stufcfg 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param request
+	* @param @return    设定文件 
+	* @return AbstractModelAndView    返回类型 
+	* @throws 
+	*/ 
+	@ResponseBody
+	@RequestMapping(value = "stufcfg.page")
+	public AbstractModelAndView stufcfg(HttpServletRequest request) {
+		String productId = request.getParameter("productId");
+		ProductAttribute product = productService.findProductAttributeById(productId);
+		JRadModelAndView mv = new JRadModelAndView("/product/product_stufcfg", request);
+		mv.addObject("product", product);
+		List<ProductStuf> stufs = productService.findStufByProductId(product.getId());
+		mv.addObject("stufs", stufs);
+		return mv;
+	}
+	
+	
+	/** 
+	* @Title: stuf_create 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param request
+	* @param @return    设定文件 
+	* @return AbstractModelAndView    返回类型 
+	* @throws 
+	*/ 
+	@ResponseBody
+	@RequestMapping(value = "stuf_create.page")
+	public AbstractModelAndView stuf_create_page(HttpServletRequest request) {
+		String productId = request.getParameter("productId");
+		ProductAttribute product = productService.findProductAttributeById(productId);
+		JRadModelAndView mv = new JRadModelAndView("/product/stuf_create", request);
+		mv.addObject("product", product);
+		
+		List<ProductStuf> stufs = productService.findStufByProductId(product.getId());
+		if(stufs != null && stufs.size()>0){
+			ProductStuf lastStuf = stufs.get(stufs.size()-1);
+			BigInteger currentCode = new BigInteger(lastStuf.getStufCode());
+			mv.addObject("stufCode", currentCode.add(currentCode).toString());
+		}else{
+			mv.addObject("stufCode", 1);
+		}
+		
+		return mv;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "stuf_create.json")
+	public JRadReturnMap stuf_create(HttpServletRequest request) {
+		String productId = request.getParameter("productId");
+		ProductAttribute product = productService.findProductAttributeById(productId);
+		JRadReturnMap returnMap = new JRadReturnMap();
+		try {
+			ProductStuf stuf = new ProductStuf();
+			stuf.setProductId(product.getId());
+			stuf.setProductType(product.getDefaultType());
+			stuf.setStufIndex(new BigInteger(request.getParameter("stufCode")).mod(new BigInteger("2")).intValue());
+			stuf.setStufCode(request.getParameter("stufCode"));
+			stuf.setStufName(request.getParameter("stufName"));
+			stuf.setIsUseable("1");
+			productService.insertStuf(stuf);
+			returnMap.addGlobalMessage(CHANGE_SUCCESS);
+			returnMap.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return WebRequestHelper.processException(e);
+		}
+
+		return returnMap;
+	}
+	
+	/** 
+	* @Title: stuf_change_page 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param request
+	* @param @return    设定文件 
+	* @return AbstractModelAndView    返回类型 
+	* @throws 
+	*/ 
+	@ResponseBody
+	@RequestMapping(value = "stuf_change.page")
+	public AbstractModelAndView stuf_change_page(HttpServletRequest request) {
+		String productId = request.getParameter("productId");
+		ProductAttribute product = productService.findProductAttributeById(productId);
+		JRadModelAndView mv = new JRadModelAndView("/product/stuf_change", request);
+		mv.addObject("product", product);
+		
+		String stufId = request.getParameter("stufId");
+		ProductStuf stuf = productService.findStufById(stufId);
+		mv.addObject("stuf", stuf);
+		return mv;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "stuf_change.json")
+	public JRadReturnMap stuf_change(HttpServletRequest request) {
+		String productId = request.getParameter("productId");
+		ProductAttribute product = productService.findProductAttributeById(productId);
+		JRadReturnMap returnMap = new JRadReturnMap();
+		try {
+			String stufId = request.getParameter("stufId");
+			ProductStuf stuf = productService.findStufById(stufId);
+			stuf.setStufName(request.getParameter("stufName"));
+			stuf.setIsUseable(request.getParameter("isUseable"));
+			productService.updateStuf(stuf);
+			returnMap.addGlobalMessage(CHANGE_SUCCESS);
+			returnMap.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return WebRequestHelper.processException(e);
+		}
+
+		return returnMap;
+	}
 }

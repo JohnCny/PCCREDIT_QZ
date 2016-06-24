@@ -126,10 +126,10 @@
 			cardNo = $(this).val().split("_")[3];
 		});
 		if(clientNo!=null && cardNo!=null && contNo != null && loanStatus!=null ){
-			Dialog.confirm("确定要冻结该笔贷款吗？", "提示",
+			Dialog.confirm("确定要执行该操作吗？", "提示",
 					function(){
 				    $.ajax({
-				    	timeout:1000,
+				    
 				    	url:"${contextPath}/intopieces/quotafreezeorthaw/quot_operate.json?clientNo="+clientNo+"&contNo="+contNo+"&cardNo="+cardNo+"&operateType="+operateType+"&loanStatus="+loanStatus,
 				    	type : "get",
 						success : function(data) {

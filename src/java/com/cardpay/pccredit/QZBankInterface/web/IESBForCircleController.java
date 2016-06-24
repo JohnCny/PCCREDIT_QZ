@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.QZBankInterface.client.Client;
 import com.cardpay.pccredit.QZBankInterface.filter.EcifFilter;
 import com.cardpay.pccredit.QZBankInterface.model.Circle;
 import com.cardpay.pccredit.QZBankInterface.model.ECIF;
 import com.cardpay.pccredit.QZBankInterface.service.CircleService;
 import com.cardpay.pccredit.QZBankInterface.service.ECIFService;
+import com.cardpay.pccredit.QZBankInterface.service.IESBForCardNo;
 import com.cardpay.pccredit.customer.constant.CustomerInforConstant;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.web.CustomerInforForm;
@@ -33,7 +35,9 @@ import com.cardpay.pccredit.intopieces.model.QzApplnJyd;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationInfoService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.ipad.constant.IpadConstant;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
+import com.dc.eai.data.CompositeData;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -70,6 +74,15 @@ public class IESBForCircleController extends BaseController{
 	
 	@Autowired
 	private CustomerApplicationProcessService customerApplicationProcessService;
+	
+	@Autowired
+	private CustomerApplicationInfoService customerApplicationInfoService;
+	
+	@Autowired
+	private IESBForCardNo iESBforCardNo;
+	
+	@Autowired
+	private Client client;
 	
 	/**
 	 * 浏览页面
@@ -135,10 +148,7 @@ public class IESBForCircleController extends BaseController{
 		mv.addObject("appId",appId);
 		mv.addObject("returnUrl",intoPiecesService.getReturnUrl(operate));
 		mv.addObject("ifHideUser", ifHideUser);
-<<<<<<< HEAD
-=======
 		mv.addObject("nodeId", process==null?"":process.getNextNodeId());
->>>>>>> chinhBy-master
 		return mv;
 	}
 	
@@ -187,6 +197,15 @@ public class IESBForCircleController extends BaseController{
 			mv.addObject("parentOrgId",parentOrgId);
 			mv.addObject("externalId",externalId);
 			
+			//查看是否续授信,如果是则反显默认账号
+			CustomerApplicationInfo app = customerApplicationInfoService.findById(appId);
+			if(StringUtils.isNotEmpty(app.getIsContinue())){
+				Circle pre_circle = circleService.findPreCircle(customerId);
+				if(pre_circle != null){
+					mv.addObject("pre_circle",pre_circle);
+				}
+			}
+			
 		}
 		else{
 			mv = new JRadModelAndView("/qzbankinterface/iesbforcircle_change", request);
@@ -194,6 +213,16 @@ public class IESBForCircleController extends BaseController{
 				circle.setHigherOrgNo(Constant.QZ_ORG_ROOT_ID);
 			}
 			mv.addObject("circle",circle);
+			/*if(operate.equals("填写合同信息")){//查询所属账号
+				if(StringUtils.isNotEmpty(circle.getClientNo())){
+					CompositeData req = iESBforCardNo.createRequest(circle.getClientNo());
+					CompositeData resp = client.sendMess(req);
+					String ret_code = iESBforCardNo.parseResponse(resp);
+					if(ret_code.equals(IpadConstant.RET_CODE_SUCCESS)){
+						
+					}
+				}
+			}*/
 		}
 		
 		mv.addObject("customerId",customerId);
@@ -326,7 +355,8 @@ public class IESBForCircleController extends BaseController{
 				Circle circle = iesbForCircleForm.createModel(Circle.class);
 				User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
 				circle.setCreatedBy(user.getId());
-				circle.setUserId(user.getId());
+				ECIF ecif = eCIFService.findEcifByCustomerId(request.getParameter("customerId"));
+				circle.setUserId(ecif.getUserId());
 				circle.setCustomerId(request.getParameter("customerId"));
 				circle.setApplicationId(appId);
 				circleService.insertCustomerInforCircle(circle);
@@ -465,7 +495,8 @@ public class IESBForCircleController extends BaseController{
 				Circle circle = iesbForCircleForm.createModel(Circle.class);
 				User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
 				circle.setCreatedBy(user.getId());
-				circle.setUserId(user.getId());
+				ECIF ecif = eCIFService.findEcifByCustomerId(request.getParameter("customerId"));
+				circle.setUserId(ecif.getUserId());
 				circle.setId(circleId);
 				circle.setCustomerId(request.getParameter("customerId"));
 				circle.setApplicationId(appId);

@@ -10,7 +10,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 	<div class="box">
 		<div name="content">
 			<table class="myTable">
-				<caption>"贷生活"业务申请表</caption>
+				<caption>业务申请表</caption>
 				<colgroup>
 					<col width="10%">
 					<col width="40%">
@@ -20,17 +20,10 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				<tr>
 					<td class="table-label">机构名称：</td>
 					<td>
-<<<<<<< HEAD
-						<input type="text" value="$!orgName" disabled>
-						<input type="hidden" value="$!orgName" name="orgName">
-						<input type="hidden" name="orgId" value="$!orgId"></select></td>
-					<td class="table-label">申请日期：</td>
-=======
 						<input type="text" value="$!orgName" readonly>
 						<input type="hidden" value="$!orgName" name="orgName">
 						<input type="hidden" name="orgId" value="$!orgId"></select></td>
 					<td class="table-label">申请日期：<font color="#ff0000">*</font></td>
->>>>>>> chinhBy-master
 					<td><input type="text" name="applyTime" onmouseover="_calendar()" readonly/></td>					
 				</tr>
 			</table>
@@ -55,11 +48,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				<tr>
 					<td class="table-label">姓名：<font color="#ff0000">*</font></td>
 					<td>
-<<<<<<< HEAD
-						<input type="text" value="$!ecif.clientName" disabled />
-=======
 						<input type="text" value="$!ecif.clientName" readonly />
->>>>>>> chinhBy-master
 						<input type="hidden" name="name" value="$!ecif.clientName" /></td>	
 					<td class="table-label">性别：<font color="#ff0000">*</font></td>
 					<td>
@@ -75,16 +64,12 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">证件类型：<font color="#ff0000">*</font></td>
 					<td>
 						<select id="globalType" name="globalType" onchange="setSelect(this,'qtzjlx')">
-							<option value="001" #if($!ecif.globalType=='001') selected #end>身份证</option>
+							<option value="100" #if($!ecif.globalType=='100') selected #end>身份证</option>
 							<option value="130" #if($!ecif.globalType=='130') selected #end>户口簿</option>
 							<option value="140" #if($!ecif.globalType=='140') selected #end>护照</option>
 							<option value="026" #if($!ecif.globalType=='026') selected #end>其他</option>
 						</select>
-<<<<<<< HEAD
-						<input type="text" name="globalTypeOther" id="qtzjlx" disabled/>
-=======
 						<input type="text" name="globalTypeOther" id="qtzjlx" readonly/>
->>>>>>> chinhBy-master
 					</td>		
 				</tr>
 				<tr>
@@ -114,46 +99,25 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 							<option value="40" #if($!ecif.maritalStatus=='40') selected #end>离婚</option>
 							<option value="30" #if($!ecif.maritalStatus=='30') selected #end>丧偶</option>
 						</select>
-<<<<<<< HEAD
-						<input type="text" name="maritalStatusOther" id="qthyzk" disabled/>
-=======
 						<input type="text" name="maritalStatusOther" id="qthyzk" readonly/>
->>>>>>> chinhBy-master
 					</td>		
 				</tr>
 				<tr>
 					<td class="table-label">配偶姓名：</td>
-<<<<<<< HEAD
-					<td><input type="text" id="maritalName" name="maritalName" disabled/></td>	
-=======
 					<td><input type="text" id="maritalName" name="maritalName" readonly/></td>	
->>>>>>> chinhBy-master
 					<td class="table-label">配偶证件类型：</td>
 					<td>
 						<select id="maritalGlobalType" name="maritalGlobalType" onchange="setSelect(this,'qtpozjlx')" disabled>
-							<option value="001">身份证</option>
+							<option value="100">身份证</option>
 							<option value="130">户口簿</option>
 							<option value="140">护照</option>
 							<option value="026">其他</option>
 						</select>
-<<<<<<< HEAD
-						<input type="text" name="maritalGlobalTypeOther" id="qtpozjlx" disabled/>
-=======
 						<input type="text" name="maritalGlobalTypeOther" id="qtpozjlx" readonly/>
->>>>>>> chinhBy-master
 					</td>		
 				</tr>
 				<tr>
 					<td class="table-label">配偶证件号码：</td>
-<<<<<<< HEAD
-					<td><input type="text" id="maritalGlobalId" name="maritalGlobalId" disabled/></td>	
-					<td class="table-label">配偶工作单位：</td>					
-					<td><input type="text" id="maritalWorkunit" name="maritalWorkunit" disabled/></td>		
-				</tr>
-				<tr>
-					<td class="table-label">配偶联系方式：</td>
-					<td><input type="text" id="maritalPhone" name="maritalPhone" disabled/></td>	
-=======
 					<td><input type="text" id="maritalGlobalId" name="maritalGlobalId" readonly/></td>	
 					<td class="table-label">配偶工作单位：</td>					
 					<td><input type="text" id="maritalWorkunit" name="maritalWorkunit" readonly/></td>		
@@ -161,7 +125,6 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				<tr>
 					<td class="table-label">配偶联系方式：</td>
 					<td><input type="text" id="maritalPhone" name="maritalPhone" readonly/></td>	
->>>>>>> chinhBy-master
 					<td class="table-label">家庭人数：</td>					
 					<td><input type="text" name="familyNum"/>人</td>		
 				</tr>
@@ -171,11 +134,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 						（<select id="addressType" name="addressType" onchange="setSelect(this,'qtjtzz')" style="width:80px">
 							#dict("ADDRESS_TYPE_NEW", "")
 						</select>
-<<<<<<< HEAD
-						<input type="text" name="addressTypeOther" id="qtjtzz" disabled/>）：		
-=======
 						<input type="text" name="addressTypeOther" id="qtjtzz" readonly/>）：		
->>>>>>> chinhBy-master
 						<input type="text" name="address" style="width:250px;"/>
 					</td>		
 				</tr>				
@@ -189,21 +148,12 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">电子邮箱：</td>
 					<td colspan="3"><input type="text" name="email"/></td>
 				</tr>
-<<<<<<< HEAD
-				<tr>
-					<td class="table-label">所属的商圈地址：<font color="#ff0000">*</font></td>
-					<td colspan="3"><input type="text" name="bussdistrictAddress" value="$!qzApplnZa.address"/>
-					<input type="text" name="bussdisAddDetail" style="width:250px;"/></td>	
-				</tr>
-=======
 				#if($!{productType}=="2")
 				<tr>
 					<td class="table-label">所属的商圈地址：<font color="#ff0000">*</font></td>
-					<td colspan="3"><input type="text" style="width:250px name="bussdistrictAddress" value="$!qzApplnZa.address"/>
-					<input type="text" name="bussdisAddDetail" style="width:250px;"/></td>	
+					<td colspan="3"><input type="text" style="width:250px" name="bussdistrictAddress" value="$!qzApplnZa.address"/>
 				</tr>
 				#end
->>>>>>> chinhBy-master
 			</table>
 		</div><!--/content-->
 	</div>
@@ -254,7 +204,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td><select id="unitType" name="unitType" onchange="setSelect(this,'qtzzxs')">
 							#dict("UNIT_TYPE", "$!qzApplnYwsqb.unitType")
 						</select>
-						<input type="text" name="bussTypeOther" id="qtzzxs" value="$!qzApplnYwsqb.bussTypeOther" #if($!qzApplnYwsqb.unitType!='9') disabled #end/>	
+						<input type="text" name="unitTypeOther" id="qtzzxs" value="$!qzApplnYwsqb.unitTypeOther" #if($!qzApplnYwsqb.unitType!='9') disabled #end/>	
 						</td>				
 				</tr>
 			</table>
@@ -322,7 +272,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<col width="40%">
 				</colgroup>
 				<tr>
-					<td class="table-label">年薪(年/元)：<font color="#ff0000">*</font></td>
+					<td class="table-label">年薪(元/年)：<font color="#ff0000">*</font></td>
 					<td><input type="text" name="yearIncome"/>元</td>	
 					<td class="table-label">负债情况：</td>					
 					<td>
@@ -411,6 +361,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td><b>银行或其他方式</b></td>	
+					<td><b>担保方式</b></td>	
 					<td><b>目的</b></td>					
 					<td><b>贷款总额</b></td>	
 					<td><b>发放日期</b></td>					
@@ -421,6 +372,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td><input type="text" class="input" name="bankOrOtherType_jkjl_1" disabled/></td>	
+					<td><input type="text" class="input" name="guaranteeMode_jkjl_1" disabled/></td>
 					<td><input type="text" class="input" name="purpose_jkjl_1" disabled/></td>					
 					<td><input type="text" class="input" name="totalAmount_jkjl_1" disabled/></td>	
 					<script>
@@ -534,11 +486,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>						
 				<tr>
 					<td class="table-label">客户签名：<font color="#ff0000">*</font></td>
-<<<<<<< HEAD
-					<td><input type="text" value="$!ecif.clientName" disabled/><input type="hidden" name="sign" value="$!ecif.clientName"/></td>	
-=======
 					<td><input type="text" value="$!ecif.clientName" readonly/><input type="hidden" name="sign" value="$!ecif.clientName"/></td>	
->>>>>>> chinhBy-master
 					<td class="table-label">签名日期：<font color="#ff0000">*</font></td>	
 					<td><input type="text" name="signDate" onmouseover="_calendar()" readonly/></td>	
 				</tr>	
@@ -567,11 +515,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 						<select name="infoType" onchange="setSelect(this,'qtxxqd')">
 							#dict("INFO_TYPE", "")
 						</select>
-<<<<<<< HEAD
-						<input type="text" name="infoTypeOther" id="qtxxqd" disabled/>	
-=======
 						<input type="text" name="infoTypeOther" id="qtxxqd" readonly/>	
->>>>>>> chinhBy-master
 					</td>	
 						
 				</tr>
@@ -594,11 +538,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td class="table-label">经办人：</td>
-<<<<<<< HEAD
-					<td><input type="text" value="$!userName" disabled/>
-=======
 					<td><input type="text" value="$!userName" readonly/>
->>>>>>> chinhBy-master
 						<input type="hidden" name="managerName" value="$!userName"/>
 						<input type="hidden" name="managerId" value="$!externalId"/></td>	
 					<td class="table-label">日期：<font color="#ff0000">*</font></td>	
@@ -613,7 +553,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 	#if($!type=="readonly")
 		<a class="btn_gr"  onclick="parent.location.href = '${contextPath}${returnUrl}'" title="返回">返回</a>
 	#else
-		<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
+		<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="保存">保存</a>
 		<a id="id_back_button" class="btn_gr" href="javascript:void(0);" title="返回">返回</a>
 	#end
 	</div>
@@ -643,7 +583,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				$("#"+id).removeAttr('disabled');
 			}
 			else{
-				$("#"+id).val('001');//配偶身份证
+				$("#"+id).val('100');//配偶身份证
 				$("#"+id).attr('disabled','disabled');
 				$("#qtpozjlx").val('');
 				$("#qtpozjlx").attr('disabled','disabled');
@@ -660,17 +600,13 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 			//保存
 			$("#id_save_button").click(function() {
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;
 				if ($($formName).valid()) {
 					var formjson = $($formName).serialize();
-<<<<<<< HEAD
-					var url = "${contextPath}/intopieces/intopiecesapprove/insert_page1ForLife.json?customerId=${customerId}";
-=======
 					var url = "${contextPath}/intopieces/intopiecesapprove/insert_page1ForLife.json?customerId=${customerId}&appId=${appId}";
->>>>>>> chinhBy-master
 					$.ajax({
 						url : url,
 						type : "get",
@@ -678,11 +614,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 						success : function(data) {
 							if (data.success) {
 								topWin.Dialog.message("保存成功！");
-<<<<<<< HEAD
-								window.location.href = "${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}";
-=======
 								window.location.href = "${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}";
->>>>>>> chinhBy-master
 							}
 							else{
 								topWin.Dialog.message("保存失败！");

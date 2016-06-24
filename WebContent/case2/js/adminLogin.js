@@ -36,14 +36,20 @@ function inputKeyDown(e){
 // check username && password
 function checkUserInfo(e) {
 	if ($("input[name='username']").val() == "") {
-		$("span.notice").text("*请输入用户名");
+		//$("span.notice").text("*请输入用户名");
+		Dialog.message("请输入用户名");
 	} else if ($("input[name='password']").val() == "") {
-		$("span.notice").text("*请输入密码");
+		//$("span.notice").text("*请输入密码");
+		Dialog.message("请输入密码");
 //	} else if ($("input[name='validateCode']").val() == "") {
 //		$("span.notice").text("*请输入验证码");
 	} else {
+
+		Dialog.load();
 		$.post($("form#userInfo").attr("action"), $("form#userInfo").serialize(), function(
 				data, status, jqxhr) {
+
+			Dialog.closeLoad();
 			if (data.success == true) {
 				var src = window.location.href;
 				window.location.href = src.replace("login.html","main.page");

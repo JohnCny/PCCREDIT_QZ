@@ -95,6 +95,7 @@ public class IntoPiecesChushenControl extends BaseController {
 		String loginId = user.getId();
 		filter.setLoginId(loginId);
 		filter.setNodeName(Constant.status_chushen);
+		filter.setFilterTeamLeader("1");//团队长
 		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.recieveIntopieceWaitForm(filter);
 		JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm> pagedResult = new JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm>(filter, result);
 
@@ -102,6 +103,8 @@ public class IntoPiecesChushenControl extends BaseController {
 				"/intopieces/intopieces_wait/intopiecesApprove_chushen", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -141,7 +144,7 @@ public class IntoPiecesChushenControl extends BaseController {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
 		try {
-			intoPiecesService.checkDoNot(filter);
+			intoPiecesService.checkDoNot(filter,request);
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
 			returnMap.addGlobalMessage("退回失败");

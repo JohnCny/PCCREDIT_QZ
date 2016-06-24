@@ -143,6 +143,18 @@ public class Circle extends BusinessModel{
 	private String customerId;
 	private String applicationId;
 	
+	private String shenHeRen1;
+	private String shenHeRen2;
+	
+	private String serialnumberQuota;//冻结解冻 流程序列号 
+	private String processStatus;//审批状态
+	
+	private String serialnumberSx;//授信维护 流程序列号 
+	private String processStatusSx;//授信维护 审批状态
+	
+	private String sxqx;//授信期限
+	private String czdz;
+	
 	public String getContractNo() {
 		return contractNo;
 	}
@@ -773,5 +785,53 @@ public class Circle extends BusinessModel{
 	}
 	public void setLoanStatus(String loanStatus) {
 		this.loanStatus = loanStatus;
+	}
+	public String getShenHeRen1() {
+		return shenHeRen1;
+	}
+	public void setShenHeRen1(String shenHeRen1) {
+		this.shenHeRen1 = shenHeRen1;
+	}
+	public String getShenHeRen2() {
+		return shenHeRen2;
+	}
+	public void setShenHeRen2(String shenHeRen2) {
+		this.shenHeRen2 = shenHeRen2;
+	}
+	public String getSerialnumberQuota() {
+		return serialnumberQuota;
+	}
+	public void setSerialnumberQuota(String serialnumberQuota) {
+		this.serialnumberQuota = serialnumberQuota;
+	}
+	public String getProcessStatus() {
+		return processStatus;
+	}
+	public void setProcessStatus(String processStatus) {
+		this.processStatus = processStatus;
+	}
+	public String getSerialnumberSx() {
+		return serialnumberSx;
+	}
+	public void setSerialnumberSx(String serialnumberSx) {
+		this.serialnumberSx = serialnumberSx;
+	}
+	public String getProcessStatusSx() {
+		return processStatusSx;
+	}
+	public void setProcessStatusSx(String processStatusSx) {
+		this.processStatusSx = processStatusSx;
+	}
+	public String getSxqx() {
+		return sxqx;
+	}
+	public void setSxqx(String sxqx) {
+		this.sxqx = sxqx;
+	}
+	public String getCzdz() {
+		return czdz;
+	}
+	public void setCzdz(String czdz) {
+		this.czdz = czdz;
 	}
 }

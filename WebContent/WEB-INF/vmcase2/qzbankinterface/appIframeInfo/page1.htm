@@ -64,7 +64,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">证件类型：<font color="#ff0000">*</font></td>
 					<td>
 						<select id="globalType" name="globalType" onchange="setSelect(this,'qtzjlx')">
-							<option value="001" #if($!ecif.globalType=='001') selected #end>身份证</option>
+							<option value="100" #if($!ecif.globalType=='100') selected #end>身份证</option>
 							<option value="130" #if($!ecif.globalType=='130') selected #end>户口簿</option>
 							<option value="140" #if($!ecif.globalType=='140') selected #end>护照</option>
 							<option value="026" #if($!ecif.globalType=='026') selected #end>其他</option>
@@ -108,7 +108,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">配偶证件类型：</td>
 					<td>
 						<select id="maritalGlobalType" name="maritalGlobalType" onchange="setSelect(this,'qtpozjlx')" disabled>
-							<option value="001">身份证</option>
+							<option value="100">身份证</option>
 							<option value="130">户口簿</option>
 							<option value="140">护照</option>
 							<option value="026">其他</option>
@@ -371,6 +371,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td><b>银行或其他方式</b></td>	
+					<td><b>担保方式</b></td>	
 					<td><b>目的</b></td>					
 					<td><b>贷款总额</b></td>	
 					<td><b>发放日期</b></td>					
@@ -381,6 +382,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td><input type="text" class="input" name="bankOrOtherType_jkjl_1" disabled/></td>	
+					<td><input type="text" class="input" name="guaranteeMode_jkjl_1" disabled/></td>
 					<td><input type="text" class="input" name="purpose_jkjl_1" disabled/></td>					
 					<td><input type="text" class="input" name="totalAmount_jkjl_1" disabled/></td>	
 					<script>
@@ -446,7 +448,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">是否曾在泉州银行申请过贷款？ </td>
 					<td>
 						<label><input type="radio" name="haveApplyLoan" value="1" onclick="$('#jksj').removeAttr('disabled');"/>是</label>
-						借款时间：<input type="text" name="haveLoanTime" id="jksj" onmouseover="_calendar()" disabled/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						借款时间：<input type="text" name="haveLoanTime" id="jksj" readonly onmouseover="_calendar()" disabled/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<label><input type="radio" name="haveApplyLoan" value="0" onclick="$('#jksj').val('');$('#jksj').attr('disabled','disabled');" checked/>否</label>
 					</td>
 				</tr>
@@ -549,6 +551,11 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td><input type="text" value="$!userName" readonly/>
 						<input type="hidden" name="managerName" value="$!userName"/>
 						<input type="hidden" name="managerId" value="$!externalId"/></td>	
+					<td class="table-label">协办客户经理：</td>
+					<td><input type="text" name="helpManagerName" value="$!qzApplnYwsqb.helpManagerName" />
+					</td>	
+				</tr>
+				<tr>		
 					<td class="table-label">日期：<font color="#ff0000">*</font></td>	
 					<td><input type="text" name="managerTime" onmouseover="_calendar()" readonly/></td>	
 				</tr>	
@@ -561,7 +568,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 	#if($!type=="readonly")
 		<a class="btn_gr"  onclick="parent.location.href = '${contextPath}${returnUrl}'" title="返回">返回</a>
 	#else
-		<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
+		<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="保存">保存</a>
 		<a id="id_back_button" class="btn_gr" href="javascript:void(0);" title="返回">返回</a>
 	#end
 	</div>
@@ -591,7 +598,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				$("#"+id).removeAttr('disabled');
 			}
 			else{
-				$("#"+id).val('001');//配偶身份证
+				$("#"+id).val('100');//配偶身份证
 				$("#"+id).attr('disabled','disabled');
 				$("#qtpozjlx").val('');
 				$("#qtpozjlx").attr('disabled','disabled');
@@ -608,7 +615,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 			//保存
 			$("#id_save_button").click(function() {
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;
@@ -616,7 +623,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					var formjson = $($formName).serialize();
 					var url = "${contextPath}/intopieces/intopiecesapprove/insert_page1.json?customerId=${customerId}&appId=${appId}";
 					$.ajax({
-						timeout : 500,
+						
 						url : url,
 						type : "get",
 						data : formjson,

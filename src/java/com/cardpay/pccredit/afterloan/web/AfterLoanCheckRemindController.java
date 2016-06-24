@@ -1,5 +1,7 @@
 package com.cardpay.pccredit.afterloan.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cardpay.pccredit.afterloan.filter.AfterLoanCheckFilter;
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.afterloan.service.AfterloanCheckService;
+import com.cardpay.pccredit.customer.service.CustomerInforService;
+import com.cardpay.pccredit.system.model.Dict;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -36,6 +40,8 @@ public class AfterLoanCheckRemindController extends BaseController{
 	@Autowired
 	private AfterloanCheckService afterloanCheckService;
 	
+	@Autowired
+	private CustomerInforService customerInforService;
 
 	
 	/**
@@ -53,6 +59,20 @@ public class AfterLoanCheckRemindController extends BaseController{
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
 		filter.setUserId(userId);
+		//获取贷后点击通知时限和截止时限
+		List<Dict> dict = customerInforService.findDict("afterloan");
+		String reminddate="";
+		String enddate="";
+		for(int i=0;i<dict.size();i++){
+			Dict dictd = dict.get(i);
+			if("reminddate".equals(dictd.getTypeCode())){
+				reminddate=dictd.getTypeName();
+			}else if("enddate".equals(dictd.getTypeCode())){
+				enddate=dictd.getTypeName();
+			}
+		}
+		filter.setRemindate(reminddate);
+		filter.setEnddate(enddate);
 		QueryResult<AfterLoaninfo> result = afterloanCheckService.findAfterLoanCheckTaskRemindByFilter(filter);
 		JRadPagedQueryResult<AfterLoaninfo> pagedResult = new JRadPagedQueryResult<AfterLoaninfo>(
 				filter, result);

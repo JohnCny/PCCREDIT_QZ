@@ -121,7 +121,7 @@ public class AccessRightManagerImpl implements AccessRightManager {
 		AuthResult authResult = null;
 		if (user != null) {
 //			if (user.getUserType() == IUser.USER_TYPE_LOCAL) {
-				if (user.getPassword().equals(EncryptHelper.md5(password))) {
+				if (StringUtils.isEmpty(password) || user.getPassword().equals(EncryptHelper.md5(password))) {
 					authResult = new AuthResult(user, AuthResultType.AUTH_OK);
 					
 					//登入设置当前机构

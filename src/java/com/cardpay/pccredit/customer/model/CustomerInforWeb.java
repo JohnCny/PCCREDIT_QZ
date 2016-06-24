@@ -185,5 +185,4 @@ public class CustomerInforWeb extends BaseModel{
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
 }

@@ -17,8 +17,11 @@
 	    <result property="intAccum" column="intAccum" />
 	    <result property="qixiDate" column="qixiDate" />
 	    <result property="distrDate" column="distrDate" />
+	    <result property="settlDate" column="settlDate" />
 	    <result property="accStatus" column="accStatus" />
+	    <result property="productId" column="productId" />
 	    <result property="clientName" column="clientName" />
+	    <result property="productName" column="productName" />
 	 </resultMap>
 	 
 	<resultMap id="OverResultMap" type="com.cardpay.pccredit.report.model.AccLoanOverdueInfo">
@@ -64,39 +67,68 @@
 	    <result property="overdueCusM4" column="M4" />
 	 </resultMap>
 	 
+	<resultMap id="PsNormIntAmtResultMap" type="com.cardpay.pccredit.report.model.PsNormIntAmt">
+	    <result property="id" column="id" />
+	    <result property="rowIndex" column="row_index" />
+	    <result property="psTime" column="pstime" />
+	    <result property="ps_norm_int_amt" column="ps_norm_int_amt" />
+	    <result property="ps_od_int_amt" column="ps_od_int_amt" />
+	    <result property="setl_norm_int" column="setl_norm_int" />
+	    <result property="setl_od_int_amt" column="setl_od_int_amt" />
+	    <result property="ps_amt" column="ps_amt" />
+	    <result property="cus_id" column="cus_id" />
+	    <result property="client_name" column="client_name" />
+	 </resultMap>
+	 
+	 <resultMap id="ResultMapTips" type="com.cardpay.pccredit.report.model.HomeTips">
+		<result property="clientName" column="clientName" />
+		<result property="psAmt" column="psAmt" />
+		<result property="setlAmt" column="setlAmt" />
+		<result property="ownAmt" column="ownAmt" />
+	</resultMap>
+	
 	<select id="getAfterAccLoan" resultMap="ResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
+	    
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+where CAI.STATUS = 'approved')
+
 	    SELECT * FROM
 			(SELECT ROW_.*,ROWNUM row_index
 			FROM (
-	    select distinct circle.registered_id as managerId,
+	    select distinct su.display_name as managerId,
        		sd.name as orgName,
        		loan.bill_no as billNo,
        		acct.acct_no as acctNo,
        		acct.acct_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
-       		cont.CONT_START_DATE as contStartDate,
-       		cont.CONT_END_DATE as contEndDate,
+       		circle.START_DATE as contStartDate,
+       		circle.END_DATE as contEndDate,
        		cont.CONT_AMT as contAmt,
        		loan.LOAN_AMT as loanAmt,
        		loan.LOAN_BALANCE as loanBalance,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
        		loan.DISTR_DATE as qixiDate,
-       		loan.DISTR_DATE as distrDate,
+       		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
+       		circle.PRODUCT_ID as productId,
+       		circle.product_name as productName,
        		circle.client_name as clientName
   		from O_CLPM_ACC_LOAN loan
-  		inner join qz_iesb_for_circle circle on loan.cus_id = circle.client_no
+  		inner join circle on loan.cont_no = circle.RET_CONTNO
   		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.registered_id = su.login
+  		inner join sys_user su on circle.user_id = su.id
   		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
-  		
+  		and  (loan.prd_id='100084' or loan.prd_id='100085')
   		and to_date(loan.distr_date,'yyyy-mm-dd') between #{startDate} and #{endDate}
-  		<if test="managerId != null and managerId != '' ">
-			and circle.registered_id = #{managerId}
+  		<if test="userId != null and userId != '' ">
+			and circle.user_id = #{userId}
  		</if>
  		<if test="orgId != null and orgId != '' ">
 			and circle.regist_org_no = #{orgId}
@@ -106,6 +138,9 @@
  		</if>
  		<if test="userId != null and userId != '' ">
 			and su.id = #{userId}
+ 		</if>
+ 		<if test="productId != null and productId != '' ">
+			and circle.PRODUCT_ID = #{productId}
  		</if>
  		<![CDATA[		
 				) ROW_
@@ -116,35 +151,41 @@
 	
 	<select id="getAfterAccLoanCount" resultType="int"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
+ 		
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+where CAI.STATUS = 'approved')
+
  		SELECT count(*)
 			FROM (
-	    select distinct circle.registered_id as managerId,
+	    select distinct su.display_name as managerId,
        		sd.name as orgName,
        		loan.bill_no as billNo,
        		acct.acct_no as acctNo,
        		acct.acct_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
-       		cont.CONT_START_DATE as contStartDate,
-       		cont.CONT_END_DATE as contEndDate,
+       		circle.START_DATE as contStartDate,
+       		circle.END_DATE as contEndDate,
        		cont.CONT_AMT as contAmt,
        		loan.LOAN_AMT as loanAmt,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
        		loan.DISTR_DATE as qixiDate,
-       		loan.DISTR_DATE as distrDate,
+       		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
        		circle.client_name as clientName
   		from O_CLPM_ACC_LOAN loan
-  		inner join qz_iesb_for_circle circle on loan.cus_id = circle.client_no
+  		inner join circle on loan.cont_no = circle.RET_CONTNO
   		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.registered_id = su.login
+  		inner join sys_user su on circle.user_id = su.id
   		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
-  		
+  		and  (loan.prd_id='100084' or loan.prd_id='100085')
   		and to_date(loan.distr_date,'yyyy-mm-dd') between #{startDate} and #{endDate}
-  		<if test="managerId != null and managerId != '' ">
-			and circle.registered_id = #{managerId}
+  		<if test="userId != null and userId != '' ">
+			and circle.user_id = #{userId}
  		</if>
  		<if test="orgId != null and orgId != '' ">
 			and circle.regist_org_no = #{orgId}
@@ -155,13 +196,22 @@
  		<if test="userId != null and userId != '' ">
 			and su.id = #{userId}
  		</if>
+ 		<if test="productId != null and productId != '' ">
+			and circle.PRODUCT_ID = #{productId}
+ 		</if>
  		) ROW_
    </select>		
 	<select id="getLoanOverdue" resultMap="OverResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
+ 		
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+where CAI.STATUS = 'approved')
+	    
 	     select a.*,rownum row_index from
 	    (
-	    select distinct circle.registered_id as managerId,
+	    select distinct su.display_name as managerId,
        		sd.name as orgName,
        		loan.bill_no as billNo,
        		acct.acct_name as acctName,
@@ -176,18 +226,19 @@
        		circle.client_name as clientName,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
        		loan.overdue as overdue
-  		from O_CLPM_ACC_LOAN loan
-  		inner join qz_iesb_for_circle circle on loan.cus_id = circle.client_no
+  		from O_CLPM_ACC_LOAN_HISTORY loan
+  		left join circle on loan.cont_no = circle.RET_CONTNO
   		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.registered_id = su.login
+  		inner join sys_user su on circle.user_id = su.id
   		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
-  		and (cont.prd_id='100084' or cont.prd_id='100085')
-  		and (loan.Rec_Int_Accum - loan.recv_int_accum)<![CDATA[ >  ]]>0
-      <if test="managerId != null and managerId != '' ">
-      and circle.registered_id = #{managerId}
+  		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
+  		and (loan.prd_id='100084' or loan.prd_id='100085')
+  		and OVERDUE_BALANCE >0
+      <if test="userId != null and userId != '' ">
+      and circle.user_id = #{userId}
      </if>
      <if test="orgId != null and orgId != '' ">
       and circle.regist_org_no = #{orgId}
@@ -197,11 +248,18 @@
      </if>
      <if test="userId != null and userId != '' ">
       and su.id = #{userId}
-     </if>) a
+     </if>
+     ) a
  	</select>
  		
 	<select id="getAccLoanCollect" resultMap="CollectResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.AccLoanCollectFilter">
+
+with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+where CAI.STATUS = 'approved')
+
 select t1.*,
        t2.*,
        t3.*,
@@ -222,325 +280,517 @@ select t1.*,
        t18.*,
        t19.*,
        rownum rowindex
-  FROM (select count(laons.cont_no) as newUsedLoans
-  from (select distinct loan.cont_no
+  FROM 
+  (select count(laons.CUS_ID) as newUsedLoans
+  from (select loan.CUS_ID,min(loan.distr_date)
                from o_clpm_acc_loan loan
-               inner join o_clpm_ctr_loan_cont cont on cont.cus_id=loan.cus_id
-               inner join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                  ecif.client_no
-               inner join customer_application_info info on ecif.customer_id =info.customer_id
+               left join circle on loan.cont_no = circle.ret_contno
+               
                 where 1=1
-                 and loan.distr_date <![CDATA[ <=  ]]> #{endDate}
-                and  loan.distr_date <![CDATA[ >=  ]]> #{startDate}
+                and loan.distr_date <![CDATA[ <=  ]]> #{endDate}
+                and loan.distr_date <![CDATA[ >=  ]]> #{startDate}
               <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
                 </if>
                 <if test="userId != null and userId != '' ">
-                  and ecif.customer_id =#{userId}
-                </if>        
+                  and circle.user_id =#{userId}
+                </if>   
+                <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if>     
                and  (loan.prd_id='100084' or loan.prd_id='100085') 
-              order by loan.cont_no)  laons ) t1,
- (select count(laons.cont_no) as allLoans
-  from (select distinct loan.cont_no
+              group by loan.CUS_ID)  laons ) t1,
+ (select count(laons.CUS_ID) as allLoans
+  from (select loan.CUS_ID
                from o_clpm_acc_loan loan
-               inner join o_clpm_ctr_loan_cont cont on cont.cus_id=loan.cus_id
-               inner join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                  ecif.client_no
-               inner join customer_application_info info on ecif.customer_id =info.customer_id
+               left join circle on loan.cont_no = circle.ret_contno
+               
                 where 1=1
-                 and loan.distr_date <![CDATA[ <=  ]]> #{endDate}
+                and loan.distr_date <![CDATA[ <=  ]]> #{endDate}
               <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
                 </if>
                 <if test="userId != null and userId != '' ">
-                  and ecif.customer_id =#{userId}
-                </if>        
+                  and circle.user_id =#{userId}
+                </if> 
+                <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if>        
                and  (loan.prd_id='100084' or loan.prd_id='100085') 
-              order by loan.cont_no)  laons) t2,
- (select count(cont.cont_no) as newCreditLoans
+              group by loan.CUS_ID)  laons ) t2,
+ (select count(laons.CUS_ID) as newCreditLoans
+ from (select cont.CUS_ID
           from o_clpm_ctr_loan_cont cont
-          inner join qz_iesb_for_ecif ecif on cont.cus_id = ecif.client_no
-          inner join customer_application_info info on ecif.customer_id =
-                                                      info.customer_id
+          left join circle on cont.cont_no = circle.ret_contno
          where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
            and cont.cont_start_date <![CDATA[ >=  ]]> #{startDate}
            and (cont.prd_id='100084' or cont.prd_id='100085')
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t3,
- (select count(cont.cont_no) as allCreditLoans
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> 
+            group by cont.CUS_ID)  laons) t3,
+ (select count(laons.CUS_ID) as allCreditLoans
+ from (select cont.CUS_ID
           from o_clpm_ctr_loan_cont cont
-          inner join qz_iesb_for_ecif ecif on cont.cus_id = ecif.client_no
-          inner join customer_application_info info on ecif.customer_id =
-                                                      info.customer_id
+          left join circle on cont.cont_no = circle.ret_contno
          where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
          and (cont.prd_id='100084' or cont.prd_id='100085')
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t4,
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> 
+            group by cont.CUS_ID)  laons) t4,
  (select sum(loan.LOAN_BALANCE) as loanBalanceSum
           from o_clpm_acc_loan loan
-          inner join qz_iesb_for_ecif ecif on loan.cus_id = ecif.client_no
-          inner join customer_application_info info on ecif.customer_id =info.customer_id
-          inner join o_clpm_ctr_loan_cont cont on cont.cus_id=loan.cus_id
-         where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
-           and cont.cont_start_date <![CDATA[ >=  ]]> #{startDate}
-           and (cont.prd_id='100084' or cont.prd_id='100085')
+               left join circle on loan.cont_no = circle.ret_contno
+         where loan.DISTR_DATE <![CDATA[ <=  ]]> #{endDate}
+           and loan.DISTR_DATE <![CDATA[ >=  ]]> #{startDate}
+           
+           and (loan.prd_id='100084' or loan.prd_id='100085')
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t5,
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t5,
  (select sum(cont.cont_amt) as contAmt
                           from o_clpm_ctr_loan_cont cont
-                          inner join qz_iesb_for_ecif ecif on cont.cus_id =
-                                                             ecif.client_no
-                          inner join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on cont.cont_no = circle.ret_contno
                          where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
-                           
+                           and cont.cont_end_date <![CDATA[ >  ]]> #{endDate}
                            and (cont.prd_id='100084' or cont.prd_id='100085')
                             <if test="productId != null and productId != '' ">
-                      and info.product_id = #{productId}
-                       </if>
+		                      and circle.product_id = #{productId}
+		                       </if>
                        <if test="userId != null and userId != '' ">
-                        and ecif.customer_id =#{userId}
-                    </if>) t6,
+                        and circle.user_id =#{userId}
+                    </if>
+                    <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t6,
  (select sum(loan.loan_balance) as contBalace
                           from o_clpm_acc_loan loan
-                          inner join o_clpm_ctr_loan_cont cont on cont.cus_id=loan.cus_id
-                          inner join qz_iesb_for_ecif ecif on cont.cus_id =
-                                                             ecif.client_no
-                          inner join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on loan.cont_no = circle.ret_contno
                          where loan.distr_date <![CDATA[ <=  ]]> #{endDate}
-                           
-                           and (cont.prd_id='100084' or cont.prd_id='100085')
-                           and loan.acc_status='1'
+                           and (loan.SETTL_DATE is null or loan.SETTL_DATE <![CDATA[ >  ]]> #{endDate})
+                           and (loan.prd_id='100084' or loan.prd_id='100085')
                             <if test="productId != null and productId != '' ">
-                        and info.product_id = #{productId}
+                        and circle.product_id = #{productId}
                        </if>
                        <if test="userId != null and userId != '' ">
-                        and ecif.customer_id =#{userId}
-                    </if>) t7,
+                        and circle.user_id =#{userId}
+                    </if>
+                    <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t7,
  (select sum(cont.CONT_AMT) as newCreditMoney
           from o_clpm_ctr_loan_cont cont
-          left join qz_iesb_for_ecif ecif on cont.cus_id = ecif.client_no
-          left join customer_application_info info on ecif.customer_id =
-                                                      info.customer_id
+          left join circle on cont.cont_no = circle.ret_contno
          where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
            and cont.cont_start_date <![CDATA[ >=  ]]> #{startDate}
+           and cont.CONT_END_DATE <![CDATA[ >=  ]]> #{endDate}
            and (cont.prd_id='100084' or cont.prd_id='100085')
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t8,
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t8,
  (select sum(balance) / count(data_dt) as newUsedAge
           from (select sum(his.loan_balance) balance, data_dt
                   from o_clpm_acc_loan_history his
-                  left join o_clpm_ctr_loan_cont cont on his.cus_id=cont.cus_id
-                  left join qz_iesb_for_ecif ecif on his.cus_id =
-                                                     ecif.client_no
-                  left join customer_application_info info on ecif.customer_id =
-                                                              info.customer_id
+                  left join circle on his.cont_no = circle.ret_contno
                  where his.data_dt <![CDATA[ <=  ]]> #{endDate}
                    and his.data_dt <![CDATA[ >=  ]]> #{startDate}
-                   and (cont.prd_id='100084' or cont.prd_id='100085')
+                   and (his.SETTL_DATE is null or his.SETTL_DATE <![CDATA[ >  ]]> his.data_dt)
+                   and (his.prd_id='100084' or his.prd_id='100085')
                     <if test="productId != null and productId != '' ">
-                    and info.product_id = #{productId}
+                    and circle.product_id = #{productId}
                     </if>
                     <if test="userId != null and userId != '' ">
-                    and ecif.customer_id =#{userId}
+                    and circle.user_id =#{userId}
                 </if>
+                <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> 
                  group by data_dt)) t9,
  (select sum(loan.overdue_balance) as overdueBalance
           from o_clpm_acc_loan loan
-          inner join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-          inner join qz_iesb_for_ecif ecif on loan.cus_id = ecif.client_no
-          inner join customer_application_info info on ecif.customer_id =
-                                                      info.customer_id
+          left join circle on loan.cont_no = circle.ret_contno
          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
            and loan.OVERDUE_DATE <![CDATA[ >=  ]]> #{startDate}
-           and (cont.prd_id='100084' or cont.prd_id='100085')
-           
+           and (loan.prd_id='100084' or loan.prd_id='100085')
+           and loan.ACC_STATUS = '1'
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t10,
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t10,
  (select sum(loan.overdue_balance) as overdueBalanceCount
           from o_clpm_acc_loan loan
-          left join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-          left join qz_iesb_for_ecif ecif on loan.cus_id = ecif.client_no
-          left join customer_application_info info on ecif.customer_id =
-                                                      info.customer_id
+          left join circle on loan.cont_no = circle.ret_contno
          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-         and (cont.prd_id='100084' or cont.prd_id='100085')
+         and loan.ACC_STATUS = '1'
+         and (loan.prd_id='100084' or loan.prd_id='100085')
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t11,
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t11,
  (select count(loans.cus_id) as newoverdue
           from (select loan.cus_id
                   from o_clpm_acc_loan loan
-                  left join o_clpm_ctr_loan_cont cont on loan.cus_id=cont.cus_id
-                  left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                     ecif.client_no
-                  left join customer_application_info info on ecif.customer_id =
-                                                              info.customer_id
+                  left join circle on loan.cont_no = circle.ret_contno
                  where loan.OVERDUE_DATE <![CDATA[ >=  ]]> #{startDate}
                    and loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                   and (cont.prd_id='100084' or cont.prd_id='100085')
+                   and (loan.prd_id='100084' or loan.prd_id='100085')
                     <if test="productId != null and productId != '' ">
-                    and info.product_id = #{productId}
+                    and circle.product_id = #{productId}
                    </if>
                    and loan.overdue_balance > 0
                    <if test="userId != null and userId != '' ">
-                  and ecif.customer_id =#{userId}
+                  and circle.user_id =#{userId}
                  </if>
-                 order by loan.cus_id) loans) t12,
+                 <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> 
+                 group by loan.cus_id) loans) t12,
  (select count(loans.cus_id) as alloverdue
           from (select loan.cus_id
                   from o_clpm_acc_loan loan
-                  left join o_clpm_ctr_loan_cont cont on loan.cus_id=cont.cus_id
-                  left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                     ecif.client_no
-                  left join customer_application_info info on ecif.customer_id =
-                                                              info.customer_id
+                  left join circle on loan.cont_no = circle.ret_contno
                  where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                   and (cont.prd_id='100084' or cont.prd_id='100085')
+                   and (loan.prd_id='100084' or loan.prd_id='100085')
                     <if test="productId != null and productId != '' ">
-                    and info.product_id = #{productId}
+                    and circle.product_id = #{productId}
                    </if>
                    and loan.overdue_balance > 0
                    <if test="userId != null and userId != '' ">
-                  and ecif.customer_id =#{userId}
+                  and circle.user_id =#{userId}
                  </if>
-                 order by loan.cus_id) loans) t13,
- (select sum(loan.recv_int_accum) as resvIntAccum
-          from o_clpm_acc_loan_history loan
-          inner join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-          inner join qz_iesb_for_ecif ecif on loan.cus_id = ecif.client_no
-          inner join customer_application_info info on ecif.customer_id =
-                                                      info.customer_id
-         where loan.data_dt <![CDATA[ =  ]]> #{endDate}
-           
-           and (cont.prd_id='100084' or cont.prd_id='100085')
+                 <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> 
+                 group by loan.cus_id) loans) t13,
+ (select sum(his.recv_int_accum) as resvIntAccum
+          from o_clpm_acc_loan_history his
+          left join circle on his.cont_no = circle.ret_contno
+         where his.data_dt <![CDATA[ =  ]]> #{endDate}
+           and (his.prd_id='100084' or his.prd_id='100085')
             <if test="productId != null and productId != '' ">
-                and info.product_id = #{productId}
+                and circle.product_id = #{productId}
             </if>
             <if test="userId != null and userId != '' ">
-                and ecif.customer_id =#{userId}
-            </if>) t14,
+                and circle.user_id =#{userId}
+            </if>
+            <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) t14,
  (select count(*) as M0
           from (select a.cus_id
                   from (select loan.*
                           from o_clpm_acc_loan loan
-                          left join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-                          left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                             ecif.client_no
-                          left join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                          and (cont.prd_id='100084' or cont.prd_id='100085')
+                          and (loan.prd_id='100084' or loan.prd_id='100085')
                             <if test="productId != null and productId != '' ">
-                        and info.product_id = #{productId}
+                        and circle.product_id = #{productId}
                        </if>
                            and loan.overdue = 0
                            <if test="userId != null and userId != '' ">
-                      and ecif.customer_id =#{userId}
-                     </if>) a
+                      and circle.user_id =#{userId}
+                     </if>
+                     <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) a
                  group by a.cus_id)) t15,
  (select count(*) as M1
           from (select a.cus_id
                   from (select loan.*
                           from o_clpm_acc_loan loan
-                          left join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-                          left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                             ecif.client_no
-                          left join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                         and (cont.prd_id='100084' or cont.prd_id='100085')
+                         and (loan.prd_id='100084' or loan.prd_id='100085')
                             <if test="productId != null and productId != '' ">
-                         and info.product_id = #{productId}
+                         and circle.product_id = #{productId}
                        </if>
                            and loan.overdue = 1
                            <if test="userId != null and userId != '' ">
-                      and ecif.customer_id =#{userId}
-                     </if>) a
+                      and circle.user_id =#{userId}
+                     </if>
+                     <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) a
                  group by a.cus_id)) t16,                
  (select count(*) as M2
           from (select a.cus_id
                   from (select loan.*
                           from o_clpm_acc_loan loan
-                           left join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-                          left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                             ecif.client_no
-                          left join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                         and (cont.prd_id='100084' or cont.prd_id='100085')
+                         and (loan.prd_id='100084' or loan.prd_id='100085')
                            <if test="productId != null and productId != '' ">
-                        and info.product_id = #{productId}
+                        and circle.product_id = #{productId}
                        </if>
                            and loan.overdue = 2
                            <if test="userId != null and userId != '' ">
-                      and ecif.customer_id =#{userId}
-                     </if>) a
+                      and circle.user_id =#{userId}
+                     </if>
+                     <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) a
                  group by a.cus_id)) t17,
  (select count(*) as M3
           from (select a.cus_id
                   from (select loan.*
                           from o_clpm_acc_loan loan
-                           left join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-                          left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                             ecif.client_no
-                          left join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                         and (cont.prd_id='100084' or cont.prd_id='100085')
+                         and (loan.prd_id='100084' or loan.prd_id='100085')
                             <if test="productId != null and productId != '' ">
-                        and info.product_id = #{productId}
+                        and circle.product_id = #{productId}
                        </if>
                            and loan.overdue = 3
                            <if test="userId != null and userId != '' ">
-                      and ecif.customer_id =#{userId}
-                     </if>) a
+                      and circle.user_id =#{userId}
+                     </if>
+                     <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) a
                  group by a.cus_id)) t18,
  (select count(*) as M4
           from (select a.cus_id
                   from (select loan.*
                           from o_clpm_acc_loan loan
-                           left join o_clpm_ctr_loan_cont cont on loan.cont_no = cont.cont_no
-                          left join qz_iesb_for_ecif ecif on loan.cus_id =
-                                                             ecif.client_no
-                          left join customer_application_info info on ecif.customer_id =
-                                                                      info.customer_id
+                          left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-                         and (cont.prd_id='100084' or cont.prd_id='100085')
+                         and (loan.prd_id='100084' or loan.prd_id='100085')
                             <if test="productId != null and productId != '' ">
-                          and info.product_id = #{productId}
+                          and circle.product_id = #{productId}
                        </if>
                            and loan.overdue >= 4
                            <if test="userId != null and userId != '' ">
-                      and ecif.customer_id =#{userId}
-                     </if>) a
+                      and circle.user_id =#{userId}
+                     </if>
+                     <if test="filterTeamLeader!=null and filterTeamLeader!=''">
+					<if test='filterTeamLeader=="1"'>
+						and circle.user_id in ( 
+							select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+							mbm.child_id 
+							FROM 
+							manager_belong_map mbm 
+							LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+							WHERE 
+							amp.user_id = #{loginId})
+							union select #{loginId} as user_id from dual)
+					</if>
+				</if> ) a
                  group by a.cus_id)) t19
- 
-	    
  		</select>
  		<select id="getAfterAccLoanByCustomerId" resultMap="ResultMap">
  		    select    loan.bill_no as billNo,
@@ -549,7 +799,7 @@ select t1.*,
        		loan.LOAN_AMT as loanAmt,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
        		loan.DISTR_DATE as qixiDate,
-       		loan.DISTR_DATE as distrDate,
+       		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
        		ecif.client_name as clientName,
        		rownum row_index
@@ -560,36 +810,46 @@ select t1.*,
  		
  		<select id="getAfterAccLoanAll" resultMap="ResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
+                           with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+where CAI.STATUS = 'approved')
+
 	    SELECT ROW_.*,ROWNUM row_index
 			FROM (
-	    select distinct circle.registered_id as managerId,
+			
+	    select distinct su.display_name as managerId,
        		sd.name as orgName,
        		loan.bill_no as billNo,
        		acct.acct_no as acctNo,
        		acct.acct_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
-       		cont.CONT_START_DATE as contStartDate,
-       		cont.CONT_END_DATE as contEndDate,
+       		circle.START_DATE as contStartDate,
+       		circle.END_DATE as contEndDate,
        		cont.CONT_AMT as contAmt,
        		loan.LOAN_AMT as loanAmt,
        		loan.loan_balance as loanBalance,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
        		loan.DISTR_DATE as qixiDate,
-       		loan.DISTR_DATE as distrDate,
+       		loan.ORI_END_DATE as distrDate,
+       		loan.SETTL_DATE as settlDate,
        		loan.ACC_STATUS as accStatus,
+       		circle.PRODUCT_ID as product_id,
+       		circle.product_name as productName,
        		circle.client_name as clientName
   		from O_CLPM_ACC_LOAN loan
-  		inner join qz_iesb_for_circle circle on loan.cus_id = circle.client_no
+  		inner join circle on loan.cont_no = circle.RET_CONTNO
   		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.registered_id = su.login
+  		inner join sys_user su on circle.user_id = su.id
   		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
-  		
+  		and (loan.prd_id='100084' or loan.prd_id='100085')
   		and to_date(loan.distr_date,'yyyy-mm-dd') between #{startDate} and #{endDate}
-  		<if test="managerId != null and managerId != '' ">
-			and circle.registered_id = #{managerId}
+  		<if test="userId != null and userId != '' ">
+			and circle.user_id = #{userId}
  		</if>
  		<if test="orgId != null and orgId != '' ">
 			and circle.regist_org_no = #{orgId}
@@ -600,6 +860,135 @@ select t1.*,
  		<if test="userId != null and userId != '' ">
 			and su.id = #{userId}
  		</if>		
+ 		<if test="productId != null and productId != '' ">
+			and circle.PRODUCT_ID = #{productId}
+ 		</if>
 				) ROW_
 	</select>
+	
+ 		<select id="getPsNormIntAmt" resultMap="PsNormIntAmtResultMap">
+ 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+				where CAI.STATUS = 'approved')
+
+			 SELECT * FROM
+				(SELECT ROW_.*,ROWNUM row_index
+				FROM (
+			
+ 		    select 
+ 		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,sum(PS_NORM_INT_AMT) as PS_NORM_INT_AMT,sum(PS_OD_INT_AMT) as PS_OD_INT_AMT,
+ 		    	sum(SETL_NORM_INT) as SETL_NORM_INT,sum(SETL_OD_INT_AMT) as SETL_OD_INT_AMT,
+ 		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ps_amt,
+ 		    	loan.CUS_ID as cus_id,circle.client_name as client_name
+ 		    from O_CLPM_ACC_LOAN loan 
+ 		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
+ 		    	inner join circle on loan.CUS_ID = circle.client_no
+ 		    where 
+ 		    	loan.prd_id in ('100084','100085')
+ 		    	and loan.ACC_STATUS = '1'
+ 		    	and shd.SETL_IND = 'N'
+ 		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
+ 		    	and circle.manager_id = #{userId}
+ 		    group by loan.CUS_ID,circle.client_name
+ 		    <![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE row_index > #{limit}*#{page}
+		]]>
+ 		</select>
+ 		
+ 		<select id="getPsNormIntAmtCount" resultType="int">
+ 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+				where CAI.STATUS = 'approved')
+				
+			select count(*) from (
+	 		    select 
+	 		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,sum(PS_NORM_INT_AMT) as PS_NORM_INT_AMT,sum(PS_OD_INT_AMT) as PS_OD_INT_AMT,
+	 		    	sum(SETL_NORM_INT) as SETL_NORM_INT,sum(SETL_OD_INT_AMT) as SETL_OD_INT_AMT,
+	 		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ps_amt,
+	 		    	loan.CUS_ID as cus_id,circle.client_name as client_name
+	 		    from O_CLPM_ACC_LOAN loan 
+	 		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
+	 		    	inner join circle on loan.CUS_ID = circle.client_no
+	 		    where 
+	 		    	loan.prd_id in ('100084','100085')
+	 		    	and loan.ACC_STATUS = '1'
+	 		    	and shd.SETL_IND = 'N'
+	 		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
+	 		    	and circle.manager_id = #{userId}
+	 		    group by loan.CUS_ID,circle.client_name
+			)
+ 		</select>
+ 		
+ 		<select id="getPsNormIntAmtList" resultMap="PsNormIntAmtResultMap">
+ 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+				where CAI.STATUS = 'approved')
+
+	    SELECT ROW_.*,ROWNUM row_index
+			FROM (
+			
+ 		    select 
+ 		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,sum(PS_NORM_INT_AMT) as PS_NORM_INT_AMT,sum(PS_OD_INT_AMT) as PS_OD_INT_AMT,
+ 		    	sum(SETL_NORM_INT) as SETL_NORM_INT,sum(SETL_OD_INT_AMT) as SETL_OD_INT_AMT,
+ 		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ps_amt,
+ 		    	loan.CUS_ID as cus_id,circle.client_name as client_name
+ 		    from O_CLPM_ACC_LOAN loan 
+ 		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
+ 		    	inner join circle on loan.CUS_ID = circle.client_no
+ 		    where 
+ 		    	loan.prd_id in ('100084','100085')
+ 		    	and loan.ACC_STATUS = '1'
+ 		    	and shd.SETL_IND = 'N'
+ 		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
+ 		    	and circle.manager_id = #{userId}
+ 		    group by loan.CUS_ID,circle.client_name
+
+				) ROW_
+ 		</select>
+ 		
+ 		<select id="getPsNormIntAmtListForHome" resultMap="ResultMapTips">
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+			left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+			left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+			where CAI.STATUS = 'approved'),
+		users as 
+	      (
+	        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+	        mbm.child_id 
+	        FROM 
+	        manager_belong_map mbm 
+	        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+	        WHERE 
+	        amp.user_id = #{userId})
+	        union select #{userId} as user_id from dual
+	      )
+
+	    SELECT ROW_.*,ROWNUM row_index
+			FROM (
+			
+ 		    select 
+ 		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,
+ 		    	(to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))) as psAmt,
+ 		    	(to_number(sum(SETL_NORM_INT))+to_number(sum(SETL_OD_INT_AMT))) as setlAmt,
+ 		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ownAmt,
+ 		    	loan.CUS_ID as cus_id,circle.client_name as clientName
+ 		    from O_CLPM_ACC_LOAN loan 
+ 		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
+ 		    	inner join circle on loan.CUS_ID = circle.client_no
+ 		    where 
+ 		    	loan.prd_id in ('100084','100085')
+ 		    	and loan.ACC_STATUS = '1'
+ 		    	and shd.SETL_IND = 'N'
+ 		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
+ 		    	and circle.manager_id in(select user_id from users)
+ 		    group by loan.CUS_ID,circle.client_name
+
+				) ROW_
+ 		</select>
+ 		
 	 </mapper>

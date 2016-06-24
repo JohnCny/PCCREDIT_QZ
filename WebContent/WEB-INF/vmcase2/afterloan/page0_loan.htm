@@ -35,7 +35,11 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 						<input type="text" value="$!pspCheckTask.cusId" name="cusId" readonly>
 					</td>
 					<td class="table-label">任务类型：</td>
-					<td><input type="text" name="taskType" value="#dictVal("TASK_TYPE",$!pspCheckTask.taskType)" readonly/></td>					
+					#if($!pspCheckTask.checkDescribe != $null)
+	                <td><input type="text" name="taskType" value="$!pspCheckTask.checkDescribe" readonly/></td>
+	                #else
+	                <td><input type="text" name="taskType" value="#dictVal("TASK_TYPE",$!pspCheckTask.taskType)" readonly/></td>
+	                #end					
 				</tr>
 				<tr>
 					<td class="table-label">任务生成日期：</td>
@@ -70,13 +74,11 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					</td>
 				</tr>
 				<tr>
-					
-					<td class="table-label">检查时间：</td>
-					<td><input type="text" name="checkTime" value="$!pspCheckTask.checkTime" onmouseover="_calendar()"/></td>					
+					<td class="table-label">检查时间：<font color="#ff0000">*</font></td>
+					<td><input type="text" name="checkTime" value="$!pspCheckTask.checkTime" onmouseover="_calendar()" readonly/></td>					
 				
 				<td class="table-label">检查地点：</td>
 					<td>
-						
 						<input type="text" value="$!pspCheckTask.checkAddr" name="checkAddr" >
 					</td>
 				</tr>
@@ -94,7 +96,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td><select id="repayment" name="repayment" onchange="setSelect(this.value,'repaymentOther')">
 	                   #dict("repayment_type", $!pspCheckTask.repayment)
 	                </select>
-	                <input type="text" name="repaymentOther" id="repaymentOther" value="$!pspCheckTask.repaymentOther" disabled />
+	                <input type="text" name="repaymentOther" id="repaymentOther" value="$!pspCheckTask.repaymentOther" readonly />
 				    </td>	
 					<td class="table-label">回访类型：</td>
 					<td><select id="reciprocalType" name="reciprocalType">
@@ -108,16 +110,20 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 	                </select></td>	
 				</tr>
 				<tr>
-					<td class="table-label">检查结论：</td>
+					<td class="table-label">检查结论：<font color="#ff0000">*</font></td>
 					<td>
-						
-						<textarea name="remarks"> $!pspCheckTask.remarks</textarea>
+						<textarea name="remarks">$!pspCheckTask.remarks</textarea>
 					</td>
 					<!--<td class="table-label">审批状态：</td>
-					<td><input type="text" name="approveStatus" value="$!pspCheckTask.approveStatus" readonly/></td>  -->					
+					<td><input type="text" name="approveStatus" value="$!pspCheckTask.approveStatus" readonly/></td>  -->
+					<td class="table-label">退回原因：</td>
+					<td>
+						<textarea id="fallbackReason" name="fallbackReason">$!pspCheckTask.fallbackReason</textarea>
+					</td>					
 				</tr>
 			</table>
 		</div>
+	</div>
 	</div>
 </form>	
 <div class="controlbtn">
@@ -125,7 +131,15 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 		<a class="btn_gr"  onclick="parent.location.href = '${contextPath}/afterloan/afterloancheck/browse.page'" title="返回">返回</a>
 	#else
 		<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="保存">保存</a>
-		<a id="id_approve_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
+		<!-- -->#if($!pspCheckTask.uploadFlag=="0")
+			<a id="id_browse_button" class="btn_g" href="javascript:void(0);" onclick="browseFolder()" title="提交影像" disabled>正在上传,禁止提交审核</a>
+		#else
+			<a id="id_browse_button" class="btn_g" href="javascript:void(0);" onclick="browseFolder()" title="提交影像">提交影像</a>
+			<a id="id_server_button" class="btn_g" href="javascript:void(0);" onclick="displayServer()" title="查看影像">查看影像</a>
+			#if($!pspCheckTask.checkTime != $null)
+				<a id="id_approve_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
+			#end
+		#end 
 		<a id="id_back_button" class="btn_gr" href="javascript:void(0);" title="返回">返回</a>
 	#end
 	</div>
@@ -134,13 +148,13 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 		window.top.currentWindow.setLayout(layout);
 		
 		#set ($formName = "'#id_module_form'")
-		#parse ("qzbankinterface/appIframeInfo/page1_validation.js")
+		#parse ("afterloan/page0_validation.js")
 		
 		$(document).ready(function() {	
 			//保存
 			$("#id_save_button").click(function() {
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;
@@ -169,32 +183,37 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 			//提交
 			$("#id_approve_button").click(function() {
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;
-				var clientNo = document.getElementById("clientNo");
-				var taskId = document.getElementById("taskId");
-				var type = document.getElementById("type")
-				if (taskId!=null) {
-					var url = "${contextPath}/afterloan/afterloancheck/insert_loanpage1.json?taskId=${taskId}&clientNo=${clientNo}&type=${type}";
-					$.ajax({
-						url : url,
-						type : "get",
-						success : function(data) {
-							if (data.success) {
-								topWin.Dialog.message("保存成功！");
-								window.location.href = "${contextPath}/afterloan/afterloancheck/loanpage0_display.page?taskId=${taskId}&clientNo=${clientNo}&type=$!{type}";
+				if ($($formName).valid()) {
+					var clientNo = document.getElementById("clientNo");
+					var taskId = document.getElementById("taskId");
+					var type = document.getElementById("type")
+					if (taskId!=null) {
+						var url = "${contextPath}/afterloan/afterloancheck/insert_loanpage1.json?taskId=${taskId}&clientNo=${clientNo}&type=${type}";
+						$.ajax({
+							url : url,
+							type : "get",
+							success : function(data) {
+								if (data.success) {
+									topWin.Dialog.message("提交成功！");
+									parent.window.location.href = "${contextPath}/afterloan/afterloancheck/browse.page";
+								}
+								else{
+									topWin.Dialog.message("保存失败！");
+							    }
+								submitFlag = 0;
 							}
-							else{
-								topWin.Dialog.message("保存失败！");
-						    }
-							submitFlag = 0;
-						}
-					});
+						});
+					}else{
+						submitFlag = 0;
+					}
 				}else{
 					submitFlag = 0;
 				}
+				
 			});
 			//返回
 			$("#id_back_button").click(function() {
@@ -204,12 +223,22 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 		});
 		function setSelect(obj,id){//其他证件类型、其他教育水平等
 			if(obj=="3"){
-				$("#"+id).removeAttr('disabled');
+				$("#"+id).removeAttr('readonly');
 			}
 			else{
 				$("#"+id).val('');
-				$("#"+id).attr('disabled','disabled');
+				$("#"+id).attr('readonly','readonly');
 			}
+		}
+		
+		//提交影像
+		function browseFolder(){
+			window.location.href = "${contextPath}/afterloan/afterloancheck/browse_folder.page?taskId=${taskId}&clientNo=${clientNo}&type=$!{type}";
+		}
+		
+		//查看影像
+		function displayServer(){
+			window.location.href = "${contextPath}/afterloan/afterloancheck/display_server.page?taskId=${taskId}&clientNo=${clientNo}&type=$!{type}&first_flag=1";
 		}
 	</script>	
 </body>

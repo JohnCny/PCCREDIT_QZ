@@ -16,8 +16,10 @@
 						<select name="bussType" id="jdlx" onchange="lxSelect()">
 							<option value="1">工薪类</option>
 							<option value="2">经营类</option>
+							<option value="3">工薪类(新版)</option>
+							<option value="4">经营类(新版)</option>
 						</select>
-						<input type="hidden" id="chkValue" name="chkValue" value="1">
+						<input type="hidden" id="chkValue" name="chkValue" value="0">
 					</td>
 				</tr>
 			</table>	
@@ -69,7 +71,7 @@
 				<tr>
 					<td>1</td>	
 					<td>合同扫描件</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="return false" value="1" checked/></td>						
+					<td><input type="checkbox" class="mustCheck" name="checkbox1" onclick="return false" value="1" checked/></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>			
@@ -80,31 +82,31 @@
 				<tr>
 					<td>1</td>	
 					<td>贷款申请表</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2" /></td>						
+					<td><input type="checkbox"  name="checkbox1"  value="2" /></td>						
 					<td>2</td>	
 					<td>调查报告</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4" /></td>				
+					<td><input type="checkbox" name="checkbox1"  value="4" /></td>				
 				</tr>				
 				<tr>
 					<td>3</td>	
 					<td>征信查询授权书</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8" /></td>						
+					<td><input type="checkbox" name="checkbox1"  value="8" /></td>						
 					<td>4</td>	
 					<td>工作底稿</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16" /></td>				
+					<td><input type="checkbox"name="checkbox1"  value="16" /></td>				
 				</tr>				
 				<tr>
 					<td>5</td>	
 					<td>信用报告及联网核查</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="32" /></td>						
+					<td><input type="checkbox"  name="checkbox1"  value="32" /></td>						
 					<td>6</td>	
 					<td>贷审小组决议表</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="64" /></td>				
+					<td><input type="checkbox" name="checkbox1"  value="64" /></td>				
 				</tr>				
 				<tr>
 					<td>7</td>	
 					<td>规范操作承诺书</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="128" /></td>						
+					<td><input type="checkbox" name="checkbox1"  value="128" /></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>				
@@ -116,38 +118,175 @@
 				<tr>
 					<td>1</td>	
 					<td>收入证明文件</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="256" /></td>						
+					<td><input type="checkbox"  name="checkbox1"  value="256" /></td>						
 					<td>2</td>	
 					<td>借款人资产文件、住址证明</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="512" /></td>				
+					<td><input type="checkbox" name="checkbox1"  value="512" /></td>				
 				</tr>				
 				<tr>
 					<td>3</td>	
 					<td>借款人及共同借款人身份证复印件</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="1024" /></td>						
+					<td><input type="checkbox" name="checkbox1"  value="1024" /></td>						
 					<td>4</td>	
 					<td>借款人及共同借款人婚姻状况证明</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2048" /></td>				
+					<td><input type="checkbox" name="checkbox1"  value="2048" /></td>				
 				</tr>				
 				<tr>
 					<td>5</td>	
 					<td>担保人及配偶身份证明复印件</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4096" /></td>						
+					<td><input type="checkbox" name="checkbox1"  value="4096" /></td>						
 					<td>6</td>	
 					<td>担保人及配偶婚姻状况说明</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8192" /></td>				
+					<td><input type="checkbox" name="checkbox1"  value="8192" /></td>				
 				</tr>				
 				<tr>
 					<td>7</td>	
 					<td>担保人收入证明</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16384" /></td>						
+					<td><input type="checkbox" name="checkbox1"  value="16384" /></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>				
 				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第四部分  其他</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>其他</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox1" onclick="return false" value="1073741824" checked/></td>						
+					<td></td>	
+					<td></td>	
+					<td></td>			
+				</tr>
 			</table>
 		</div>
-	<!--*************************************************************经营类*************************************************************-->
+		<!--*************************************************************工薪类新版*************************************************************-->
+		<div name="content" id="gxl_new">
+			<table class="myTable">
+				<colgroup>
+					<col width="10%">
+					<col width="40%">
+					<col width="10%">
+					<col width="40%">
+				</colgroup>
+				<tr>
+					<td class="tableTitle" colspan="4">工薪类</td>				
+				</tr>
+				<tr>
+					<td class="table-label">借款人姓名：</td>
+					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
+						<input type="hidden" name="clientName_new" value="$!customerInfo.chineseName"/></td>
+					<td class="table-label">身份证号码：</td>
+					<td><input type="text" value="$!customerInfo.cardId" readonly/>
+						<input type="hidden" name="globalId_new" value="$!customerInfo.cardId"/></td>			
+				</tr>
+			</table>
+			<table class="myTable" style="text-align:center;">
+				<colgroup>
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+				</colgroup>	
+				<tr>
+					<td class="tableTitle" colspan="6">资料清单</td>				
+				</tr>		
+				<tr>
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>	
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>					
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第一部分  业务信息</td>				
+				</tr>						
+				<tr>
+					<td>1</td>	
+					<td>贷款申请表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="1" checked/></td>						
+					<td>2</td>	
+					<td>调查报告</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="2" checked/></td>				
+				</tr>				
+				<tr>
+					<td>3</td>	
+					<td>征信查询授权书</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="4" checked/></td>						
+					<td>4</td>	
+					<td>工作底稿</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="8" checked/></td>				
+				</tr>				
+				<tr>
+					<td>5</td>	
+					<td>信用报告及联网核查</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="16" checked/></td>						
+					<td>6</td>	
+					<td>贷审小组决议表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="32" checked/></td>				
+				</tr>				
+				<tr>
+					<td>7</td>	
+					<td>规范操作承诺书</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="64" checked/></td>						
+					<td></td>	
+					<td></td>	
+					<td></td>				
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第二部分  客户资料</td>				
+				</tr>					
+								
+				<tr>
+					<td>1</td>	
+					<td>收入证明文件</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="128" checked/></td>						
+					<td>2</td>	
+					<td>借款人资产文件、住址证明</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="256" checked/></td>				
+				</tr>				
+				<tr>
+					<td>3</td>	
+					<td>借款人及共同借款人身份证复印件</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="512" checked/></td>						
+					<td>4</td>	
+					<td>借款人及共同借款人婚姻状况证明</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="1024" checked/></td>				
+				</tr>				
+				<tr>
+					<td>5</td>	
+					<td>担保人及配偶身份证明复印件</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="2048" checked/></td>						
+					<td>6</td>	
+					<td>担保人及配偶婚姻状况说明</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="4096" checked/></td>				
+				</tr>				
+				<tr>
+					<td>7</td>	
+					<td>担保人收入证明</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false"  value="8192" checked/></td>						
+					<td></td>	
+					<td></td>	
+					<td></td>				
+				</tr>
+				
+				<tr>
+					<td class="tableTitle" colspan="6">第三部分  佐证资料</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>其他</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false" value="16384" checked/></td>						
+					<td></td>	
+					<td></td>	
+					<td></td>			
+				</tr>
+			</table>
+		</div>
+	<!--*************************************************************经营类旧版*************************************************************-->
 		<div name="content" id="jyl" style="display:none;">
 			<table class="myTable">
 				<colgroup>
@@ -157,7 +296,7 @@
 					<col width="40%">
 				</colgroup>
 				<tr>
-					<td class="tableTitle" colspan="4">经营类</td>				
+					<td class="tableTitle" colspan="4">经营类(旧版)</td>				
 				</tr>
 				<tr>
 					<td class="table-label">公司名称：</td>
@@ -194,7 +333,7 @@
 				<tr>
 					<td>1</td>	
 					<td>合同扫描件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="return false" value="1" checked/></td>						
+					<td><input type="checkbox" class="mustCheck" name="checkbox2" onclick="return false" value="1" checked/></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>			
@@ -205,31 +344,31 @@
 				<tr>
 					<td>1</td>	
 					<td>申请表</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="2" /></td>						
 					<td>2</td>	
 					<td>调查报告</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="4" /></td>				
 				</tr>				
 				<tr>
 					<td>3</td>	
 					<td>征信查询授权书</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="8" /></td>						
 					<td>4</td>	
 					<td>工作底稿</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="16" /></td>				
 				</tr>				
 				<tr>
 					<td>5</td>	
 					<td>信用报告及联网核查</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="32" /></td>						
 					<td>6</td>	
 					<td>贷审小组决议表</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="64" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="64" /></td>				
 				</tr>				
 				<tr>
 					<td>7</td>	
 					<td>规范操作承诺书</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="128" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="128" /></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>				
@@ -240,50 +379,218 @@
 				<tr>
 					<td>1</td>	
 					<td>营业执照（副本）复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="256" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="256" /></td>						
 					<td>2</td>	
 					<td>税务登记证（副本）复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="512" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="512" /></td>				
 				</tr>				
 				<tr>
 					<td>3</td>	
 					<td>组织机构代码证（副本）复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="1024" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="1024" /></td>						
 					<td>4</td>	
 					<td>贷款卡及年检报告复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2048" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="2048" /></td>				
 				</tr>				
 				<tr>
 					<td>5</td>	
 					<td>公司章程（包括验资报告复印件）</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4096" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="4096" /></td>						
 					<td>6</td>	
 					<td>股东会或董事会决议原件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8192" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="8192" /></td>				
 				</tr>				
 				<tr>
 					<td>7</td>	
 					<td>法定代表人身份证明文件复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16384" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="16384" /></td>						
 					<td>8</td>	
 					<td>股东身份证明复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32768" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="32768" /></td>				
 				</tr>				
 				<tr>
 					<td>9</td>	
 					<td>担保人身份证明复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="65536" /></td>						
+					<td><input type="checkbox" name="checkbox2"  value="65536" /></td>						
 					<td>10</td>	
 					<td>担保人贷款卡复印件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="131072" /></td>				
+					<td><input type="checkbox" name="checkbox2"  value="131072" /></td>				
 				</tr>				
 				<tr>
 					<td>11</td>	
 					<td>担保人收入证明</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="262144"/></td>						
+					<td><input type="checkbox" name="checkbox2"  value="262144"/></td>						
 					<td>12</td>	
 					<td>信用等级证复印件（如有）</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="getSum(2);" value="524288"/></td>				
+					<td><input type="checkbox" name="checkbox2"  value="524288"/></td>				
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第四部分  其他</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>其他</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox2" onclick="return false" value="1073741824" checked/></td>						
+					<td></td>	
+					<td></td>	
+					<td></td>			
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!--*************************************************************经营类新版*************************************************************-->
+		<div name="content" id="jyl_new" style="display:none;">
+			<table class="myTable">
+				<colgroup>
+					<col width="10%">
+					<col width="40%">
+					<col width="10%">
+					<col width="40%">
+				</colgroup>
+				<tr>
+					<td class="tableTitle" colspan="4">经营类(新版)</td>				
+				</tr>
+				<tr>
+					<td class="table-label">公司名称：</td>
+					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/>
+						<input type="hidden" name="shopName" value="$!qzApplnJyxx.bussName" /></td>
+					<td class="table-label">营业执照号：</td>
+					<td><input type="text" id="shopId" name="shopId"/></td>			
+					
+				</tr>
+			</table>
+			<table class="myTable" style="text-align:center;">
+				<colgroup>
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+				</colgroup>	
+				<tr>
+					<td class="tableTitle" colspan="6">资料清单</td>				
+				</tr>		
+				<tr>
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>	
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>					
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第一部分  业务资料</td>				
+				</tr>						
+				<tr>
+					<td>1</td>	
+					<td>个人微贷业务申请表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1" checked/></td>						
+					<td>2</td>	
+					<td>客户信息调查表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2" checked/></td>				
+				</tr>				
+				<tr>
+					<td>3</td>	
+					<td>资产负债表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4" checked/></td>						
+					<td>4</td>	
+					<td>损益表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8" checked/></td>				
+				</tr>				
+				<tr>
+					<td>5</td>	
+					<td>库存清单</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16" checked/></td>						
+					<td>6</td>	
+					<td>贷款用途申明书</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32" checked/></td>				
+				</tr>				
+				<tr>
+					<td>7</td>	
+					<td>规范操作承诺书</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="64" checked/></td>	
+					<td>8</td>	
+					<td>存量授信业务客户信息调查表</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="128" checked/></td>				
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第二部分  客户资料</td>				
+				</tr>			
+				<tr>					
+					<td>1</td>	
+					<td>征信授权书</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="256" checked/></td>	
+					<td>2</td>	
+					<td>借款人及配偶身份证</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="512" checked/></td>				
+				</tr>				
+				<tr>					
+					<td>3</td>	
+					<td>借款人及配偶征信报告</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1024" checked/></td>
+					<td>4</td>	
+					<td>担保人信息表、身份证、征信报告</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2048" checked/></td>				
+				</tr>				
+				<tr>					
+					<td>5</td>	
+					<td>企业征信报告</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4096" checked/></td>	
+					<td>6</td>	
+					<td>婚姻证明</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8192" checked/></td>				
+				</tr>				
+				<tr>					
+					<td>7</td>	
+					<td>户口证件</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16384" checked/></td>	
+					<td>8</td>	
+					<td>被执行人网查</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32768" checked/></td>				
+				</tr>				
+				<tr>					
+					<td>9</td>	
+					<td>营业执照</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="65536" checked/></td>		
+					<td>10</td>	
+					<td>工商信息查询</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="131072" checked/></td>				
+				</tr>				
+				<tr>					
+					<td>11</td>	
+					<td>租赁合同</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="262144" checked/></td>							
+					<td>12</td>	
+					<td>其他</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="524288" checked/></td>		
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第三部分  佐证资料</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>资产证明</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1048576" checked/></td>						
+					<td>2</td>	
+					<td>营业单据</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2097152" checked/></td>			
+				</tr>
+				<tr>
+					<td>3</td>	
+					<td>银行流水</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4194304" checked/></td>						
+					<td>4</td>	
+					<td>照片</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8388608" checked/></td>			
+				</tr>
+				<tr>
+					<td>5</td>	
+					<td>借款合同</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16777216" checked/></td>						
+					<td>6</td>	
+					<td>其他</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1073741824" checked/></td>			
 				</tr>
 			</table>
 		</div>
@@ -323,14 +630,42 @@
 			if($("#jdlx option:selected").text()=="工薪类"){
 				$("#gxl").show();
 				$("#jyl").hide();
-				$("input[type=checkbox][name=checkbox2]:checked").attr("checked",false);
+				$("#gxl_new").hide();
+				$("#jyl_new").hide();
+				$("input[type=checkbox][name=checkbox2][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox3][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox4][class!=mustCheck]:checked").attr("checked",false);
 				getSum(1);
 			}
 			if($("#jdlx option:selected").text()=="经营类"){
 				$("#gxl").hide();
 				$("#jyl").show();
-				$("input[type=checkbox][name=checkbox1]:checked").attr("checked",false);
+				$("#gxl_new").hide();
+				$("#jyl_new").hide();
+				$("input[type=checkbox][name=checkbox1][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox3][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox4][class!=mustCheck]:checked").attr("checked",false);
 				getSum(2);
+			}
+			if($("#jdlx option:selected").text()=="工薪类(新版)"){
+				$("#gxl").hide();
+				$("#jyl").hide();
+				$("#gxl_new").show();
+				$("#jyl_new").hide();
+				$("input[type=checkbox][name=checkbox1][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox2][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox4][class!=mustCheck]:checked").attr("checked",false);
+				getSum(3);
+			}
+			if($("#jdlx option:selected").text()=="经营类(新版)"){
+				$("#gxl").hide();
+				$("#jyl").hide();
+				$("#gxl_new").hide();
+				$("#jyl_new").show();
+				$("input[type=checkbox][name=checkbox1][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox2][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox3][class!=mustCheck]:checked").attr("checked",false);
+				getSum(4);
 			}
 		}
 		
@@ -351,8 +686,21 @@
 		$(document).ready(function() {	
 			//保存
 			$("#id_save_button").click(function() {
+				if($("#jdlx option:selected").text()=="工薪类"){
+					getSum(1);
+				}
+				if($("#jdlx option:selected").text()=="经营类"){
+					getSum(2);
+				}
+				if($("#jdlx option:selected").text()=="工薪类(新版)"){
+					getSum(3);
+				}
+				if($("#jdlx option:selected").text()=="经营类(新版)"){
+					getSum(4);
+				}
+				
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;

@@ -1,7 +1,440 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cardpay.pccredit.intopieces.dao.IntoPiecesDao" >
+    
+    <resultMap id="BaseResultMap" type="com.cardpay.pccredit.intopieces.model.LocalExcelForm" >
+	    <id column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+	    <result column="CHINESE_NAME" property="customerName" jdbcType="VARCHAR" />
+	    <result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+	    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+	    <result column="APPLICATION_ID" property="applicationId" jdbcType="VARCHAR" />
+	    <result column="ATTACHMENT" property="attachment" jdbcType="VARCHAR" />
+	    <result column="URI" property="uri" jdbcType="VARCHAR" />
+	    <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
+  	</resultMap>
+    
+    <resultMap id="ResultMap" type="com.cardpay.pccredit.intopieces.model.IntoPieces">
+	    <result property="id" column="ID" />
+	    <result property="customerId" column="customer_id" />
+	    <result property="chineseName" column="chinese_name" />
+	    <result property="productId" column="product_id" />
+	    <result property="productName" column="product_name" />
+	    <result property="cardId" column="card_id" />
+	    <result property="applyQuota" column="apply_quota" />
+	    <result property="status" column="status" />
+	    <result property="statusName" column="status_name" />
+	    <result property="createTime" column="Created_Time" />
+	    <result property="nodeName" column="node_name" />
+	    <result property="loanStatus" column="loan_status" />
+	    <result property="isContinue" column="is_continue" />
+	    <result property="fallbackReason" column="fallback_reason" />
+	</resultMap>
+	
+	<resultMap id="ResultMapDshJyd" type="com.cardpay.pccredit.intopieces.model.QzApplnDshJyd">
+	    <result property="id" column="ID" />
+	    <result property="applicationId" column="application_id" />
+  		<result property="customerId" column="customer_id" />
+   		<result property="managerBrId" column="manager_br_id" />
+   		<result property="managerId" column="manager_id" />
+   		<result property="clientName" column="client_name" />
+   		<result property="discussItems" column="discuss_items" />
+   		<result property="sugAmt" column="sug_amt" />
+   		<result property="sugDeadline" column="sug_deadline" />
+   		<result property="sugRate" column="sug_rate" />
+   		<result property="loanUseType" column="loan_use_type" />
+   		<result property="repayType" column="repay_type" />
+   		<result property="coborrower1Name" column="coborrower_1_name" />
+   		<result property="coborrower1Cardid" column="coborrower_1_cardid" />
+   		<result property="coborrower2Name" column="coborrower_2_name" />
+   		<result property="coborrower2Cardid" column="coborrower_2_cardid" />
+   		<result property="guarantee1Name" column="guarantee_1_name" />
+   		<result property="guarantee1Cardid" column="guarantee_1_cardid" />
+   		<result property="guarantee2Name" column="guarantee_2_name" />
+   		<result property="guarantee2Cardid" column="guarantee_2_cardid" />
+   		<result property="helpManagerName" column="help_manager_name" />
+   		<result property="verifyItems" column="verify_items" />
+   		<result property="amt" column="amt" />
+   		<result property="rate" column="rate" />
+   		<result property="deadline" column="deadline" />
+   		<result property="repaymentTerm" column="repayment_term" />
+   		<result property="sugRepayType" column="sug_repay_type" />
+   		<result property="guaranteeItems" column="guarantee_items" />
+   		<result property="focusContent" column="focus_content" />
+   		<result property="otherRequirement" column="other_requirement" />
+   		<result property="refuseReason" column="refuse_reason" />
+   		<result property="checkManagerId" column="check_manager_id" />
+   		<result property="subBranchManagerSug" column="sub_branch_manager_sug" />
+   		<result property="subBranchManagerId" column="sub_branch_manager_id" />
+	</resultMap>
+	
   <select id="checkValue" resultType="int">
   select count(1) from account_manager_parameter a, manager_customer_type c   where  a.level_information = c.level_id  and  a.user_id=#{userId} and c.customer_type =#{valueType} 
+  </select>
+  
+  <select id="findintoPiecesByFilterWF" resultMap="ResultMap">
+      SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+			FROM (
+		SELECT T.ID, T.customer_id, b.chinese_name, T.product_id, b.card_id, circle.CONTRACT_AMT as apply_quota, T.status, T.Created_Time ,circle.LOAN_STATUS,T.is_continue,
+		A.FALLBACK_REASON
+		FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID 
+		LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id 
+		left join CUSTOMER_APPLICATION_PROCESS A on A.APPLICATION_ID = circle.application_id 
+		where b.user_id = #{userId}
+		
+		<if test="chineseName != null and chineseName != '' ">
+		    and b.chinese_name like '%'||#{chineseName}||'%' 
+		</if>
+		<if test="cardId != null and cardId != '' ">
+		    and b.card_id like '%'||#{cardId}||'%' 
+		</if>
+		<if test="status != null and status != '' ">
+		    <if test="status == 'audit' ">
+				and (T.status=#{status} or T.status='RETURNAPPROVE')
+			</if>
+			<if test="status != 'audit' ">
+				and T.status=#{status}
+			</if>
+		</if>
+		<if test="isContinue != null and isContinue != '' ">
+		    <if test="isContinue == 'YES' ">
+				and T.IS_CONTINUE is not null
+			</if>
+			<if test="isContinue == 'NO' ">
+				and T.IS_CONTINUE is null
+			</if>
+		</if>
+			<![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+	</select>
+	
+  <select id="findCountintoPiecesByFilterWF" resultType="int">
+		 select count(*) 
+		FROM 
+		(
+		SELECT T.ID, T.customer_id, b.chinese_name, T.product_id, b.card_id, circle.CONTRACT_AMT as apply_quota, T.status, T.Created_Time,T.is_continue
+		FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID 
+		LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id 
+		where b.user_id = #{userId} 
+		
+		<if test="chineseName != null and chineseName != '' ">
+		    and b.chinese_name like '%'||#{chineseName}||'%' 
+		</if>
+		<if test="cardId != null and cardId != '' ">
+		    and b.card_id like '%'||#{cardId}||'%' 
+		</if>
+		<if test="status != null and status != '' ">
+		    <if test="status == 'audit' ">
+				and (T.status=#{status} or T.status='RETURNAPPROVE')
+			</if>
+			<if test="status != 'audit' ">
+				and T.status=#{status}
+			</if>
+		</if>
+		<if test="isContinue != null and isContinue != '' ">
+		    <if test="isContinue == 'YES' ">
+				and T.IS_CONTINUE is not null
+			</if>
+			<if test="isContinue == 'NO' ">
+				and T.IS_CONTINUE is null
+			</if>
+		</if>
+		)
+	</select>
+	
+ 	 <select id="findintoPiecesAllByFilter" resultMap="ResultMap">
+ 	     
+      SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+			FROM (
+			
+      	SELECT T.ID, T.customer_id, b.chinese_name, T.product_id, b.card_id, circle.CONTRACT_AMT as apply_quota, T.status,T.is_continue,approve.start_examine_time
+      	FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID 
+      	<if test="chineseName != null and chineseName != '' ">
+		    and b.chinese_name like '%'||#{chineseName}||'%' 
+		</if>
+		<if test="cardId != null and cardId != '' ">
+		    and b.card_id like '%'||#{cardId}||'%' 
+		</if>
+		<if test="status != null and status != '' ">
+		    <if test="status == 'audit' ">
+				and (T.status=#{status} or T.status='RETURNAPPROVE')
+			</if>
+			<if test="status != 'audit' ">
+				and T.status=#{status}
+			</if>
+		</if>
+		<if test="isContinue != null and isContinue != '' ">
+		    <if test="isContinue == 'YES' ">
+				and T.IS_CONTINUE is not null
+			</if>
+			<if test="isContinue == 'NO' ">
+				and T.IS_CONTINUE is null
+			</if>
+		</if>
+		<if test="cus_mgr_id != null and cus_mgr_id != '' ">
+		    and b.user_id = #{cus_mgr_id}
+		</if>
+		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
+			<if test='filterTeamLeader=="1"'>
+				and b.user_id in ( 
+					select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+					mbm.child_id 
+					FROM 
+					manager_belong_map mbm 
+					LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+					WHERE 
+					amp.user_id = #{userId})
+					union select #{userId} as user_id from dual)
+			</if>
+		</if>
+		LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id 
+		left join(
+		    select
+		       t.start_examine_time,
+		       aa.application_id
+		  from wf_status_queue_record t
+		  left join wf_status_info s on t.current_status = s.id
+		  left join wf_process_record pr on t.current_process = pr.id
+		  left join customer_application_process aa on pr.id = aa.serial_number
+		 where s.status_name in('中心终审','行长')
+		   and t.examine_result = 'APPROVE') approve on approve.application_id = T.id
+   
+		where 1=1
+		<if test="productId != null and productId != '' ">
+		     and T.product_id = #{productId} 
+		</if>
+		
+		<if test="check_approve_flag != null and check_approve_flag != '' ">
+		     and approve.start_examine_time between #{startDate} and #{endDate}
+		</if>
+		
+		order by T.created_time desc
+		
+		<![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+      </select>
+      
+ 	 <select id="findintoPiecesAllCountByFilter" resultType="int">
+      	SELECT count(*)
+      	FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID 
+      	<if test="chineseName != null and chineseName != '' ">
+		    and b.chinese_name like '%'||#{chineseName}||'%' 
+		</if>
+		<if test="cardId != null and cardId != '' ">
+		    and b.card_id like '%'||#{cardId}||'%' 
+		</if>
+		<if test="status != null and status != '' ">
+		    <if test="status == 'audit' ">
+				and (T.status=#{status} or T.status='RETURNAPPROVE')
+			</if>
+			<if test="status != 'audit' ">
+				and T.status=#{status}
+			</if>
+		</if>
+		<if test="isContinue != null and isContinue != '' ">
+		    <if test="isContinue == 'YES' ">
+				and T.IS_CONTINUE is not null
+			</if>
+			<if test="isContinue == 'NO' ">
+				and T.IS_CONTINUE is null
+			</if>
+		</if>
+		<if test="cus_mgr_id != null and cus_mgr_id != '' ">
+		    and b.user_id = #{cus_mgr_id}
+		</if>
+		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
+			<if test='filterTeamLeader=="1"'>
+				and b.user_id in ( 
+					select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+					mbm.child_id 
+					FROM 
+					manager_belong_map mbm 
+					LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+					WHERE 
+					amp.user_id = #{userId})
+					union select #{userId} as user_id from dual)
+			</if>
+		</if>
+		
+		LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id 
+		left join(
+		    select
+		       t.start_examine_time,
+		       aa.application_id
+		  from wf_status_queue_record t
+		  left join wf_status_info s on t.current_status = s.id
+		  left join wf_process_record pr on t.current_process = pr.id
+		  left join customer_application_process aa on pr.id = aa.serial_number
+		 where s.status_name  in('中心终审','行长')
+		   and t.examine_result = 'APPROVE') approve on approve.application_id = T.id
+   
+		where 1=1
+		<if test="productId != null and productId != '' ">
+		     and T.product_id = #{productId} 
+		</if>
+		
+		<if test="check_approve_flag != null and check_approve_flag != '' ">
+		     and approve.start_examine_time between #{startDate} and #{endDate}
+		</if>
+		
+		order by T.created_time desc
+      </select>
+      
+ 	 <select id="findBelogCusMgr" resultType="com.cardpay.pccredit.system.model.Dict">
+ 	     select su.id as TypeCode, su.display_name as TypeName
+		  from ACCOUNT_MANAGER_PARAMETER amp
+		  left join sys_user su on amp.user_id = su.id
+		 where amp.id in
+		       (SELECT mbm.child_id
+		          FROM manager_belong_map mbm
+		          LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id
+		         WHERE amp.user_id =#{userId})
+		         or amp.id = #{userId}
+ 	 </select>
+ 	 
+ 	 <select id="getApprovedInfo" resultType="com.cardpay.pccredit.intopieces.model.ApprovedInfo">
+ 	     
+ 	     with circle as (
+ 	     select 
+ 	     	CIRCLE.*,
+ 	     	CAI.PRODUCT_ID,
+ 	     	pa.product_name as productName,
+ 	     	su.display_name || '(' || su.login || ')' as displayName,
+ 	     	bci.user_id as manager_id,
+ 	     	to_number(to_char(sysdate,'yyyy'))-to_number(substr(circle.global_Id,7,4)) as age,
+ 	     	ywsqb.phone_1,  
+			ywsqb.address as homeAddr,  
+ 	     	jyxx.buss_Addr,
+ 	     	jyxx.buss_Phone,
+ 	     	leco.jynx,
+ 	     	jyxx.buss_scope,
+ 	     	leco.zc,
+ 	     	leco.qy,
+ 	     	leco.zcfzl,
+ 	     	leco.yye,
+ 	     	leco.nkzpsl,
+ 	     	ywsqb.marital_Name,
+            jyd.psjy,
+            cai.is_continue,
+            ecif.REG_PERM_RESIDENCE_1 as jiguan1,
+            ecif.REG_PERM_RESIDENCE_2 as jiguan2,
+            ecif.REG_PERM_RESIDENCE_3 as jiguan3,
+            circle.loan_Direction_1 as loanDirection1,
+            circle.loan_Direction_2 as loanDirection2,
+            circle.loan_Direction_3 as loanDirection3,
+            circle.loan_Direction_4 as loanDirection4
+ 	     	
+ 	      from CUSTOMER_APPLICATION_INFO cai 
+		 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+		 left join QZ_IESB_FOR_ecif ecif on CAI.customer_id = ecif.customer_id
+		 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+		 left join qz_appln_jyxx jyxx on cai.customer_id = jyxx.customer_id   
+		 left join qz_appln_ywsqb ywsqb on cai.id = ywsqb.application_id
+     	 left join qz_appln_jyd jyd on cai.id = jyd.application_id
+     	 left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+     	 left join sys_user su on su.id = bci.user_id
+     	 left join local_excel_collect_field leco on cai.id = leco.application_id
+		 where CAI.STATUS = 'approved')
+
+SELECT ROW_.*,ROWNUM rowindex
+			FROM (
+			
+ 	     select 
+ 	     circle.client_name as clientName,
+ 	     circle.productName,
+ 	     circle.displayName,
+ 	     circle.global_Id as globalId,
+ 	     circle.age,
+ 	     circle.phone_1 as mobile, 
+ 	     circle.homeAddr,
+ 	     circle.buss_Addr as bussAddr,
+ 	     circle.buss_Phone as bussPhone,
+ 	     circle.marital_Name as maritalName,
+ 	     
+ 	     circle.CARD_NO as cardNo,
+ 	     circle.buss_scope as bussType,
+ 	     circle.jynx as bussYear,
+ 	     circle.yye as yearIncome,
+ 	     circle.zc as totalAssets,
+ 	     circle.qy,
+ 	     circle.nkzpsl,
+ 	     circle.zcfzl as fzbl,
+ 	     circle.psjy as psyj,
+ 	     circle.contract_Amt as loanAmt,
+ 	     to_char(circle.start_Date,'yyyy-MM-dd') as loanStartTerm,
+ 	     to_char(circle.end_Date,'yyyy-MM-dd') as loanEndTerm,
+ 	     circle.term as loanRepayTerm,
+ 	     circle.is_continue as isContinue,
+ 	     circle.jiguan1,
+ 	     circle.jiguan2,
+ 	     circle.jiguan3,
+ 	     circle.loanDirection1,
+ 	     circle.loanDirection2,
+ 	     circle.loanDirection3,
+ 	     circle.loanDirection4
+ 	     from circle
+ 	     ) ROW_
+ 	 </select>
+ 	 
+ 	 <select id="findByApplication" resultType="com.cardpay.pccredit.intopieces.model.LocalExcel">
+    select
+    id,
+    application_id as applicationId, 
+    customer_id as customerId,
+    product_id as productId,
+    sheet_khxx as sheetKhxx,
+	sheet_zcfz as sheet_zcfz,
+	sheet_sy as sheetSy,
+	uri,
+	attachment,
+	encode_type as encodeType,
+	decode_type as decodeType
+    from local_excel
+    where application_id=#{applicationId}
+  </select>
+  
+  <select id="findLocalExcelForm" resultMap="BaseResultMap">
+      SELECT * FROM
+		(SELECT ROW_.*,ROWNUM ROWNUM_
+		FROM (
+		    select t.id,
+		    t.customer_id,
+		    t.product_id,
+		    t.attachment,
+		    t.uri,
+		    t.application_id,
+		    t.created_time,
+		    bci.chinese_name,pa.product_name
+		    from local_excel t
+		    left join BASIC_CUSTOMER_INFORMATION bci on t.customer_id = bci.id
+		    left join PRODUCT_ATTRIBUTE pa on t.product_id = pa.id
+		    where 
+		    product_id=#{productId} and customer_id=#{customerId}
+		    
+		    <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+  </select>
+  
+  <select id="findCountByProductAndCustomer" resultType="int">
+    select count(0) from local_excel
+    where 
+    product_id=#{productId} and customer_id=#{customerId}
+  </select>
+  
+   <select id="findDsh10JydByAppId" resultMap="ResultMapDshJyd">
+    select * from QZ_APPLN_DSH_JYD
+    where 
+    application_id = #{appId}
   </select>
 </mapper>

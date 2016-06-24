@@ -19,6 +19,7 @@ import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
 import com.cardpay.pccredit.divisional.constant.DivisionalConstant;
 import com.cardpay.pccredit.divisional.filter.DivisionalFilter;
+import com.cardpay.pccredit.divisional.model.Divisional;
 import com.cardpay.pccredit.divisional.model.DivisionalWeb;
 import com.cardpay.pccredit.divisional.service.DivisionalService;
 import com.cardpay.pccredit.system.model.Dict;
@@ -32,7 +33,11 @@ import com.wicresoft.jrad.base.web.controller.BaseController;
 import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.security.LoginManager;
 import com.wicresoft.jrad.base.web.utility.WebRequestHelper;
+import com.wicresoft.jrad.modules.privilege.filter.OrganizationFilter;
+import com.wicresoft.jrad.modules.privilege.model.Organization;
 import com.wicresoft.jrad.modules.privilege.model.User;
+import com.wicresoft.jrad.modules.privilege.service.OrganizationService;
+import com.wicresoft.jrad.modules.privilege.service.UserService;
 import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 import com.wicresoft.util.web.RequestHelper;
@@ -52,6 +57,10 @@ public class DivisionalController extends BaseController{
 
 	@Autowired
 	private CustomerInforService customerInforservice;
+	@Autowired
+	private OrganizationService organizationService;
+	@Autowired
+	private UserService userService;
 	/**
 	 * 浏览页面
 	 * 
@@ -61,14 +70,13 @@ public class DivisionalController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browse(@ModelAttribute DivisionalFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user =Beans.get(LoginManager.class).getLoggedInUser(request);
-		String orgId = user.getOrganization().getId();
-		filter.setCurrentOrganizationId(orgId);
-		filter.setDivisionalProgress(DivisionalConstant.CHARGE);
-		QueryResult<DivisionalWeb> result = divisionalservice.findDivisional(filter);
+		//String orgId = user.getOrganization().getId();
+		//filter.setCurrentOrganizationId(orgId);
+		//filter.setDivisionalProgress(DivisionalConstant.CHARGE);
+		QueryResult<DivisionalWeb> result = divisionalservice.findDivisional_qz(filter);
 		JRadPagedQueryResult<DivisionalWeb> pagedResult = new JRadPagedQueryResult<DivisionalWeb>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/divisional/customerallot/customerallot_browse", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
@@ -83,7 +91,6 @@ public class DivisionalController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "divisional.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISTRIBUTION)
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/divisional/customerallot/customerallot_divisional", request);
 		String divisionalId = RequestHelper.getStringValue(request, ID);
@@ -102,6 +109,38 @@ public class DivisionalController extends BaseController{
 		mv.addObject(DivisionalConstant.ID,divisionalId);
 		return mv;
 	}
+	
+	/**
+	 * 
+	 * 客户经理分配-信贷
+	 * @param filter
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "divisional_xd.page", method = { RequestMethod.GET })
+	public AbstractModelAndView divisional_xd(HttpServletRequest request) {
+		JRadModelAndView mv = new JRadModelAndView("/divisional/customerallot/customerallot_xd_divisional", request);
+		String divisionalId = RequestHelper.getStringValue(request, ID);
+		Divisional divisional = divisionalservice.findDivisinalById(divisionalId);
+		
+		CustomerInforWeb customerInforWeb = null;
+		if (StringUtils.isNotEmpty(divisionalId)) {
+			String customerInforId = divisionalservice.findCustomerIdById(divisionalId);
+			customerInforWeb = customerInforservice.findCustomerInforWebById(customerInforId);
+		}
+		mv.addObject(DivisionalConstant.CUSTOMERINFOR, customerInforWeb);
+		mv.addObject(DivisionalConstant.ID,divisionalId);
+		mv.addObject("divisional",divisional);
+		//查找机构
+		Organization org = organizationService.getOrganizationById(divisional.getCurrentOrganizationId());
+		mv.addObject("org",org);
+		//查找用户
+		User user = userService.getUserById(divisional.getCustomerManagerId());
+		mv.addObject("user",user);
+		return mv;
+	}
+	
 	/**
 	 * 提交分配结果 
 	 * @param request
@@ -109,7 +148,6 @@ public class DivisionalController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "divisional.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISTRIBUTION)
 	public Map<String, Object> divisional(@ModelAttribute DivisionalForm form,HttpServletRequest request) {
 		Map<String, Object> returnMap = new HashMap<String,Object>();
 		IUser user =(User)Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -117,20 +155,70 @@ public class DivisionalController extends BaseController{
 		String id = form.getId();
 		String customerManagerId = form.getCustomerManagerId();
 		try{
-			int i = divisionalservice.updateDivisional(id, customerManagerId, orgId,DivisionalConstant.DISTRIBUTION);
-			if(i>0){
-				returnMap.put(JRadConstants.SUCCESS, true);
-				returnMap.put(JRadConstants.MESSAGE,DivisionalConstant.DIVISIONALSUCCESS);
-			}else{
-				returnMap.put(JRadConstants.SUCCESS, false);
-				returnMap.put(JRadConstants.MESSAGE,DivisionalConstant.DIVISIONALERROR);
-			}
+			divisionalservice.updateDivisional(id, customerManagerId, orgId,DivisionalConstant.DISTRIBUTION);
+			returnMap.put(JRadConstants.SUCCESS, true);
+			returnMap.put(JRadConstants.MESSAGE,DivisionalConstant.DIVISIONALSUCCESS);
 		}catch(Exception e){
+			returnMap.put(JRadConstants.SUCCESS, false);
+			returnMap.put(JRadConstants.MESSAGE,e.getMessage());
 			return WebRequestHelper.processException(e);
 		}
 		returnMap.put(RECORD_ID, id);
 		return returnMap;
-	}	
+	}
+	
+	/**
+	 * 提交分配结果 退回 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "divisional_refuse.json", method = { RequestMethod.GET })
+	public Map<String, Object> divisional_refuse(@ModelAttribute DivisionalForm form,HttpServletRequest request) {
+		Map<String, Object> returnMap = new HashMap<String,Object>();
+		//IUser user =(User)Beans.get(LoginManager.class).getLoggedInUser(request);
+		//String orgId = user.getOrganization().getId();
+		String id = form.getId();
+		//String customerManagerId = form.getCustomerManagerId();
+		try{
+			divisionalservice.returnDivisional(id,form.getCustomerId());
+			
+			returnMap.put(JRadConstants.SUCCESS, true);
+			returnMap.put(JRadConstants.MESSAGE,DivisionalConstant.DIVISIONALSUCCESS);
+		}catch(Exception e){
+			e.printStackTrace();
+			return WebRequestHelper.processException(e);
+		}
+		returnMap.put(RECORD_ID, id);
+		return returnMap;
+	}
+	
+	/**
+	 * 提交分配结果 -信贷
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "divisional_xd.json", method = { RequestMethod.GET })
+	public Map<String, Object> divisional_xd_json(@ModelAttribute DivisionalForm form,HttpServletRequest request) {
+		Map<String, Object> returnMap = new HashMap<String,Object>();
+		IUser user =(User)Beans.get(LoginManager.class).getLoggedInUser(request);
+		String orgId = user.getOrganization().getId();
+		String id = form.getId();
+		String customerManagerId = form.getCustomerManagerId();
+		try{
+			divisionalservice.updateDivisional(id, customerManagerId, orgId,DivisionalConstant.DISTRIBUTION);
+			returnMap.put(JRadConstants.SUCCESS, true);
+			returnMap.put(JRadConstants.MESSAGE,DivisionalConstant.DIVISIONALSUCCESS);
+		}catch(Exception e){
+			returnMap.put(JRadConstants.SUCCESS, false);
+			returnMap.put(JRadConstants.MESSAGE,e.getMessage());
+			//return WebRequestHelper.processException(e);
+		}
+		returnMap.put(RECORD_ID, id);
+		return returnMap;
+	}
+	
 	/**
 	 * 上传到卡中心 
 	 * @param request

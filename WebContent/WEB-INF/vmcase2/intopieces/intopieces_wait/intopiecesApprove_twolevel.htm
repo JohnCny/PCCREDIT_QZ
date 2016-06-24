@@ -32,7 +32,7 @@
   <div class="content_main">
     <div class="contentinner">
       <div class="place">
-        <div class="title">二级支行审批进件</div>
+        <div class="title">团队长审批进件(安居贷)</div>
       </div>
       <div class="inquiry">
        <div class="search_tag">进件查询</div>
@@ -163,6 +163,8 @@
 		<a id="id_reject_button" class="btn_g" title="拒件">拒件</a>
         <a id="id_return_to_cu_button" class="btn_g" href="javascript:void(0);"  title="补充上会">补充上会</a>-->
         <!--  <a id="id_chureject_button" class="btn_g" title="初审拒件记录">初审拒件记录</a>-->
+         <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> -->
+          <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -177,6 +179,60 @@
 	window.top.currentWindow.setLayout(layout);
 
 	$(document).ready(function() {
+		
+		 var opsObj = new Object();
+			opsObj.formObj = $("#submitForm");
+			
+			
+			
+			//查看调查模板
+			$("#id_report_button").click(function() {
+				if ($(".checkbox :checked").length == 1) {
+					var rowid = $("input[name='checkbox']:checked").val();
+					var url = "${contextPath}/intopieces/intopiecesapprove/report_khxx.page?appId=" + rowid.split("@")[0];
+					
+					var isInRisk = false;
+	  				$.ajax({
+							url : "${contextPath}/intopieces/intopiecesapprove/isInBlacklist.json?id="+rowid.split("@")[0],
+							type : "get",
+							async: false,
+							success : function(data) {
+								if (data.success) {
+									if(data.isInList){
+										isInRisk = true;
+									}
+								}else{
+									window.top.Dialog.message("系统出现异常,请联系管理员");
+						    	}
+							}
+				    });
+	  				
+	  				if(isInRisk){
+	  				   window.top.Dialog.message("未导入调查模板");
+	  				   return;
+	  				}
+					
+					if (opsObj.formObj) {
+		                // 回调URL
+		                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+		                if (callBackUrlObj) {
+		                	if(url.indexOf("?")>=0){
+		                		url += "&" + $.param({
+			                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+			                    });
+		                	}else{
+			                    url += "?" + $.param({
+			                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+			                    });
+		                	}
+		                }
+		            }
+					window.location.href = url;
+				}
+				else{
+					Dialog.message("请选择一行!");
+				}
+		    });
 		
 		$('.dialog').hide();
 		$("#id_return_button").click(function() {
@@ -201,6 +257,30 @@
 	
 	});
 	
+	var idTmr = "";
+	function startExcel(){
+		var appId = null;
+		$("input[name='checkbox']:checked").each(function() {
+			appId = $(this).val().split("@")[0];
+		});
+		if(appId!=null){
+			var OExcel;
+			var oWorkbook;
+			oExcel = new ActiveXObject("Excel.Application");
+			var url = "${url}/system/startexcel/startExcel.json?appId="+appId;
+			oExcel.Workbooks.Open(url);
+			oExcel.DisplayAlerts = false;
+			oExcel.Visible = true;
+			idTmr = window.setInterval("Cleanup();",1000);
+		
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	function Cleanup(){
+		window.clearInterval(idTmr);
+		CollectGarbage();
+	}
 </script>
 
 </body>

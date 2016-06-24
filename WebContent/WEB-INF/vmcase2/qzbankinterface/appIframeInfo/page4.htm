@@ -49,7 +49,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">证件类型：<font color="#ff0000">*</font></td>
 					<td>
 						<select name="globalType">
-							<option value="001">身份证</option>
+							<option value="100">身份证</option>
 							<option value="130">户口簿</option>
 							<option value="140">护照</option>
 							<option value="026">其他</option>
@@ -232,7 +232,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td><input type="text" class="input" name="addr_1" /></td>	
-					<td><input type="text" class="input" name="price_1" /></td>					
+					<td><input type="text" class="input" name="fc_price_1" /></td>					
 					<td>
 						<select name="usrSituation_1">
 							<option value="1">自住</option>
@@ -267,7 +267,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				</tr>
 				<tr>
 					<td><input type="text" class="input" name="cardNo_1" /></td>	
-					<td><input type="text" class="input" name="price_1" /></td>	
+					<td><input type="text" class="input" name="jdc_price_1" /></td>	
 					<script>
 						document.write('<td><input type="text" class="input" value="'+timestr+'"name="buyDate_1" onmouseover="_calendar()" readonly/></td>');
 					</script>
@@ -306,7 +306,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 			//保存
 			$("#id_save_button").click(function() {
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;

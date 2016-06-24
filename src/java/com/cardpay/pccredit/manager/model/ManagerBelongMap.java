@@ -21,6 +21,8 @@ public class ManagerBelongMap extends BusinessModel{
 	private String childId;
 	
 	private Boolean isLeaf;
+	
+	private String centerName;
 
 	public String getParentId() {
 		return parentId;
@@ -45,4 +47,13 @@ public class ManagerBelongMap extends BusinessModel{
 	public void setIsLeaf(Boolean isLeaf) {
 		this.isLeaf = isLeaf;
 	}
+
+	public String getCenterName() {
+		return centerName;
+	}
+
+	public void setCenterName(String centerName) {
+		this.centerName = centerName;
+	}
+	
 }

@@ -8,6 +8,9 @@ public class SystemUserFilter extends BaseQueryFilter{
 	private String orgId;
 	
 	private String oname;
+	
+	private String displayName;
+	private String selectvaltmp;//已选择过的
 
 	public String getOrgId() {
 		return orgId;
@@ -24,6 +27,20 @@ public class SystemUserFilter extends BaseQueryFilter{
 	public void setOname(String oname) {
 		this.oname = oname;
 	}
-	
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public String getSelectvaltmp() {
+		return selectvaltmp;
+	}
+
+	public void setSelectvaltmp(String selectvaltmp) {
+		this.selectvaltmp = selectvaltmp;
+	}
 }

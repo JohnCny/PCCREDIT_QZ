@@ -25,7 +25,8 @@ public class MaintenanceAccountManagerComdao {
 	 * @return
 	 */
 	public List<MaintenanceAccountManager> getMaintenanceAccountManager(){
-		String sql = "select t.*,c.customer_type_code from maintenance_account_manager t,(select m.level_id,wm_concat(m.customer_type) as customer_type_code from manager_customer_type m group by m.level_id) c where t.hierarchy=c.level_id order by t.hierarchy asc";
+		String sql = "select t.*,c.customer_type_code from maintenance_account_manager t,(select m.level_id,m.customer_type as customer_type_code from manager_customer_type m) c where t.hierarchy=c.level_id order by t.hierarchy asc";
+		//String sql = "select t.*,c.customer_type_code from maintenance_account_manager t,(select m.level_id,wm_concat(m.customer_type) as customer_type_code from manager_customer_type m group by m.level_id) c where t.hierarchy=c.level_id order by t.hierarchy asc";
 		List<MaintenanceAccountManager> list = commonDao.queryBySql(MaintenanceAccountManager.class, sql, null);
 			return list;	
 		

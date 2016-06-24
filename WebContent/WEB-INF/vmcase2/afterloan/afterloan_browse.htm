@@ -22,9 +22,19 @@
                 <span>客户编号：<input type="text" id="clientNo" name="clientNo" value="$!result.filter.clientNo" /></span>
               </li>
               <li>
-                <span>检查类型：<select id="checkType" name="checkType">
+                <span>检查类型：
+                	<select id="checkType" name="checkType">
                        <option value="">请选择...</option>
 	                   #dict("TASK_TYPE", $!result.filter.checkType)
+	                </select>
+				</span>
+				</li>
+				<li>
+                <span>状态：
+                	<select id="status" name="status">
+                	   <option value="全部" #if($!result.filter.status=='全部') selected #end>请选择...</option>
+                       <option value="未完成" #if($!result.filter.status=='未完成') selected #end>未完成</option>
+	                   <option value="未通过" #if($!result.filter.status=='未通过') selected #end>未通过</option>
 	                </select>
 				</span>
 				</li>
@@ -80,11 +90,21 @@
               <td nowrap="nowrap">$!obj.chineseName</td>
               <td nowrap="nowrap">$!obj.cardId</td>
               <td nowrap="nowrap">$!obj.cusId</td>
+              #if($!obj.checkDescribe != $null)
+              <td nowrap="nowrap" title="$!obj.checkDescribe" >$!obj.checkDescribe</td>
+              #else
               <td nowrap="nowrap">#dictVal("TASK_TYPE",$!obj.taskType)</td>
+              #end
               <td nowrap="nowrap">$!obj.taskCreateDate</td>
               <td nowrap="nowrap">$format.formatNumber(2,$!obj.LoanTotlAmt)</td>
               <td nowrap="nowrap">$format.formatNumber(2,$!obj.loanBalance)</td>
-              <td nowrap="nowrap">#dictVal("APPROVE_STATUS",$!obj.approveStatus)</td>
+              <td nowrap="nowrap">
+              #if($!obj.fallbackReason != $null)
+              	未通过
+              #else
+              	未完成
+              #end
+              </td>
             </tr>
             #end
           </table>
@@ -115,6 +135,9 @@
 					var url="${contextPath}/afterloan/afterloancheck/iframe.page?id="+clientNo+"&cardId="+cardId+"&taskId="+taskId+"&type=write";
 					window.location.href = url;
 				}
+			}
+			else{
+				topWin.Dialog.message("请选择一条记录！");
 			}
 		});
 	});

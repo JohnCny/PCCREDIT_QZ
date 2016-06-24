@@ -40,9 +40,9 @@
             <tr style="display: none;">
             #end
             	<td><label>收息收款账号:</label><font color="#ff0000">*</font></td>
-              	<td><input type="text" name="acctNo1"/></td>
+              	<td><input type="text" name="acctNo1" #if($!pre_circle != $null) value="$!pre_circle.acctNo1" #end/></td>
               	<td><label>放款账号:</label><font color="#ff0000">*</font></td>
-              	<td><input type="text" name="acctNo2"/></td>
+              	<td><input type="text" name="acctNo2" #if($!pre_circle != $null) value="$!pre_circle.acctNo2" #end/></td>
             </tr>
              #if($!operate=="填写合同信息")
             <tr>
@@ -54,11 +54,11 @@
               <td><label>合同号:</label><font color="#ff0000">*</font></td>
               <td><input type="text" name="contractNo"/></td>
               <td><label>卡号:</label><font color="#ff0000">*</font></td>
-              <td><input type="text" name="cardNo"/></td>
+              <td><input type="text" name="cardNo" #if($!pre_circle != $null) value="$!pre_circle.cardNo" #end/></td>
             </tr>
             <tr>
               <td><label>担保方式:</label></td>
-              <td><select id="guaranteeMode" name="guaranteeMode" onchange="change_guaranteeMode(this);">#dict("ASSURE_MAIN", "")</select></td>
+              <td><select id="guaranteeMode" name="guaranteemode" onchange="change_guaranteeMode(this);">#dict("ASSURE_MAIN", "")</select></td>
               <td><label>担保方式细分:</label></td>
               <td><select id="guaranteeModeDetail" name="guaranteeModeDetail">#dict("ASSURE_MAIN_DETAILS", "")</select></td>
             </tr>
@@ -96,9 +96,9 @@
             </tr>
 			<tr>
               <td><label>登记人:</label><font color="#ff0000">*</font></td>
-              <td><input type="text" id="registeredId" name="registeredId" /></td>
+              <td><input type="text" id="registeredId" name="registeredId" readonly/></td>
 			  <td><label>登记机构:</label><font color="#ff0000">*</font></td>
-              <td><input type="text" id="registOrgNo" name="registOrgNo" /></td>
+              <td><input type="text" id="registOrgNo" name="registOrgNo" readonly/></td>
             </tr>
 			<tr>
               <td><label>入账机构码:</label><font color="#ff0000">*</font></td>
@@ -211,11 +211,7 @@
             </colgroup>
 			<tr>
               <td><label>客户号:</label></td>
-<<<<<<< HEAD
-              <td><input type="text" id="aClientNo" name="aClientNo" disabled/>
-=======
               <td><input type="text" id="aClientNo" name="aClientNo" readonly/>
->>>>>>> chinhBy-master
               <!--<input type="button" value="检测" onclick="checkClientNo()"></td>  -->
 			  <td><label>客户名称:</label><font color="#ff0000">*</font></td>
               <td><input type="text" id="clientName" name="clientName" readonly/></td>
@@ -257,18 +253,24 @@
              		2:<select id="regPermResidence_2" name="regPermResidence_2" style="width:28%;margin:2px;" onchange="change_regPermResidence_2(this.value);">#dict("INDIV_BRT_PLACE_LEVEL_2", "")</select>
              		3:<select id="regPermResidence_3" name="regPermResidence_3" style="width:28%;margin:2px;">#dict("INDIV_BRT_PLACE_LEVEL_3", "")</select>
               </td>
-			  <td><label>地址:</label><font color="#ff0000">*</font></td>
+			  <td><label>户籍地址:</label><font color="#ff0000">*</font></td>
               <td><input type="text" id="address" name="address"/></td>
             </tr>
 			<tr>
-              <td><label>出生日期:</label><font color="#ff0000">*</font></td>
+			  <td><label>行政区划:</label><font color="#ff0000">*</font></td>
+			  <td><input type="text" id="xzqh" name="xzqh" readonly/></td>
+			  <td><label>常住地址:</label><font color="#ff0000">*</font></td>
+              <td><input type="text" id="czdz" name="czdz"/></td>
+            </tr>
+            <tr>
+            	<td><label>出生日期:</label><font color="#ff0000">*</font></td>
               <td><input type="text" id="birthDate" name="birthDate" onmouseover="_calendar()" readonly/></td>
-			  <td><label>最高学历:</label></td>
-              <td><select id="education" name="education">#dict("INDIV_EDT", "")</select></td>
             </tr>
 			<tr>
               <td><label>最高学位:</label></td>
               <td><select id="degree" name="degree">#dict("INDIV_DGR", "")</select></td>
+              <td><label>最高学历:</label></td>
+              <td><select id="education" name="education">#dict("INDIV_EDT", "")</select></td>
             </tr>
 			<tr>
               <td><label>持卡情况:</label></td>
@@ -359,7 +361,7 @@
       <div class="submit controlbtn">
          <a id="id_save_button" class="btn_g" >保存</a>
          #if($!operate=="填写合同信息")
-         <a class="btn_g" id="id_zx_in_button">审批通过</a>
+         <a class="btn_g" id="id_zx_in_button">通过</a>
          <a class="btn_g" id="id_zx_return_button">退回</a>
          #else
          
@@ -412,11 +414,7 @@
 		
 		//保存按钮
 		$("#id_save_button").click(function() {
-			if(submitFlag == 1){
-				alert("请勿重复提交!")
-				return;
-			}
-			submitFlag = 1;
+			
 			if($("#selectClientNo").val() == 0){
 				alert("请先选择对应客户!")
 			}else{
@@ -447,7 +445,6 @@
 				
 				var leng = $("#cardIde").length;
 				if(leng > 0){
-					submitFlag = 0;
 					return;
 				}
 				else{
@@ -455,12 +452,13 @@
 						var formjson = $($formName).serialize();
 			   	          
 			   	       	var url = "${modulePath}/insert.json?customerId=${customerId}&appId=${appId}";
-			   	       	
+			   	     	Dialog.load();
 			   	       	$.ajax({
 							url : url,
 							type : "get",
 							data : formjson,
 							success : function(data) {
+								Dialog.closeLoad();
 								if (data.success) {
 									topWin.Dialog.message("保存成功！");
 									window.location.reload(true);
@@ -468,11 +466,8 @@
 								else{
 									topWin.Dialog.message("保存失败！");
 							    }
-								submitFlag = 0;
 							}
 						});
-					}else{
-						submitFlag = 0;
 					}
 				}
 			}
@@ -1022,7 +1017,9 @@
 		$("#regPermResidence_1").val(obj.regPermResidence_1);
 		$("#regPermResidence_2").val(obj.regPermResidence_2);
 		$("#regPermResidence_3").val(obj.regPermResidence_3);
+		$("#xzqh").val(obj.regPermResidence_3.split("_")[1]);
 		$("#address").val(obj.address);
+		$("#czdz").val(obj.address);
 		$("#birthDate").val(obj.birthDate);
 		$("#education").val(obj.educationLevel);//教育水平educationLevel
 		//$("#degree").val();

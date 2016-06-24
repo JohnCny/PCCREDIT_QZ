@@ -23,6 +23,7 @@ public class OClpmAccLoanFilter extends BaseQueryFilter{
 	//客户经理Id
 	private String userId;
 	
+	private String productId;
 	
 	public String getManagerId() {
 		return managerId;
@@ -61,6 +62,10 @@ public class OClpmAccLoanFilter extends BaseQueryFilter{
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
-	
+	public String getProductId() {
+		return productId;
+	}
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
 }

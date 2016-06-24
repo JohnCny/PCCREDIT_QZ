@@ -9,8 +9,15 @@
 <script src="${contextPath}/common/js/common/common.js"></script>
 <script src="${contextPath}/common/js/common/dialog.js"></script>
 <script type="text/javascript" src="${uicasePath}/js/adminLogin.js"></script>
-
+<script type="text/javascript">
+  var contextPath="${contextPath}";
+  var uicasePath="${uicasePath}";
+</script>
 <title>#i18n("system.title")</title>
+<style type="text/css">
+	label{line-height:38px}
+	.myselect{padding:5px;width:90px}
+</style>
 </head>
 
 <body class="loginPage">
@@ -51,10 +58,14 @@
                   </div>
                   <!-- <div class="error_info">密码错误！</div> -->
                   <div class="act clearfix">
-                    <div class="remember f_l">
-                      <label class="check"> <input type="checkbox" checked="checked" /> <a href="#">记住用户名</a>
-                      </label>
-                    </div>
+                 	<label>登录方式:</label>
+                  	<select class="myclass" name="loginType">
+                  		<option value="1">微贷登录</option>
+                  		<option value="2">统一门户登录</option>
+                  	</select>
+                    <!-- <div class="remember f_l">
+                      <label class="check"><input type="checkbox" checked="checked" /><a href="#">记住用户名</a></label>
+                    </div> -->
                     <a href="javascript:void(0);" class="login_btn">登&nbsp;录</a>
                   </div>
                   <!-- 美化checkbox  -->
@@ -76,8 +87,8 @@
                     <a href="#">忘记密码</a>
                     &nbsp;&nbsp;|&nbsp;
                     <a href="#">帮助</a>
-                    &nbsp;&nbsp;|&nbsp;
-                    <a href="intopieces/sqlinputupdate/ipad/sunds_ocx.page">影像控件下载</a>
+                    <!-- &nbsp;&nbsp;|&nbsp;
+                    <a href="intopieces/sqlinputupdate/ipad/sunds_ocx.page">影像控件下载</a> -->
                     
                   </div>
                 </div>

@@ -9,6 +9,7 @@ import com.wicresoft.util.annotation.Mapper;
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.afterloan.model.PspCheckTask;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
+import com.cardpay.pccredit.report.model.HomeTips;
 
 @Mapper
 public interface AfterLoanDao {
@@ -29,5 +30,12 @@ public interface AfterLoanDao {
 	public int findAferLoanCheckCountByUserId(@Param("userId") String userId);
 	
     //查询超过十天未做检查的任务
-	public int findAferLoanCheckRemindCount();
+	public int findAferLoanCheckRemindCount(@Param("limitdate") String limitdate,@Param("userId") String userId);
+	public List<HomeTips> findAferLoanCheckRemindCountTeam(@Param("enddate") String enddate,@Param("reminddate") String reminddate,@Param("userId") String userId);
+
+	public List<AfterLoaninfo> findAfterLoanHistoryTaskByFilter(AfterLoanCheckFilter filter);
+
+	public int findAfterLoanHistoryTaskCountByFilter(AfterLoanCheckFilter filter);
+
+	
 }

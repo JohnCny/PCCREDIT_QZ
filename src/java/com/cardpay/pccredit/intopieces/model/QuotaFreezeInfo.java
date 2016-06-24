@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.wicresoft.jrad.base.database.model.BusinessModel;
 
+//冻结流程和授信信息维护共用
 public class QuotaFreezeInfo extends BusinessModel{
 	
 	private static final long serialVersionUID = 1L;
@@ -19,6 +20,12 @@ public class QuotaFreezeInfo extends BusinessModel{
 	private String clientName;
 	private String contractAmt;
 	private String cardNo;
+	private String circleId;
+	private String processId;
+	private String processStatus;
+	private String operateType;
+	private String nodeName;
+	private String applyReason;
 	
 	public String getClientNo() {
 		return clientNo;
@@ -85,5 +92,41 @@ public class QuotaFreezeInfo extends BusinessModel{
 	}
 	public void setCardNo(String cardNo) {
 		this.cardNo = cardNo;
+	}
+	public String getProcessId() {
+		return processId;
+	}
+	public void setProcessId(String processId) {
+		this.processId = processId;
+	}
+	public String getCircleId() {
+		return circleId;
+	}
+	public void setCircleId(String circleId) {
+		this.circleId = circleId;
+	}
+	public String getProcessStatus() {
+		return processStatus;
+	}
+	public void setProcessStatus(String processStatus) {
+		this.processStatus = processStatus;
+	}
+	public String getOperateType() {
+		return operateType;
+	}
+	public void setOperateType(String operateType) {
+		this.operateType = operateType;
+	}
+	public String getNodeName() {
+		return nodeName;
+	}
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+	public String getApplyReason() {
+		return applyReason;
+	}
+	public void setApplyReason(String applyReason) {
+		this.applyReason = applyReason;
 	}
 }

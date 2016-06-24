@@ -33,7 +33,6 @@ import com.cardpay.pccredit.customer.filter.VideoAccessoriesFilter;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
@@ -49,6 +48,7 @@ import com.cardpay.pccredit.intopieces.service.AttachmentListService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -106,13 +106,15 @@ public class IntoPiecesShouxinControl extends BaseController {
 		String loginId = user.getId();
 		filter.setLoginId(loginId);
 		filter.setNodeName(Constant.status_shouxin);
-		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.recieveIntopieceWaitFormM(filter);
+		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.recieveIntopieceWaitForm(filter);
 		JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm> pagedResult = new JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm>(filter, result);
 
 		JRadModelAndView mv = new JRadModelAndView(
 				"/intopieces/intopieces_wait/intopiecesApprove_shouxin", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -261,13 +263,13 @@ public class IntoPiecesShouxinControl extends BaseController {
 			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
 			request.setAttribute("serialNumber", process.getSerialNumber());
 			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 			request.setAttribute("objection", "false");
 			//查找审批金额
 			Circle circle = circleService.findCircleByAppId(appId);
 			
 			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
+			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
 			returnMap.addGlobalMessage("保存失败");
@@ -288,25 +290,6 @@ public class IntoPiecesShouxinControl extends BaseController {
 	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
-<<<<<<< HEAD
-			int nodeNo=0;//授信审核
-			String appId = request.getParameter("appId");
-			String operate = request.getParameter("operate");
-			String nodeName = request.getParameter("nodeName");
-			if("授信审批".equals(operate)){
-				nodeNo = 4;
-			}else{//中心复核
-				nodeNo = 5;
-			}
-			if(Integer.parseInt(nodeName) > nodeNo){
-				returnMap.put(JRadConstants.SUCCESS, false);
-				returnMap.put(JRadConstants.MESSAGE, "退回进件不能退回至当前节点的后面~！");
-			}
-			if("1".equals(nodeName)){
-				intoPiecesService.checkDoNotToManager(appId,request,Integer.parseInt(nodeName),nodeNo);
-			}else{
-				intoPiecesService.returnAppln(appId, request,Integer.parseInt(nodeName),nodeNo);
-=======
 			int nodeNo=0;//授信审核	
 			String appId = request.getParameter("appId");
 			String operate = request.getParameter("operate");
@@ -316,7 +299,6 @@ public class IntoPiecesShouxinControl extends BaseController {
 				intoPiecesService.checkDoNotToManager(appId,request);
 			}else{
 				intoPiecesService.returnAppln(appId, request,nodeName);
->>>>>>> chinhBy-master
 			}
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
@@ -348,8 +330,8 @@ public class IntoPiecesShouxinControl extends BaseController {
 		IESBForECIFReturnMap ecif = eCIFService.findEcifMapByCustomerId(appInfo.getCustomerId());
 		mv.addObject("ecif",ecif);
 				
-		Circle circle = circleService.findCircleByClientNo(ecif.getClientNo());
-		mv.addObject("circle",circle);
+		List<Circle> circle_ls = circleService.findCircleByClientNo(ecif.getClientNo());
+		mv.addObject("circle",circle_ls.get(circle_ls.size()-1));
 		return mv;
 	}
 	
@@ -368,7 +350,8 @@ public class IntoPiecesShouxinControl extends BaseController {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {
 			try {
-				Circle circle = circleService.findCircleByClientNo(clientNo);
+				List<Circle> circle_ls = circleService.findCircleByClientNo(clientNo);
+				Circle circle = circle_ls.get(circle_ls.size()-1);
 				circle.setContractAmt(iesbForCircleForm.getContractAmt());
 				
 				circleService.updateCustomerInforCircle(circle);

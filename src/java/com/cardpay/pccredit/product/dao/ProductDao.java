@@ -8,6 +8,7 @@ import com.cardpay.pccredit.customer.web.CustomerInforForm;
 import com.cardpay.pccredit.product.filter.ProductFilter;
 import com.cardpay.pccredit.product.model.FilterDict;
 import com.cardpay.pccredit.product.model.ProductAttribute;
+import com.cardpay.pccredit.product.model.ProductStuf;
 import com.cardpay.pccredit.product.model.ProductsAgencyAssociation;
 import com.wicresoft.util.annotation.Mapper;
 
@@ -61,4 +62,11 @@ public interface ProductDao {
 	public List<ProductsAgencyAssociation> findProductsAgencyAssociationByOrganizationIdPage(@Param("organizationId") String organizationId,@Param("page") int currentPage,@Param("limit") int limit);
 	
 	public int findProductsAgencyAssociationCountByOrganizationId(@Param("organizationId") String organizationId);
+
+	public List<ProductStuf> findStufByProductId(@Param("productId") String productId);
+
+	public ProductStuf findStufById(@Param("stufId") String stufId);
+
+	public ProductStuf findMaxStufByProductId(@Param("productId") String productId);
+	
 }

@@ -32,6 +32,7 @@ public class QzApplnJyd extends BusinessModel {
 	private String hkfs;
 	private String je;
 	private String ll;
+	private String sxqx;//授信期限
 	private String qx;
 	private String hkfs1;
 	private String dydb1;
@@ -48,6 +49,9 @@ public class QzApplnJyd extends BusinessModel {
 	private String zy1;
 	private String zy2;
 	private String zy3;
+	
+	private String zzjy;//组长建议
+	private String psjy;//评审建议
 
 	public String getCustomerId() {
 		return customerId;
@@ -242,5 +246,22 @@ public class QzApplnJyd extends BusinessModel {
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
 	}
-	
+	public String getZzjy() {
+		return zzjy;
+	}
+	public void setZzjy(String zzjy) {
+		this.zzjy = zzjy;
+	}
+	public String getPsjy() {
+		return psjy;
+	}
+	public void setPsjy(String psjy) {
+		this.psjy = psjy;
+	}
+	public String getSxqx() {
+		return sxqx;
+	}
+	public void setSxqx(String sxqx) {
+		this.sxqx = sxqx;
+	}
 }

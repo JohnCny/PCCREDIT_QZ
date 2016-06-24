@@ -8,7 +8,7 @@
 <!--*************************************************************内部审查意见表*************************************************************-->
 	<div class="box">
 		<div name="content">
-			<table class="myTable">
+		<table class="myTable">
 				<caption>内部审查意见表</caption>
 				<colgroup>
 					<col width="15%">
@@ -25,7 +25,7 @@
 					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
 						<input type="hidden" name="clientName" value="$!customerInfo.chineseName"/></td>
 					<td class="table-label">店铺/企业名称：</td>
-					<<td><input type="text" name="shopName" value="$!qzApplnNbscyjb.shopName"/>
+					<td><input type="text" name="shopName" value="$!qzApplnNbscyjb.shopName"/>
 						<input type="hidden" name="bussName" value="$!qzApplnJyxx.bussName"/></td>		
 				</tr>
 				<tr>
@@ -34,7 +34,7 @@
 					<td class="table-label">申请期限：<font color="#ff0000">*</font></td>
 					<td>
 						<select name="applyDeadline">
-	                    	#dict("APPLY_DEADLINE", '')
+	                    	#dict("APPLY_DEADLINE", "")
 	                  	</select>
 	                </td>			
 				</tr>
@@ -82,7 +82,7 @@
 		//保存
 		$("#id_save_button").click(function() {
 			if(submitFlag == 1){
-				alert("请勿重复提交!")
+				alert("等待后台响应,请勿重复提交!")
 				return;
 			}
 			submitFlag = 1;

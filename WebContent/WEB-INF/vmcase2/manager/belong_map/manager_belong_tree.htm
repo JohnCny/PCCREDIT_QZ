@@ -93,8 +93,8 @@ function addTreeNode() {
       </div>
 	</div>
     <form id="loadSubUnitTree" action="${contextPath}/manager/belongmap/displayManagerBelong.page" target="displayIframe">
-      <input type="hidden" name="parentId" id="parentId"/>
-      <input type="hidden" name="userName" id="userName"/>
+      <input type="hidden" name="parentId" id="parentId" value="${parentId}"/>
+      <input type="hidden" name="userName" id="userName" value="${userName}"/>
     </form>
 	<script>
 	 $(document).ready(function() {

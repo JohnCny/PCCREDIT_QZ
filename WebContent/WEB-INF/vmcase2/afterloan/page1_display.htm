@@ -4,9 +4,6 @@
 <body>
   <div class="content_main">
     <div class="contentinner">
-      <div class="place">
-        <div class="title">客户台账借据清单</div>
-      </div>
       <div class="inquiry">
        <div class="search_tag">客户台账借据清单</div>
        		<input type="hidden" name="clientNo" id="clientNo" value="$!clientNo">
@@ -113,7 +110,7 @@
 	$(document).ready(function() {
 		$("#id_apply_button").click(function() {
 			if(submitFlag == 1){
-				alert("请勿重复提交!")
+				alert("等待后台响应,请勿重复提交!")
 				return;
 			}
 			submitFlag = 1;
@@ -143,7 +140,7 @@
 	
 	$("#id_approve_button").click(function() {
 		if(submitFlag == 1){
-			alert("请勿重复提交!")
+			alert("等待后台响应,请勿重复提交!")
 			return;
 		}
 		submitFlag = 1;

@@ -16,14 +16,18 @@ public interface CircleDao {
 
 	int findCircleCountByFilter(EcifFilter filter);
 
-	Circle findCircleByClientNo(@Param("clientNo") String clientNo);
+	List<Circle> findCircleByClientNo(@Param("clientNo") String clientNo);
 
 	Circle findCircle(@Param("customerId")String customerId,@Param("applicationId")String applicationId);
 	Circle findCircleByAppId(@Param("applicationId")String applicationId);
 	public List<Circle> findCircleByCardNo(@Param("globalId") String globalId);
-<<<<<<< HEAD
-=======
 	
 	Circle findCircleByClientNoAndContNo(@Param("clientNo") String clientNo,@Param("retContNo") String retContNo);
->>>>>>> chinhBy-master
+
+	Circle findCircleByCONTRACT_NO(@Param("CONTRACT_NO") String CONTRACT_NO);
+
+	List<Circle> findCircleApproved(@Param("customerId") String customerId);
+	List<Circle> findPreCircle(@Param("customerId") String customerId);
+	
+	List<Circle> findByCustomerId(@Param("customerId") String customerId);
 }

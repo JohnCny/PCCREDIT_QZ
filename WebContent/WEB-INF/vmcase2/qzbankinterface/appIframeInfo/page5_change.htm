@@ -19,6 +19,8 @@
 						<select name="bussType" id="jdlx" onchange="lxSelect()">
 							<option value="1" #if($!qzApplnAttachmentList.bussType=='1') selected #end>工薪类</option>
 							<option value="2" #if($!qzApplnAttachmentList.bussType=='2') selected #end>经营类</option>
+							<option value="3" #if($!qzApplnAttachmentList.bussType=='3') selected #end>工薪类(新版)</option>
+							<option value="4" #if($!qzApplnAttachmentList.bussType=='4') selected #end>经营类(新版)</option>
 						</select>
 						<input type="hidden" id="chkValue" name="chkValue" value="$!qzApplnAttachmentList.chkValue">
 						<script type="text/javascript">
@@ -29,7 +31,7 @@
 			</table>	
 		</div><!--/content-->
 	<!--*************************************************************工薪类*************************************************************-->
-		<div name="content" id="gxl" #if($!qzApplnAttachmentList.bussType=='2') style="display:none;" #end >
+		<div name="content" id="gxl" #if($!qzApplnAttachmentList.bussType!='1') style="display:none;" #end >
 			<table class="myTable">
 				<colgroup>
 					<col width="10%">
@@ -75,7 +77,7 @@
 				<tr>
 					<td>1</td>	
 					<td>合同扫描件</td>	
-					<td><input type="checkbox" name="checkbox1" onclick="return false" value="1" checked/></td>						
+					<td><input type="checkbox" class="mustCheck" name="checkbox1" onclick="return false" value="1" checked/></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>			
@@ -90,13 +92,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&2) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="2" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="2"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2"/>
+							<input type="checkbox" name="checkbox1"  value="2"/>
 						#end
 						</td>						
 					<td>2</td>	
@@ -105,13 +107,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&4) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="4" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="4"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4"/>
+							<input type="checkbox" name="checkbox1"  value="4"/>
 						#end
 						</td>				
 				</tr>				
@@ -122,13 +124,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&8) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="8" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="8"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8"/>
+							<input type="checkbox" name="checkbox1"  value="8"/>
 						#end
 						</td>						
 					<td>4</td>	
@@ -137,13 +139,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&16) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="16" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="16"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16"/>
+							<input type="checkbox" name="checkbox1"  value="16"/>
 						#end
 						</td>				
 				</tr>				
@@ -154,13 +156,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&32) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="32" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="32" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="32"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="32"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="32"/>
+							<input type="checkbox" name="checkbox1"  value="32"/>
 						#end
 						</td>						
 					<td>6</td>	
@@ -169,13 +171,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&64) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="64" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="64" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="64"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="64"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="64"/>
+							<input type="checkbox" name="checkbox1"  value="64"/>
 						#end
 						</td>				
 				</tr>				
@@ -186,13 +188,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&128) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="128" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="128" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="128"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="128"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="128"/>
+							<input type="checkbox" name="checkbox1"  value="128"/>
 						#end
 						</td>						
 					<td></td>	
@@ -210,13 +212,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&256) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="256" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="256" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="256"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="256"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="256"/>
+							<input type="checkbox" name="checkbox1"  value="256"/>
 						#end
 						</td>						
 					<td>2</td>	
@@ -225,13 +227,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&512) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="512" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="512" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="512"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="512"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="512"/>
+							<input type="checkbox" name="checkbox1"  value="512"/>
 						#end
 						</td>				
 				</tr>				
@@ -242,13 +244,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&1024) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="1024" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="1024" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="1024"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="1024"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="1024"/>
+							<input type="checkbox" name="checkbox1"  value="1024"/>
 						#end
 						</td>						
 					<td>4</td>	
@@ -257,13 +259,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&2048) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2048" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="2048" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2048"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="2048"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="2048"/>
+							<input type="checkbox" name="checkbox1"  value="2048"/>
 						#end
 						</td>				
 				</tr>				
@@ -274,13 +276,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&4096) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4096" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="4096" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4096"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="4096"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="4096"/>
+							<input type="checkbox" name="checkbox1"  value="4096"/>
 						#end
 						</td>						
 					<td>6</td>	
@@ -289,13 +291,13 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&8192) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8192" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="8192" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8192"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="8192"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="8192"/>
+							<input type="checkbox" name="checkbox1"  value="8192"/>
 						#end
 						</td>				
 				</tr>				
@@ -306,23 +308,36 @@
 						#if($!qzApplnAttachmentList.bussType=='1')
 							<script>
 								if(parseInt(chkValue&16384) != 0){
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16384" checked/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="16384" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16384"/>');
+									document.write('<input type="checkbox" name="checkbox1"  value="16384"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox1" onclick="getSum(1);" value="16384"/>
+							<input type="checkbox" name="checkbox1"  value="16384"/>
 						#end
 						</td>						
 					<td></td>	
 					<td></td>	
 					<td></td>				
 				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第四部分  其他</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>其他</td>	
+					<td>
+						<input type="checkbox" class="mustCheck" name="checkbox1" onclick="return false" value="1073741824" checked/>
+					</td>						
+					<td></td>	
+					<td></td>	
+					<td></td>			
+				</tr>
 			</table>
 		</div>
-	<!--*************************************************************经营类*************************************************************-->
-		<div name="content" id="jyl" #if($!qzApplnAttachmentList.bussType=='1') style="display:none;" #end >
+		<!--*************************************************************工薪类新版*************************************************************-->
+		<div name="content" id="gxl_new" #if($!qzApplnAttachmentList.bussType!='3') style="display:none;" #end >
 			<table class="myTable">
 				<colgroup>
 					<col width="10%">
@@ -331,7 +346,312 @@
 					<col width="40%">
 				</colgroup>
 				<tr>
-					<td class="tableTitle" colspan="4">经营类</td>				
+					<td class="tableTitle" colspan="4">工薪类</td>				
+				</tr>
+				<tr>
+					<td class="table-label">借款人姓名：</td>
+					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
+						<input type="hidden" name="clientNamegxl_new" value="$!customerInfo.chineseName"/></td>
+					<td class="table-label">身份证号码：</td>
+					<td><input type="text" value="$!customerInfo.cardId" readonly/>
+						<input type="hidden" name="globalIdgxl_new" value="$!customerInfo.cardId"/></td>			
+				</tr>
+			</table>
+			<table class="myTable" style="text-align:center;">
+				<colgroup>
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+				</colgroup>	
+				<tr>
+					<td class="tableTitle" colspan="6">资料清单</td>				
+				</tr>		
+				<tr>
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>	
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>					
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第一部分  业务信息</td>				
+				</tr>						
+				<tr>
+					<td>1</td>	
+					<td>贷款申请表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&1) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="1" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="1" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="1" checked/>
+						#end
+						</td>						
+					<td>2</td>	
+					<td>调查报告</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&2) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="2" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="2" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="2" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>3</td>	
+					<td>征信查询授权书</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&4) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="4" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="4" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="4" checked/>
+						#end
+						</td>						
+					<td>4</td>	
+					<td>工作底稿</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&8) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="8" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="8" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="8" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>5</td>	
+					<td>信用报告及联网核查</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&16) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16" checked/>
+						#end
+						</td>						
+					<td>6</td>	
+					<td>贷审小组决议表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&32) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="32" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="32" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="32" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>7</td>	
+					<td>规范操作承诺书</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&64) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="64" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="64" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="64" checked/>
+						#end
+						</td>						
+					<td></td>	
+					<td></td>	
+					<td></td>				
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第二部分  客户资料</td>				
+				</tr>					
+								
+				<tr>
+					<td>1</td>	
+					<td>收入证明文件</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&128) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="128" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="128" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="128" checked/>
+						#end
+						</td>						
+					<td>2</td>	
+					<td>借款人资产文件、住址证明</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&256) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="256" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="256" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="256" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>3</td>	
+					<td>借款人及共同借款人身份证复印件</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&512) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="512" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="512" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="512" checked/>
+						#end
+						</td>						
+					<td>4</td>	
+					<td>借款人及共同借款人婚姻状况证明</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&1024) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="1024" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="1024" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="1024" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>5</td>	
+					<td>担保人及配偶身份证明复印件</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&2048) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="2048" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="2048" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="2048" checked/>
+						#end
+						</td>						
+					<td>6</td>	
+					<td>担保人及配偶婚姻状况说明</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&4096) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="4096" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="4096" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="4096" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>7</td>	
+					<td>担保人收入证明</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&8192) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="8192" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="8192" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="8192" checked/>
+						#end
+						</td>						
+					<td></td>	
+					<td></td>	
+					<td></td>				
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第三部分  其他</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>其他</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&16384) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16384" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16384" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16384" checked/>
+						#end
+						</td>				
+					<td></td>	
+					<td></td>	
+					<td></td>			
+				</tr>
+			</table>
+		</div>
+	<!--*************************************************************经营类旧版*************************************************************-->
+		<div name="content" id="jyl" #if($!qzApplnAttachmentList.bussType!='2') style="display:none;" #end >
+			<table class="myTable">
+				<colgroup>
+					<col width="10%">
+					<col width="40%">
+					<col width="10%">
+					<col width="40%">
+				</colgroup>
+				<tr>
+					<td class="tableTitle" colspan="4">经营类(旧版)</td>				
 				</tr>
 				<tr>
 					<td class="table-label">公司名称：</td>
@@ -367,7 +687,7 @@
 				<tr>
 					<td>1</td>	
 					<td>合同扫描件</td>	
-					<td><input type="checkbox" name="checkbox2" onclick="return false" value="1" checked/></td>						
+					<td><input type="checkbox" class="mustCheck" name="checkbox2" onclick="return false" value="1" checked/></td>						
 					<td></td>	
 					<td></td>	
 					<td></td>			
@@ -382,13 +702,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&2) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="2" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="2"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2"/>
+							<input type="checkbox" name="checkbox2"  value="2"/>
 						#end
 						</td>						
 					<td>2</td>	
@@ -397,13 +717,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&4) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="4" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="4"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4"/>
+							<input type="checkbox" name="checkbox2"  value="4"/>
 						#end
 						</td>				
 				</tr>				
@@ -414,13 +734,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&8) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="8" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="8"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8"/>
+							<input type="checkbox" name="checkbox2"  value="8"/>
 						#end
 						</td>						
 					<td>4</td>	
@@ -429,13 +749,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&16) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="16" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="16"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16"/>
+							<input type="checkbox" name="checkbox2"  value="16"/>
 						#end
 						</td>				
 				</tr>				
@@ -446,13 +766,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&32) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="32" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="32"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32"/>
+							<input type="checkbox" name="checkbox2"  value="32"/>
 						#end
 						</td>						
 					<td>6</td>	
@@ -461,13 +781,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&64) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="64" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="64" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="64"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="64"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="64"/>
+							<input type="checkbox" name="checkbox2"  value="64"/>
 						#end
 						</td>				
 				</tr>				
@@ -478,13 +798,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&128) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="128" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="128" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="128"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="128"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="128"/>
+							<input type="checkbox" name="checkbox2"  value="128"/>
 						#end
 						</td>						
 					<td></td>	
@@ -501,13 +821,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&256) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="256" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="256" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="256"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="256"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="256"/>
+							<input type="checkbox" name="checkbox2"  value="256"/>
 						#end
 						</td>						
 					<td>2</td>	
@@ -516,13 +836,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&512) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="512" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="512" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="512"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="512"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="512"/>
+							<input type="checkbox" name="checkbox2"  value="512"/>
 						#end
 						</td>				
 				</tr>				
@@ -533,13 +853,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&1024) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="1024" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="1024" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="1024"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="1024"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="1024"/>
+							<input type="checkbox" name="checkbox2"  value="1024"/>
 						#end
 						</td>						
 					<td>4</td>	
@@ -548,13 +868,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&2048) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2048" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="2048" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2048"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="2048"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="2048"/>
+							<input type="checkbox" name="checkbox2"  value="2048"/>
 						#end</td>				
 				</tr>				
 				<tr>
@@ -564,13 +884,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&4096) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4096" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="4096" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4096"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="4096"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="4096"/>
+							<input type="checkbox" name="checkbox2"  value="4096"/>
 						#end
 						</td>						
 					<td>6</td>	
@@ -579,13 +899,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&8192) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8192" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="8192" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8192"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="8192"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="8192"/>
+							<input type="checkbox" name="checkbox2"  value="8192"/>
 						#end
 						</td>				
 				</tr>				
@@ -596,13 +916,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&16384) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16384" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="16384" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16384"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="16384"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="16384"/>
+							<input type="checkbox" name="checkbox2"  value="16384"/>
 						#end
 						</td>						
 					<td>8</td>	
@@ -611,13 +931,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&32768) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32768" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="32768" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32768"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="32768"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="32768"/>
+							<input type="checkbox" name="checkbox2"  value="32768"/>
 						#end
 						</td>				
 				</tr>				
@@ -628,13 +948,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&65536) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="65536" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="65536" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="65536"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="65536"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="65536"/>
+							<input type="checkbox" name="checkbox2"  value="65536"/>
 						#end
 						</td>						
 					<td>10</td>	
@@ -643,13 +963,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&131072) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="131072" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="131072" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="131072"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="131072"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="131072"/>
+							<input type="checkbox" name="checkbox2"  value="131072"/>
 						#end
 						</td>				
 				</tr>				
@@ -660,13 +980,13 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&262144) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="262144" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="262144" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="262144"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="262144"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="262144"/>
+							<input type="checkbox" name="checkbox2"  value="262144"/>
 						#end
 						</td>						
 					<td>12</td>	
@@ -675,15 +995,495 @@
 						#if($!qzApplnAttachmentList.bussType=='2')
 							<script>
 								if(parseInt(chkValue&524288) != 0){
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="524288" checked/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="524288" checked/>');
 								}else{
-									document.write('<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="524288"/>');
+									document.write('<input type="checkbox" name="checkbox2"  value="524288"/>');
 								}
 							</script>
 						#else
-							<input type="checkbox" name="checkbox2" onclick="getSum(2);" value="524288"/>
+							<input type="checkbox" name="checkbox2"  value="524288"/>
 						#end
 						</td>				
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第四部分  其他</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>其他</td>	
+					<td>
+						<input type="checkbox" class="mustCheck" name="checkbox2" onclick="return false" value="1073741824" checked/>
+					</td>						
+					<td></td>	
+					<td></td>	
+					<td></td>			
+				</tr>
+			</table>
+		</div>
+		
+		<!--*************************************************************经营类新版*************************************************************-->
+		<div name="content" id="jyl_new" #if($!qzApplnAttachmentList.bussType!='4') style="display:none;" #end >
+			<table class="myTable">
+				<colgroup>
+					<col width="10%">
+					<col width="40%">
+					<col width="10%">
+					<col width="40%">
+				</colgroup>
+				<tr>
+					<td class="tableTitle" colspan="4">经营类(新版)</td>				
+				</tr>
+				<tr>
+					<td class="table-label">公司名称：</td>
+					<td><input type="text" id="shopName" name="shopNameNew" value="$!qzApplnAttachmentList.shopName"/></td>
+					<td class="table-label">营业执照号：</td>
+					<td><input type="text" id="shopId" name="shopIdNew" value="$!qzApplnAttachmentList.shopId"/></td>			
+					
+				</tr>
+			</table>
+			<table class="myTable" style="text-align:center;">
+				<colgroup>
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+					<col width="10%">
+					<col width="30%">
+					<col width="10%">
+				</colgroup>	
+				<tr>
+					<td class="tableTitle" colspan="6">资料清单</td>				
+				</tr>		
+				<tr>
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>	
+					<td><b>编号</b></td>	
+					<td><b>项目名称</b></td>	
+					<td><b></b></td>					
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第一部分  业务资料</td>				
+				</tr>
+				<tr>
+					<td>1</td>	
+					<td>个人微贷业务申请表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&1) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1" checked/>
+						#end
+						</td>		
+					<td>2</td>	
+					<td>客户信息调查表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&2) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>					
+					<td>3</td>	
+					<td>资产负债表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&4) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4" checked/>
+						#end
+						</td>	
+					<td>4</td>	
+					<td>损益表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&8) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>					
+					<td>5</td>	
+					<td>库存清单</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&16) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16" checked/>
+						#end
+						</td>		
+					<td>6</td>	
+					<td>贷款用途申明书</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&32) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>					
+					<td>7</td>	
+					<td>规范操作承诺书</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&64) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="64" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="64"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="64" checked/>
+						#end
+						</td>	
+					<td>8</td>	
+					<td>存量授信业务客户信息调查表</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&128) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="128" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="128"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="128" checked/>
+						#end
+						</td>			
+				</tr>
+				<tr>
+					<td class="tableTitle" colspan="6">第二部分  客户资料</td>				
+				</tr>			
+				<tr>
+					<td>1</td>	
+					<td>征信授权书</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&256) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="256" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="256"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="256" checked/>
+						#end
+						</td>						
+					<td>2</td>	
+					<td>借款人及配偶身份证</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&512) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="512" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="512"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="512" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>3</td>	
+					<td>借款人及配偶征信报告</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&1024) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1024" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1024"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1024" checked/>
+						#end
+						</td>						
+					<td>4</td>	
+					<td>担保人信息表、身份证、征信报告</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&2048) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2048" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2048"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2048" checked/>
+						#end</td>				
+				</tr>				
+				<tr>
+					<td>5</td>	
+					<td>企业征信报告</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&4096) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4096" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4096"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4096" checked/>
+						#end
+						</td>						
+					<td>6</td>	
+					<td>婚姻证明</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&8192) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8192" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8192"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8192" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>7</td>	
+					<td>户口证件</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&16384) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16384" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16384"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16384" checked/>
+						#end
+						</td>						
+					<td>8</td>	
+					<td>被执行人网查</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&32768) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32768" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32768"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="32768" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>9</td>	
+					<td>营业执照</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&65536) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="65536" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="65536"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="65536" checked/>
+						#end
+						</td>						
+					<td>10</td>	
+					<td>工商信息查询</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&131072) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="131072" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="131072"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="131072" checked/>
+						#end
+						</td>				
+				</tr>				
+				<tr>
+					<td>11</td>	
+					<td>租赁合同</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&262144) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="262144" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="262144"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="262144" checked/>
+						#end
+						</td>	
+					<td>12</td>	
+					<td>其他</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&524288) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="524288" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="524288"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="524288" checked/>
+						#end
+						</td>						
+				</tr>
+				<tr>	
+					<td class="tableTitle" colspan="6">第三部分  佐证资料</td>			
+				</tr>
+				<tr>				
+					<td>1</td>	
+					<td>资产证明</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&1048576) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1048576" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1048576"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1048576" checked/>
+						#end
+						</td>	
+					<td>2</td>	
+					<td>营业单据</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&2097152) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2097152" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2097152"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="2097152" checked/>
+						#end
+					</td>			
+				</tr>
+				<tr>				
+					<td>3</td>	
+					<td>银行流水</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&4194304) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4194304" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4194304"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="4194304" checked/>
+						#end
+						</td>	
+					<td>4</td>	
+					<td>照片</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&8388608) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8388608" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8388608"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="8388608" checked/>
+						#end
+					</td>			
+				</tr>
+				<tr>				
+					<td>5</td>	
+					<td>借款合同</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&16777216) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16777216" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16777216"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16777216" checked/>
+						#end
+						</td>	
+					<td>6</td>	
+					<td>其他</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='4')
+							<script>
+								if(parseInt(chkValue&1073741824) != 0){
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1073741824" checked/>');
+								}else{
+									document.write('<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1073741824"/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1073741824" checked/>
+						#end
+					</td>			
 				</tr>
 			</table>
 		</div>
@@ -719,6 +1519,7 @@
 	#else
 	<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
 	<a id="id_back_button" class="btn_gr" href="javascript:void(0);" title="返回">返回</a>
+	<a id="id_upload_button" class="btn_g" href="javascript:void(0);" title="上传">上传</a>
 	#end
 </div>
 	<script type="text/javascript" src="jquery-1.js"></script>
@@ -728,14 +1529,42 @@
 			if($("#jdlx option:selected").text()=="工薪类"){
 				$("#gxl").show();
 				$("#jyl").hide();
-				$("input[type=checkbox][name=checkbox2]:checked").attr("checked",false);
+				$("#gxl_new").hide();
+				$("#jyl_new").hide();
+				$("input[type=checkbox][name=checkbox2][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox3][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox4][class!=mustCheck]:checked").attr("checked",false);
 				getSum(1);
 			}
 			if($("#jdlx option:selected").text()=="经营类"){
 				$("#gxl").hide();
 				$("#jyl").show();
-				$("input[type=checkbox][name=checkbox1]:checked").attr("checked",false);
+				$("#gxl_new").hide();
+				$("#jyl_new").hide();
+				$("input[type=checkbox][name=checkbox1][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox3][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox4][class!=mustCheck]:checked").attr("checked",false);
 				getSum(2);
+			}
+			if($("#jdlx option:selected").text()=="工薪类(新版)"){
+				$("#gxl").hide();
+				$("#jyl").hide();
+				$("#gxl_new").show();
+				$("#jyl_new").hide();
+				$("input[type=checkbox][name=checkbox1][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox2][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox4][class!=mustCheck]:checked").attr("checked",false);
+				getSum(3);
+			}
+			if($("#jdlx option:selected").text()=="经营类(新版)"){
+				$("#gxl").hide();
+				$("#jyl").hide();
+				$("#gxl_new").hide();
+				$("#jyl_new").show();
+				$("input[type=checkbox][name=checkbox1][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox2][class!=mustCheck]:checked").attr("checked",false);
+				$("input[type=checkbox][name=checkbox3][class!=mustCheck]:checked").attr("checked",false);
+				getSum(4);
 			}
 		}
 		
@@ -755,15 +1584,28 @@
 		
 		$(document).ready(function() {	
 			if("${type}"=="readonly"){
-				$("input[type='text']").attr("readonly",true);
-				$("input[type='radio']").attr("readonly",true);
-				$("input[type='checkbox']").attr("readonly",true);
-				$("select").attr("readonly",true);
+				$("input[type='text']").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
+				$("input[type='radio']").attr("disabled",true);
+				$("input[type='checkbox']").attr("disabled",true);
+				$("select").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
 			}
 			//保存
 			$("#id_save_button").click(function() {
+				if($("#jdlx option:selected").text()=="工薪类"){
+					getSum(1);
+				}
+				if($("#jdlx option:selected").text()=="经营类"){
+					getSum(2);
+				}
+				if($("#jdlx option:selected").text()=="工薪类(新版)"){
+					getSum(3);
+				}
+				if($("#jdlx option:selected").text()=="经营类(新版)"){
+					getSum(4);
+				}
+				
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;
@@ -793,6 +1635,11 @@
 			//返回
 			$("#id_back_button").click(function() {
 				window.parent.location.href = "${contextPath}/intopieces/intopiecesapprove/approve.page";
+			});
+			
+			//上传
+			$("#id_upload_button").click(function() {
+				window.location.href = "${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}";
 			});
 			
 		});

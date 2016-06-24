@@ -41,18 +41,18 @@ public class IESBTest {
 
         /*
          * 1、IESBForECIF 
-         */
+         
         //*********************  请求报文格式是ESB自定义的CompositeData   ********************
         //组装一个CompositeData 报文
         //CompositeData req = IESBForECIF.createEcifRequest();
-        CompositeData req = IESBForED.createEDRequest();
+        CompositeData req = IESBForED.createEDRequest(null);
         //发送请求报文并获得相应报文
         CompositeData resp = client.sendMess(req);
         // 解析ESB响应的cd报文获得需要的信息
         //IESBForECIF.parseEcifResponse(resp);
         String retCode = IESBForED.parseCoreResponse(req);
         System.out.println("返回码：" + retCode);
-        
+        */
         
         /*
          * 2、IESBForCredit 

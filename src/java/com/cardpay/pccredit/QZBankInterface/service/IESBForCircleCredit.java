@@ -20,12 +20,14 @@ import com.cardpay.pccredit.QZBankInterface.util.DateUtil;
 import com.cardpay.pccredit.common.Arith;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.ipad.constant.IpadConstant;
 import com.cardpay.pccredit.manager.constant.ManagerBelongMapConstants;
 import com.dc.eai.data.Array;
 import com.dc.eai.data.CompositeData;
 import com.dc.eai.data.Field;
 import com.dc.eai.data.FieldAttr;
 import com.dc.eai.data.FieldType;
+import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
 import com.wicresoft.jrad.modules.dictionary.DictionaryManager;
 import com.wicresoft.jrad.modules.dictionary.model.Dictionary;
@@ -672,6 +674,7 @@ public class IESBForCircleCredit {
      * 返回成功与否
      * @param resp
      * @param circle
+     * @param user 
      * @return
      * 
      *  <service version="2.0">
@@ -692,7 +695,7 @@ public class IESBForCircleCredit {
 			</SYS_HEAD>
 		</service>
      */
-	public String parseEcifResponse(CompositeData resp,Circle circle) {
+	public String parseEcifResponse(CompositeData resp,Circle circle, IUser user) {
 		String retMsg = "";
 		if(resp == null){
 			retMsg = "解析放贷返回信息失败";
@@ -719,9 +722,12 @@ public class IESBForCircleCredit {
         //更新贷款信息表
         circle.setRetCode(RET_CODE);
         circle.setRetMsg("000000".equals(RET_CODE) ? "放款成功" : RET_MSG);
+        circle.setLoanStatus("000000".equals(RET_CODE) ? "10" : null);
         circle.setRetContno("000000".equals(RET_CODE) ? RET_MSG : "");
+        //circle.setModifiedBy(user.getId());
+        //circle.setModifiedTime(new Date());
         commonDao.updateObject(circle);
-        if(RET_CODE.equals( com.cardpay.pccredit.QZBankInterface.constant.Constant.RET_CODE_CIRCLE)){
+        if(RET_CODE.equals(IpadConstant.RET_CODE_SUCCESS)){
         	retMsg ="放款成功";
         	return retMsg;
         }

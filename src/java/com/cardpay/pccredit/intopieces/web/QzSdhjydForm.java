@@ -29,6 +29,7 @@ public class QzSdhjydForm extends BaseForm{
 
 	private String je;
 	private String ll;
+	private String sxqx;//授信期限
 	private String qx;
 	private String hkfs1;
 	private String dydb1;
@@ -46,6 +47,8 @@ public class QzSdhjydForm extends BaseForm{
 	private String zy2;
 	private String zy3;
 
+	private String zzjy;
+	private String psjy;
 
 	public String getCustomerId() {
 		return customerId;
@@ -235,5 +238,22 @@ public class QzSdhjydForm extends BaseForm{
 	public void setJktj(String jktj) {
 		this.jktj = jktj;
 	}
-	
+	public String getZzjy() {
+		return zzjy;
+	}
+	public void setZzjy(String zzjy) {
+		this.zzjy = zzjy;
+	}
+	public String getPsjy() {
+		return psjy;
+	}
+	public void setPsjy(String psjy) {
+		this.psjy = psjy;
+	}
+	public String getSxqx() {
+		return sxqx;
+	}
+	public void setSxqx(String sxqx) {
+		this.sxqx = sxqx;
+	}
 }

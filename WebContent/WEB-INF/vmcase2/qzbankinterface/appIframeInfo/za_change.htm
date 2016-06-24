@@ -56,13 +56,13 @@
 		//保存
 		$("#id_save_button").click(function() {
 			if(submitFlag == 1){
-				alert("请勿重复提交!")
+				alert("等待后台响应,请勿重复提交!")
 				return;
 			}
 			submitFlag = 1;
 			if ($($formName).valid()) {
 				var formjson = $($formName).serialize();
-				var url = "${contextPath}/product/zainformation/update.json?id=$!qzApplnZa.id";
+				var url = "${contextPath}/zainformation/zaquery/update.json?id=$!qzApplnZa.id";
 				$.ajax({
 					url : url,
 					type : "get",
@@ -70,7 +70,7 @@
 					success : function(data) {
 						if (data.success) {
 							topWin.Dialog.message("保存成功！");
-							window.location.href = "${contextPath}/product/zainformation/browse.page";
+							window.location.href = "${contextPath}/zainformation/zaquery/browse.page";
 						}
 						else{
 							topWin.Dialog.message("保存失败！");

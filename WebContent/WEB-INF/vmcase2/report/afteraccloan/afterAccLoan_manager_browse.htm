@@ -27,12 +27,15 @@
                 <span>结束日期：<input type="text" name="endDate" value='$!date.format("yyyy-MM-dd",$!result.filter.endDate)' onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
               </li>
               <li>
-                <span>客户经理号：<input type="text" name="managerId" value='$!result.filter.managerId' /></span>
-              </li>
-              <li>
                 <span>客户名称：<input type="text" name="clientName" value='$!result.filter.clientName' /></span>
               </li>
-              
+              <li>
+	              <span>产品名称：<select id="productId" name="productId">
+	              		   <option value="ALL">请选择</option>
+		                   #dict("ProductName", $!$!result.filter.productId)
+		                </select>
+		          </span>
+	          </li>
               <li class="search_button">
               	<input id="id_export_button" type="button" value="导出excel" class="search_button_export"
                   title="#i18n('button.export.hint')" style="height: 26px; line-height: 24px;" />
@@ -51,6 +54,7 @@
             <colgroup>
               <col width="60"/>
               <col width="80"/>
+              <col width="60"/>
               <col width="200"/>
               <col width="200"/>
               <col width="180"/>
@@ -68,23 +72,23 @@
             </colgroup>
             <tr class="title" align="center">
               <th nowrap="nowrap">序号</th>
-              <th nowrap="nowrap">客户经理号</th>
-              
+              <th nowrap="nowrap">客户经理</th>
+              <th nowrap="nowrap">产品名称</th>
               <th nowrap="nowrap">所属机构</th>
               <th nowrap="nowrap">借据号</th>
               <th nowrap="nowrap">存款账户</th>
               
               <th nowrap="nowrap">账户名称</th>
               <th nowrap="nowrap">利率</th>
-              <th nowrap="nowrap">贷款日期</th>
+              <th nowrap="nowrap">授信日期</th>
               
-              <th nowrap="nowrap">到期日期</th>
+              <th nowrap="nowrap">授信到期日</th>
               <th nowrap="nowrap">授信金额</th>
               <th nowrap="nowrap">贷款金额</th>
               <th nowrap="nowrap">贷款余额</th>
               <th nowrap="nowrap">欠息总额</th>
-              <th nowrap="nowrap">起息日期</th>
-              <th nowrap="nowrap">发放日期</th>
+              <th nowrap="nowrap">贷款日期</th>
+              <th nowrap="nowrap">贷款到期日</th>
               <th nowrap="nowrap">贷款状态</th>
             </tr>
           </table>
@@ -95,6 +99,7 @@
             <colgroup>
               <col width="60"/>
               <col width="80"/>
+              <col width="60"/>
               <col width="200"/>
               <col width="200"/>
               <col width="180"/>
@@ -114,6 +119,7 @@
             	<tr id="$!accloan.rowIndex">
 	              <td nowrap="nowrap">$!accloan.rowIndex</td>
 	              <td nowrap="nowrap">$!accloan.managerId</td>
+	              <td nowrap="nowrap">#dictVal("ProductName",$!accloan.productId)</td>
 	              <td nowrap="nowrap">$!accloan.orgName</td>
 	              <td nowrap="nowrap">$!accloan.billNo</td>
 	              <td nowrap="nowrap">$!accloan.acctNo</td>
@@ -133,9 +139,11 @@
           </table>
         </div>
       </div>
+      <div class="pagebar">
        #parse ("common/pagination.htm")		
         <div class="clear"></div>
       </div>
+    </div>
     </div>
 </body>
 <script language="javascript" type="text/javascript">

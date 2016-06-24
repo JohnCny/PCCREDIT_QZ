@@ -7,8 +7,8 @@
 		if(parent.docID != ""){
 	    	docID = parent.docID;
 	        document.getElementById("docid").value=docID;
-	        var strIp = "168.168.241.75";//测试环境 
-	        //var strIp = "168.168.214.15"; //生产环境 
+	        //var strIp = "168.168.241.75";//测试环境 
+	        var strIp = "168.168.214.15"; //生产环境 
 	        var strPort = "8023";
 	        SunScan.TestInitScanWnd(strIp, strPort);
 	        var result = SunScan.ViewImageByCaseIDEx("WD_CASES",docID);//根据批次号查看ECM并下载影像到本地

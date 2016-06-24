@@ -1,10 +1,14 @@
 package com.cardpay.pccredit.system.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cardpay.pccredit.customer.model.CustomerInfor;
+import com.cardpay.pccredit.system.dao.SystemDao;
 import com.cardpay.pccredit.system.dao.comdao.SystemComDao;
 import com.cardpay.pccredit.system.filter.SystemUserFilter;
 import com.cardpay.pccredit.system.model.SystemUser;
@@ -18,6 +22,10 @@ public class SystemUserService {
 	
 	@Autowired
 	private SystemComDao systemComDao;
+	
+	@Autowired
+	private SystemDao systemDao;
+	
 	/**
 	 * 按id查找相应的客户基本信息
 	 * @param customerInforId
@@ -44,9 +52,11 @@ public class SystemUserService {
 	 */
 	
 	public QueryResult<SystemUser> findSystemUserByFilter(SystemUserFilter filter) {
-		
-		
-		return systemComDao.findSystemUserByFilter(filter);
+		//return systemComDao.findSystemUserByFilter(filter);
+		List<SystemUser> ls = systemDao.findSystemUserByFilter(filter);
+		int size = systemDao.findSystemUserCountByFilter(filter);
+		QueryResult<SystemUser> qs = new QueryResult<SystemUser>(size, ls);
+		return qs;
 	}
 	
 }

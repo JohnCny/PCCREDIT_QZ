@@ -43,13 +43,13 @@ public class Client implements InitializingBean{
 		//这一步不能少，这是指定密钥文件所在路径(密钥文件不必一定放在工程的src下，也可以放在工程外面) todo:需要秘钥文件
         //System.setProperty(ClientConfig.FILEPATH, new File("").getAbsolutePath()+"/src/java/");
 		//tomcat 可动态获取
-		//String path = this.getClass().getResource("/").toString();
-		//System.setProperty(ClientConfig.FILEPATH,path.substring(6, path.length()));
+		String path = this.getClass().getResource("/").toString();
+		System.setProperty(ClientConfig.FILEPATH,path.substring(6, path.length()));
 		//jboss weblogic直接写死路径
 		//测试环境
 		//System.setProperty(ClientConfig.FILEPATH,"/usr/cardpay/esb/");
 		//生产环境
-		System.setProperty(ClientConfig.FILEPATH,"/home/pccredit/pccredit_esb/");
+		//System.setProperty(ClientConfig.FILEPATH,"/home/pccredit/pccredit_esb/");
         //设置log4j配置文件路径
         PropertyConfigurator.configure("/home/pccredit/pccredit_log/log4j.properties");
 	}

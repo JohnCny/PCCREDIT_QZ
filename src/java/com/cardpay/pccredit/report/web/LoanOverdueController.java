@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -22,16 +23,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.ipad.dao.UserIpadDao;
 import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.report.model.AccLoanInfo;
 import com.cardpay.pccredit.report.model.AccLoanOverdueInfo;
 import com.cardpay.pccredit.report.service.AferAccLoanService;
+import com.cardpay.pccredit.system.model.Dict;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
 import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.date.DateHelper;
 import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
@@ -48,6 +53,10 @@ import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 public class LoanOverdueController extends BaseController{
 	
 	@Autowired
+	private UserIpadDao userIpadDao;
+	@Autowired
+	private IntoPiecesService intoPiecesService;
+	@Autowired
 	private AferAccLoanService aferAccLoanService;
 	
 	private static final Logger logger = Logger.getLogger(LoanOverdueController.class);
@@ -61,19 +70,24 @@ public class LoanOverdueController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browse(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
 		filter.setUserId(userId);
-		
+		if(filter.getEndDate()==null){
+			filter.setEndDate(new Date());
+		}
 		List<AccLoanOverdueInfo> overdue = aferAccLoanService.getLoanOverdue(filter);
 		JRadModelAndView mv = new JRadModelAndView("/report/loanoverdue/accloanoverdue_manager_browse", request);
 		mv.addObject("list", overdue);
 		mv.addObject("filter", filter);
 		return mv;
 		
+	}
+	
+	public User findByLogin(String login){
+		return userIpadDao.findByLogin(login);
 	}
 	
 	/**
@@ -85,13 +99,19 @@ public class LoanOverdueController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browseAll.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browseAll(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
-//		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-//		String userId = user.getId();
-//		filter.setUserId(userId);
-		
+		if(filter.getEndDate()==null){
+			filter.setEndDate(new Date());
+		}
+		if(StringUtils.isNotEmpty(filter.getManagerId())){
+			User tmp = this.findByLogin(filter.getManagerId());
+			if(tmp != null){
+				filter.setUserId(tmp.getId());
+			}else{
+				filter.setUserId("999");
+			}
+		}
 		List<AccLoanOverdueInfo> overdue = aferAccLoanService.getLoanOverdue(filter);
 		JRadModelAndView mv = new JRadModelAndView("/report/loanoverdue/accloanoverdue_centre_browseAll", request);
 		mv.addObject("list", overdue);
@@ -112,9 +132,13 @@ public class LoanOverdueController extends BaseController{
 	@RequestMapping(value = "export.page", method = { RequestMethod.GET })
 	public void export(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request,HttpServletResponse response){
 		filter.setRequest(request);
+		if(filter.getEndDate()==null){
+			filter.setEndDate(new Date());
+		}
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
 		filter.setUserId(userId);
+		
 		List<AccLoanOverdueInfo> list = aferAccLoanService.getLoanOverdue(filter);
 		create(list,response,filter);
 	}
@@ -130,10 +154,18 @@ public class LoanOverdueController extends BaseController{
 	@RequestMapping(value = "exportAll.page", method = { RequestMethod.GET })
 	public void exportAll(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request,HttpServletResponse response){
 		filter.setRequest(request);
-		
-//		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-//		String userId = user.getId();
-//		filter.setUserId(userId);
+		if(filter.getEndDate()==null){
+			filter.setEndDate(new Date());
+		}
+		if(StringUtils.isNotEmpty(filter.getManagerId())){
+			User tmp = this.findByLogin(filter.getManagerId());
+			if(tmp != null){
+				filter.setUserId(tmp.getId());
+			}else{
+				filter.setUserId("999");
+			}
+		}
+
 		List<AccLoanOverdueInfo> list = aferAccLoanService.getLoanOverdue(filter);
 		create(list,response,filter);
 	}

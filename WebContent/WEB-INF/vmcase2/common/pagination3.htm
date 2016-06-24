@@ -21,13 +21,9 @@
 					#set ($endPageNo = $result.totalPages - 1)
 					#set ($end = $endPageNo*$result.pageSize)
 				        <span>共<b>$result.totalCount</b>条数据，当前第<b>$dispPageNo</b>页</span>
-						<a href="javascript:void(0);" id="first" class="first"></a>
-						<a href="javascript:void(0);" id="previous" class="previous"></a>
 						<input type="text"  name="num" id="num" style="width:25px;" onkeyup="this.value=this.value.replace(/[^\d]/g,''); var totalPageSize = $result.totalPages; if(this.value > totalPageSize || this.value < 1 )this.value=''; " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') "/>
 						<input type="button" value="GO" class="btn" onclick="submitForm($('#num').val());"/>
 						<span>/$result.totalPages页</span>	
-						<a href="javascript:void(0);" id="next" class="next"></a>
-						<a href="javascript:void(0);" id="end" class="end"></a>
 				</div>
 			#else
 			<div class="page">	共<b>0</b>条数据，当前第<b>0</b>页</div>

@@ -1,8 +1,5 @@
 <div class="content_main">
     <div class="contentinner">
-      <div class="place">
-        <div class="title">审批人员查询</div>
-      </div>
  <div class="inquiry">
       <div class="search_tag">#i18n("label.browse.filter")</div>
          <div class="search">
@@ -12,6 +9,13 @@
               <li>
                 <span>单位：
                 	<select name="orgId" id="orgId" value="$!result.filter.orgId">
+	           
+		         </select>
+                  </span>
+              </li>
+               <li>
+                <span>员工名称：
+                	<input type="text" name="displayName" id="displayName" value="$!result.filter.displayName">
 	           
 		         </select>
                   </span>

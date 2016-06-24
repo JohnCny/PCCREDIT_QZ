@@ -17,7 +17,10 @@ import com.cardpay.workflow.models.WfProcessRecord;
 import com.cardpay.workflow.models.WfStatusInfo;
 import com.cardpay.workflow.models.WfStatusQueueRecord;
 import com.cardpay.workflow.models.WfStatusResult;
+import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
+import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.util.spring.Beans;
 
 /**   
  * @Title: ProcessService.java 
@@ -43,6 +46,21 @@ public class ProcessService {
 	@Autowired
 	private WfStatusQueueRecordDao wfStatusQueueRecordDao;
 	
+	//获取下一个节点的状态
+	public boolean getNextIsEnd(String wfProcessRecordID,String exUserID,String exResult){
+		//根据当前审批结果 查找审批结果表 获取下一个审批状态
+		WfProcessRecord wfProcessRecord = commonDao.findObjectById(WfProcessRecord.class, wfProcessRecordID);
+		WfStatusQueueRecord wfStatusQueueRecord = commonDao.findObjectById(WfStatusQueueRecord.class,wfProcessRecord.getWfStatusQueueRecord());
+		WfStatusResult wfStatusResult = wfStatusResultDao.getNextStatus(wfStatusQueueRecord.getCurrentStatus(), exUserID, exResult);
+		
+		//判断下一个审批批状态是否为结束状态
+		WfStatusInfo wfStatusInfo = commonDao.findObjectById(WfStatusInfo.class, wfStatusResult.getNextStatus());
+		if(wfStatusInfo.getIsClosed().equals("1")){//标示下一状态为结束
+			return true;
+		}else{
+			return false;
+		}
+	}
 	/**
 	 * 流程开始,根据状态流转表取得该下一状态信息，同时流程记录表中新增一条记录
 	 * @param wfProcessInfoID
@@ -102,7 +120,71 @@ public class ProcessService {
 	 * 
 	 * @throws SQLException
 	 */
-	public String examine(String wfProcessRecordID,String exUserID,String exResult,String exAmount){
+	public String examine(String wfProcessRecordID,String exUserID,String exResult,String exAmount,String reason){
+		//查找当前所处流转状态
+		WfProcessRecord wfProcessRecord = commonDao.findObjectById(WfProcessRecord.class, wfProcessRecordID);
+		WfStatusQueueRecord wfStatusQueueRecord = commonDao.findObjectById(WfStatusQueueRecord.class,wfProcessRecord.getWfStatusQueueRecord());
+		
+		//进入下一流转之前 先更新当前流转
+		wfStatusQueueRecord.setExamineUser(exUserID);
+		wfStatusQueueRecord.setExamineResult(exResult);
+		wfStatusQueueRecord.setExamineAmount(exAmount);
+		wfStatusQueueRecord.setStartExamineTime(new Date());
+		wfStatusQueueRecord.setReason(reason);
+		commonDao.updateObject(wfStatusQueueRecord);
+		
+		//退回
+		if(exResult.equalsIgnoreCase(ApproveOperationTypeEnum.RETURNAPPROVE.toString())){
+			wfProcessRecord.setIsClosed("1");
+			commonDao.updateObject(wfProcessRecord);
+			return ApproveOperationTypeEnum.RETURNAPPROVE.toString();
+		} 
+		//退回到客户经理 
+		else if(exResult.equalsIgnoreCase(ApproveOperationTypeEnum.RETURNTOFIRST.toString())){
+			wfProcessRecord.setIsClosed("1");
+			commonDao.updateObject(wfProcessRecord);
+			return ApproveOperationTypeEnum.RETURNTOFIRST.toString();
+		} 
+		//拒绝 
+		else if(exResult.equalsIgnoreCase(ApproveOperationTypeEnum.REJECTAPPROVE.toString())){
+			wfProcessRecord.setIsClosed("1");
+			commonDao.updateObject(wfProcessRecord);
+			return ApproveOperationTypeEnum.REJECTAPPROVE.toString();
+		} 
+		//通过 
+		else {
+			//根据当前审批结果 查找审批结果表 获取下一个审批状态
+			WfStatusResult wfStatusResult = wfStatusResultDao.getNextStatus(wfStatusQueueRecord.getCurrentStatus(), exUserID, exResult);
+			
+			//判断下一个审批批状态是否为结束状态
+			WfStatusInfo wfStatusInfo = commonDao.findObjectById(WfStatusInfo.class, wfStatusResult.getNextStatus());
+			if(wfStatusInfo.getIsClosed().equals("1")){//标示下一状态为结束
+				//将流程记录表标识为结束
+				wfProcessRecord.setIsClosed("1");
+				commonDao.updateObject(wfProcessRecord);
+				return ApproveOperationTypeEnum.NORMALEND.toString();
+			}
+			
+			//流转表新增一条记录
+			String beforeStatus = wfStatusQueueRecord.getCurrentStatus();
+			wfStatusQueueRecord = new WfStatusQueueRecord();
+			wfStatusQueueRecord.setBeforeStatus(beforeStatus);
+			wfStatusQueueRecord.setCurrentProcess(wfProcessRecordID);
+			wfStatusQueueRecord.setCurrentStatus(wfStatusResult.getNextStatus());
+			commonDao.insertObject(wfStatusQueueRecord);
+			
+			//流程表关联到新的流转
+			wfProcessRecord.setWfStatusQueueRecord(wfStatusQueueRecord.getId());
+			commonDao.updateObject(wfProcessRecord);
+			
+			String wfStatusInfoId = wfStatusResult.getNextStatus();
+			WfStatusInfo nextStatusInfo = commonDao.findObjectById(WfStatusInfo.class, wfStatusInfoId);
+			//返回节点的id
+			return nextStatusInfo.getStatusCode();
+		}
+	}
+	
+	public String examineForQuota(String wfProcessRecordID,String exUserID,String exResult,String exAmount){
 		//查找当前所处流转状态
 		WfProcessRecord wfProcessRecord = commonDao.findObjectById(WfProcessRecord.class, wfProcessRecordID);
 		WfStatusQueueRecord wfStatusQueueRecord = commonDao.findObjectById(WfStatusQueueRecord.class,wfProcessRecord.getWfStatusQueueRecord());
@@ -118,13 +200,36 @@ public class ProcessService {
 		if(exResult.equalsIgnoreCase(ApproveOperationTypeEnum.RETURNAPPROVE.toString())){
 			wfProcessRecord.setIsClosed("1");
 			commonDao.updateObject(wfProcessRecord);
-			return ApproveOperationTypeEnum.RETURNAPPROVE.toString();
-		} //拒绝 
+			//return ApproveOperationTypeEnum.RETURNAPPROVE.toString();
+			
+			//根据当前审批结果 查找审批结果表 获取前一个审批状态
+			WfStatusQueueRecord tmp = wfStatusResultDao.getLastStatus(wfStatusQueueRecord.getBeforeStatus());
+			
+			//流程表关联到新的流转
+			wfProcessRecord.setWfStatusQueueRecord(tmp.getId());
+			commonDao.updateObject(wfProcessRecord);
+			
+			String wfStatusInfoId = wfStatusQueueRecord.getBeforeStatus();
+			WfStatusInfo beforeStatusInfo = commonDao.findObjectById(WfStatusInfo.class, wfStatusInfoId);
+			
+			//删除当前流转
+			commonDao.deleteObject(WfStatusQueueRecord.class, wfStatusQueueRecord.getId());
+			//返回节点的id
+			return beforeStatusInfo.getStatusCode();
+		} 
+		//退回到客户经理 
+		else if(exResult.equalsIgnoreCase(ApproveOperationTypeEnum.RETURNTOFIRST.toString())){
+			wfProcessRecord.setIsClosed("1");
+			commonDao.updateObject(wfProcessRecord);
+			return ApproveOperationTypeEnum.RETURNTOFIRST.toString();
+		} 
+		//拒绝 
 		else if(exResult.equalsIgnoreCase(ApproveOperationTypeEnum.REJECTAPPROVE.toString())){
 			wfProcessRecord.setIsClosed("1");
 			commonDao.updateObject(wfProcessRecord);
 			return ApproveOperationTypeEnum.REJECTAPPROVE.toString();
-		} //通过 
+		} 
+		//通过 
 		else {
 			//根据当前审批结果 查找审批结果表 获取下一个审批状态
 			WfStatusResult wfStatusResult = wfStatusResultDao.getNextStatus(wfStatusQueueRecord.getCurrentStatus(), exUserID, exResult);

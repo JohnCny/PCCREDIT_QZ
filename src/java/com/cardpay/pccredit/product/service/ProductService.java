@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ import com.cardpay.pccredit.product.model.ProductCollectionRules;
 import com.cardpay.pccredit.product.model.ProductMaintain;
 import com.cardpay.pccredit.product.model.ProductMarketingRules;
 import com.cardpay.pccredit.product.model.ProductRewardIncentive;
+import com.cardpay.pccredit.product.model.ProductStuf;
 import com.cardpay.pccredit.product.model.ProductsAgencyAssociation;
 import com.cardpay.pccredit.product.model.ScreeningResults;
 import com.wicresoft.jrad.base.auth.IUser;
@@ -467,5 +469,25 @@ public class ProductService {
 		}else{
 			return productDao.findProductsCount();
 		}
+	}
+
+	public List<ProductStuf> findStufByProductId(String productId) {
+		return productDao.findStufByProductId(productId);
+	}
+	
+	public void insertStuf(ProductStuf stuf){
+		commonDao.insertObject(stuf);
+	}
+
+	public ProductStuf findStufById(String stufId) {
+		return productDao.findStufById(stufId);
+	}
+
+	public void updateStuf(ProductStuf stuf) {
+		commonDao.updateObject(stuf);
+	}
+
+	public ProductStuf findMaxStufByProductId(String productId) {
+		return productDao.findMaxStufByProductId(productId);
 	}
 }

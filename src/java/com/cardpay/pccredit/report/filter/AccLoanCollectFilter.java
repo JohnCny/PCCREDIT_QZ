@@ -19,6 +19,8 @@ public class AccLoanCollectFilter extends BaseQueryFilter{
 	
 	private String userId;
 	
+	private String filterTeamLeader;
+	private String loginId;
 	
 	public String getUserId() {
 		return userId;
@@ -44,7 +46,16 @@ public class AccLoanCollectFilter extends BaseQueryFilter{
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	
-	
-	
+	public String getFilterTeamLeader() {
+		return filterTeamLeader;
+	}
+	public void setFilterTeamLeader(String filterTeamLeader) {
+		this.filterTeamLeader = filterTeamLeader;
+	}
+	public String getLoginId() {
+		return loginId;
+	}
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
 }

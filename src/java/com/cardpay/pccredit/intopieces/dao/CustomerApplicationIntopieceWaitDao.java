@@ -5,6 +5,9 @@ import java.util.List;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess;
+import com.cardpay.pccredit.intopieces.model.QuotaProcess;
+import com.cardpay.pccredit.intopieces.model.QuotaProcessSx;
+import com.cardpay.pccredit.intopieces.model.QuotaProcessZa;
 import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.wicresoft.util.annotation.Mapper;
 
@@ -47,11 +50,6 @@ public interface CustomerApplicationIntopieceWaitDao {
 	public void autoAfterApplyTimeReleaseApply(String riskReviewProcessMaxDay);
 	
 	public List<CustomerApplicationIntopieceWaitForm> findNotEqualsActualAndFinalAmount();
-	
-	// 获取相应状态的进件-手动搜件
-	public List<CustomerApplicationIntopieceWaitForm> IntopieceWaitFormM(CustomerApplicationProcessFilter filter);
-	// 获取相应状态的进件count-手动搜件
-	public int CountIntopieceWaitFormM(CustomerApplicationProcessFilter filter);
 		
 	// 获取相应状态的进件-全部显示
 	public List<CustomerApplicationIntopieceWaitForm> IntopieceWaitForm(CustomerApplicationProcessFilter filter);
@@ -71,4 +69,11 @@ public interface CustomerApplicationIntopieceWaitDao {
 	public List<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByUsered(CustomerApplicationProcessFilter filter);
 	//安居贷相应状态进件显示count-针对审核人不同
 	public int CountIntopieceWaitFormByUsered(CustomerApplicationProcessFilter filter);
+	
+	//更新冻结进度表
+	public int updateQuotaProcessBySerialNumber(QuotaProcess process);
+	//更新冻结进度表
+	public int updateQuotaProcessSxBySerialNumber(QuotaProcessSx process);
+	//更新专案进度表
+	public int updateQuotaProcessZaBySerialNumber(QuotaProcessZa process);
 }

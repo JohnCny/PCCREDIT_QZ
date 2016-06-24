@@ -84,22 +84,57 @@ public class IESBForECIFController extends BaseController{
 		filter.setUserId(user.getId());
 		QueryResult<CustomerInfor> result = customerInforservice.findCustomerInfoWithEcifByFilter(filter);
 		for(int i=0;i<result.getItems().size();i++){
-				CustomerApplicationInfo info = customerInforservice.ifProcess(result.getItems().get(i).getId());
-				//目前存在申请件
-				if(info!=null){
-					if(info.getStatus().equals(Constant.APPROVED_INTOPICES)){
-						result.getItems().get(i).setProcessId(Constant.APP_STATE_4);
-					}else{
-						result.getItems().get(i).setProcessId(Constant.APP_STATE_1);
-					}
-					//目前不存在申请件（初审退回）
-				}else if(result.getItems().get(i).getProcessId()==null){
-					result.getItems().get(i).setProcessId(Constant.APP_STATE_2);
+			List<CustomerApplicationInfo> appliationinfo = customerInforservice.ifProcess(result.getItems().get(i).getId(),filter.getAppStatus());
+			//目前存在申请件
+			String statusDetail = "";
+			if(appliationinfo == null ){
+				//目前不存在申请件（初审退回）
+				if(result.getItems().get(i).getProcessId()==null){
+					statusDetail = Constant.APP_STATE_2;
+						
 					//没申请件
 				}else{
-					result.getItems().get(i).setProcessId(Constant.APP_STATE_3);
+					statusDetail = Constant.APP_STATE_3;
+				//result.getItems().get(i).setProcessId(Constant.APP_STATE_3);
+				}
+			}else{
+				for(int j=0; j<appliationinfo.size();j++){
+					CustomerApplicationInfo info = appliationinfo.get(j);
+					if(info!=null){
+						if(info.getStatus().equals(Constant.APPROVED_INTOPICES)){
+							if("".equals(statusDetail)){
+								statusDetail = Constant.APP_STATE_4;
+							}else{
+								statusDetail += "/"+Constant.APP_STATE_4;
+							}
+							
+							//result.getItems().get(i).setProcessId(Constant.APP_STATE_4);
+						}else if(info.getStatus().equals(Constant.REFUSE_INTOPICES)){
+							if("".equals(statusDetail)){
+								statusDetail = Constant.APP_STATE_5;
+							}else{
+								statusDetail += "/"+Constant.APP_STATE_5;
+							}
+							//result.getItems().get(i).setProcessId(Constant.APP_STATE_5);
+						}else if(info.getStatus().equals(Constant.SAVE_INTOPICES)){
+							if("".equals(statusDetail)){
+								statusDetail = Constant.APP_STATE_2;
+							}else{
+								statusDetail += "/"+Constant.APP_STATE_2;
+							}
+						}else{
+							if("".equals(statusDetail)){
+								statusDetail = Constant.APP_STATE_1;
+							}else{
+								statusDetail += "/"+Constant.APP_STATE_1;
+							}
+							//result.getItems().get(i).setProcessId(Constant.APP_STATE_1);
+						}
+					}
 				}
 			}
+			result.getItems().get(i).setProcessId(statusDetail);
+		}
 		JRadPagedQueryResult<CustomerInfor> pagedResult = new JRadPagedQueryResult<CustomerInfor>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/iesbforecif_browse",
                                                     request);
@@ -246,22 +281,22 @@ public class IESBForECIFController extends BaseController{
 				iesbForECIFForm.setCity(iesbForECIFForm.getCity_3().split("_")[1]);
 				//获取用户id
 				String customerId = request.getParameter("customerId");
-				System.out.println(customerId);
 				
-				ECIF ecif = ecifService.findEcifByCustomerId(customerId.trim());
+				ECIF ecifTmp = ecifService.findEcifByCustomerId(customerId.trim());
+				ECIF ecif = iesbForECIFForm.createModel(ECIF.class);
+				ecif.setId(ecifTmp.getId());
 				
 				//发送请求到ecif修改客户信息,客户信息表有客户号表示在核心开户成功，这个时候才要同步核心数据
-				if(StringUtils.isNotEmpty(ecif.getClientNo())){
+				/*if(StringUtils.isNotEmpty(ecif.getClientNo())){
 					boolean falg = ecifService.updateBasicCustomerInfo(iesbForECIFForm, ecif.getClientNo());
 					if(!falg){
 						returnMap.put(JRadConstants.SUCCESS, false);
 						returnMap.put(JRadConstants.MESSAGE, "核心修改客户信息失败");
 						return returnMap;
 					}
-				}
+				}*/
 				
 				User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
-				System.out.println(ecif.getGlobalId());
 				//写入数据到basic_customer_information表
 				CustomerInfor info = customerInforservice.findCustomerInforByCustomerId(customerId.trim());
 				if(info == null){
@@ -269,7 +304,7 @@ public class IESBForECIFController extends BaseController{
 				
 				}else{
 					//判断该用户的贷款信息是否存在
-					List<Circle> circlelist = circleService.findCircleByCardNo(info.getCardId());
+					List<Circle> circlelist = circleService.findByCustomerId(customerId.trim());
 					if(circlelist != null){
 						for(int i = 0; i < circlelist.size(); i++){
 							Circle circle = circlelist.get(i);
@@ -299,31 +334,7 @@ public class IESBForECIFController extends BaseController{
 				
 				ecif.setCreatedBy(user.getId());
 				ecif.setUserId(user.getId());
-				ecif.setGlobalId(iesbForECIFForm.getGlobalId());
-				ecif.setGlobalDesc(iesbForECIFForm.getGlobalDesc());
-				ecif.setGlobalType(iesbForECIFForm.getGlobalType());
-				ecif.setAddress(iesbForECIFForm.getAddress());
-				ecif.setAddressType(iesbForECIFForm.getAddressType());
-				ecif.setAreaCode(iesbForECIFForm.getAreaCode());
-				ecif.setBirthDate(iesbForECIFForm.getBirthDate());
-				ecif.setCertAreaCode(iesbForECIFForm.getCertAreaCode());
-				ecif.setCertOrg(iesbForECIFForm.getCertOrg());
-				ecif.setCity(iesbForECIFForm.getCity());
-				ecif.setCity_1(iesbForECIFForm.getCity_1());
-				ecif.setCity_2(iesbForECIFForm.getCity_2());
-				ecif.setCity_3(iesbForECIFForm.getCity_3());
-				ecif.setClientBelongOrg(iesbForECIFForm.getClientBelongOrg());
-				ecif.setClientName(iesbForECIFForm.getClientName());
-				ecif.setClientNameType(iesbForECIFForm.getClientNameType());
-				ecif.setClientType(iesbForECIFForm.getClientType());
-				ecif.setClientStatus(iesbForECIFForm.getClientStatus());
-				ecif.setCompanyName(iesbForECIFForm.getCompanyName());
-				ecif.setContactMode(iesbForECIFForm.getContactMode());
-				ecif.setContactModeType(iesbForECIFForm.getContactModeType());
-				ecif.setCountryCitizen(iesbForECIFForm.getCountryCitizen());
-				ecif.setCustManagerId(iesbForECIFForm.getCustManagerId());
 
-						
 				ecifService.updateCustomerInfor(ecif,info);
 				
 //				returnMap.put(RECORD_ID, id);

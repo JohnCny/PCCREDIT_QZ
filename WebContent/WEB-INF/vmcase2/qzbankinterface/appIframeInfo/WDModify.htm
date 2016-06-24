@@ -7,8 +7,8 @@
 	var docID = "";
 	var submitFlag = 0;
 	function connectScan(){
-		var InitScanWndResult = SunScan.TestInitScanWnd("168.168.241.75", "8023");//测试环境 
-		//var InitScanWndResult = SunScan.TestInitScanWnd("168.168.214.15", "8023");//生产环境
+		//var InitScanWndResult = SunScan.TestInitScanWnd("168.168.241.75", "8023");//测试环境 
+		var InitScanWndResult = SunScan.TestInitScanWnd("168.168.214.15", "8023");//生产环境
 	    
 	    if (InitScanWndResult != "0")
 	    {
@@ -27,19 +27,15 @@
     
     function submitBT(){
     	if(submitFlag == 1){
-			alert("请勿重复提交!")
+			alert("等待后台响应,请勿重复提交!")
 			return;
 		}
 		submitFlag = 1;
-    	if(confirm("确认提交吗?提交后暂不支持修改!")){
+    	if(confirm("确认提交吗?")){
     		//SunScan.SetFormNoEx("0-0021000001001000|1-0|2-0021000004001000|3-0","");
             //var result = SunScan.TestSubmitImageEx("WD_CASES", "WD_IMAGES",docID);
-<<<<<<< HEAD
-            var result = SunScan.UpdateImageToEcmEx(docID,"WD_CASES");
-=======
             //var result = SunScan.UpdateImageToEcmEx(docID,"WD_CASES");
             var result = SunScan.UpdateImageToEcmEx(docID,"WD_CASES","WD_IMAGES");
->>>>>>> chinhBy-master
             if (result == 200)
             {
                 //var url = "${contextPath}/intopieces/intopiecesapprove/insert_sunds.json?appId=${appId}&docID="+docID;

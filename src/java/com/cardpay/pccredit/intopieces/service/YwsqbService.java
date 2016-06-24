@@ -30,7 +30,6 @@ import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.divisional.constant.DivisionalProgressEnum;
 import com.cardpay.pccredit.divisional.constant.DivisionalTypeEnum;
 import com.cardpay.pccredit.divisional.service.DivisionalService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.constant.IntoPiecesException;
 import com.cardpay.pccredit.intopieces.dao.CustomerApplicationIntopieceWaitDao;
@@ -127,7 +126,7 @@ public class YwsqbService {
 		String ywsqbId = qzApplnYwsqb.getId();
 		
 		//添加经营信息
-		QzApplnJyxx tmp = jyxxDao.findJyxx(qzApplnYwsqb.getCustomerId(), request.getParameter("appId"));
+		QzApplnJyxx tmp = jyxxDao.findJyxx(qzApplnYwsqb.getCustomerId(), null);
 		if(tmp == null){
 			commonDao.insertObject(qzApplnJyxx);
 		}
@@ -169,6 +168,7 @@ public class YwsqbService {
 				obj.setYwsqbId(ywsqbId);
 				obj.setLsh(i);
 				obj.setBankOrOtherType(request.getParameter("bankOrOtherType_jkjl_"+i));
+				obj.setGuaranteeMode(request.getParameter("guaranteeMode_jkjl_"+i));
 				obj.setPurpose(request.getParameter("purpose_jkjl_"+i));
 				obj.setTotalAmount(request.getParameter("totalAmount_jkjl_"+i));
 				obj.setLoanDate(sdf.parse(request.getParameter("loanDate_jkjl_"+i)));
@@ -183,6 +183,9 @@ public class YwsqbService {
 	
 	//保存业务申请表(贷生活)
 		public void insert_page1ForLife(QzApplnYwsqb qzApplnYwsqb, HttpServletRequest request) throws Exception{
+			if(!qzApplnYwsqb.getUnitType().equals("9")){
+				qzApplnYwsqb.setUnitTypeOther("");
+			}
 			commonDao.insertObject(qzApplnYwsqb);
 			String ywsqbId = qzApplnYwsqb.getId();
 			
@@ -229,6 +232,7 @@ public class YwsqbService {
 					obj.setYwsqbId(ywsqbId);
 					obj.setLsh(i);
 					obj.setBankOrOtherType(request.getParameter("bankOrOtherType_jkjl_"+i));
+					obj.setGuaranteeMode(request.getParameter("guaranteeMode_jkjl_"+i));
 					obj.setPurpose(request.getParameter("purpose_jkjl_"+i));
 					obj.setTotalAmount(request.getParameter("totalAmount_jkjl_"+i));
 					obj.setLoanDate(sdf.parse(request.getParameter("loanDate_jkjl_"+i)));
@@ -291,6 +295,7 @@ public class YwsqbService {
 				obj.setYwsqbId(ywsqbId);
 				obj.setLsh(i);
 				obj.setBankOrOtherType(request.getParameter("bankOrOtherType_jkjl_"+i));
+				obj.setGuaranteeMode(request.getParameter("guaranteeMode_jkjl_"+i));
 				obj.setPurpose(request.getParameter("purpose_jkjl_"+i));
 				obj.setTotalAmount(request.getParameter("totalAmount_jkjl_"+i));
 				obj.setLoanDate(sdf.parse(request.getParameter("loanDate_jkjl_"+i)));
@@ -304,6 +309,9 @@ public class YwsqbService {
 	}
 	
 	public void update_page1ForLife(QzApplnYwsqb qzApplnYwsqb,HttpServletRequest request) throws Exception {
+		if(!qzApplnYwsqb.getUnitType().equals("9")){
+			qzApplnYwsqb.setUnitTypeOther("");
+		}
 		commonDao.updateObject(qzApplnYwsqb);
 		String ywsqbId = qzApplnYwsqb.getId();
 		
@@ -353,6 +361,7 @@ public class YwsqbService {
 				obj.setYwsqbId(ywsqbId);
 				obj.setLsh(i);
 				obj.setBankOrOtherType(request.getParameter("bankOrOtherType_jkjl_"+i));
+				obj.setGuaranteeMode(request.getParameter("guaranteeMode_jkjl_"+i));
 				obj.setPurpose(request.getParameter("purpose_jkjl_"+i));
 				obj.setTotalAmount(request.getParameter("totalAmount_jkjl_"+i));
 				obj.setLoanDate(sdf.parse(request.getParameter("loanDate_jkjl_"+i)));
@@ -419,13 +428,15 @@ public class YwsqbService {
 		}
 		//婚姻状况
 		if(!qzApplnYwsqb.getMaritalStatus().equals("20")){
-			qzApplnYwsqb.setMaritalStatusOther("");
 			qzApplnYwsqb.setMaritalName("");
-			qzApplnYwsqb.setMaritalGlobalType("001");
+			qzApplnYwsqb.setMaritalGlobalType("100");
 			qzApplnYwsqb.setMaritalGlobalTypeOther("");
 			qzApplnYwsqb.setMaritalGlobalId("");
 			qzApplnYwsqb.setMaritalWorkunit("");
 			qzApplnYwsqb.setMaritalPhone("");
+		}
+		if(!qzApplnYwsqb.getMaritalStatus().equals("90")){
+			qzApplnYwsqb.setMaritalStatusOther("");
 		}
 		//配偶证件类型
 		if(qzApplnYwsqb.getMaritalGlobalType() == null || !qzApplnYwsqb.getMaritalGlobalType().equals("026")){

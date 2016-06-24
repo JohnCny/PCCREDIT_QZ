@@ -25,7 +25,10 @@ public class AccLoanInfo extends BusinessModel{
 	private Double intAccum;//欠息总额
 	private String qixiDate;//起息日期
 	private String distrDate;//发放日期
+	private String settlDate;//结清日期
 	private String accStatus;//贷款状态
+	private String productId;
+	private String productName;
 	private String clientName;//客户名称
 	private Double loanBalance;//贷款余额
 	
@@ -132,6 +135,23 @@ public class AccLoanInfo extends BusinessModel{
 	public void setLoanBalance(Double loanBalance) {
 		this.loanBalance = loanBalance;
 	}
-	
+	public String getSettlDate() {
+		return settlDate;
+	}
+	public void setSettlDate(String settlDate) {
+		this.settlDate = settlDate;
+	}
+	public String getProductId() {
+		return productId;
+	}
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 	
 }

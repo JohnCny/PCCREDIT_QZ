@@ -105,8 +105,9 @@ public class QzApplnYwsqbForm extends BaseForm{
 	private String unitAddress;
 	private String companySize;
 	private String unitType;
+	private String unitTypeOther;
 	private String bussdistrictAddress;
-	private String bussdisAddDetail;
+	private String helpManagerName;
 	
 	public String getApplicationId() {
 		return applicationId;
@@ -669,17 +670,23 @@ public class QzApplnYwsqbForm extends BaseForm{
 	public void setUnitType(String unitType) {
 		this.unitType = unitType;
 	}
+	public String getUnitTypeOther() {
+		return unitTypeOther;
+	}
+	public void setUnitTypeOther(String unitTypeOther) {
+		this.unitTypeOther = unitTypeOther;
+	}
 	public String getBussdistrictAddress() {
 		return bussdistrictAddress;
 	}
 	public void setBussdistrictAddress(String bussdistrictAddress) {
 		this.bussdistrictAddress = bussdistrictAddress;
 	}
-	public String getBussdisAddDetail() {
-		return bussdisAddDetail;
+	public String getHelpManagerName() {
+		return helpManagerName;
 	}
-	public void setBussdisAddDetail(String bussdisAddDetail) {
-		this.bussdisAddDetail = bussdisAddDetail;
+	public void setHelpManagerName(String helpManagerName) {
+		this.helpManagerName = helpManagerName;
 	}
 	
 }

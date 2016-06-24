@@ -107,7 +107,9 @@ public class QzApplnYwsqb extends BusinessModel {
 	private String unitAddress;
 	private String companySize;
 	private String unitType;
+	private String unitTypeOther;
 	private String bussdistrictAddress;
+	private String helpManagerName;
 	
 	public String getCustomerId() {
 		return customerId;
@@ -601,10 +603,22 @@ public class QzApplnYwsqb extends BusinessModel {
 	public void setUnitType(String unitType) {
 		this.unitType = unitType;
 	}
+	public String getUnitTypeOther() {
+		return unitTypeOther;
+	}
+	public void setUnitTypeOther(String unitTypeOther) {
+		this.unitTypeOther = unitTypeOther;
+	}
 	public String getBussdistrictAddress() {
 		return bussdistrictAddress;
 	}
 	public void setBussdistrictAddress(String bussdistrictAddress) {
 		this.bussdistrictAddress = bussdistrictAddress;
+	}
+	public String getHelpManagerName() {
+		return helpManagerName;
+	}
+	public void setHelpManagerName(String helpManagerName) {
+		this.helpManagerName = helpManagerName;
 	}
 }

@@ -7,7 +7,6 @@
       <div class="place">
         <div class="title">贷后检查提醒</div>
       </div>
-      <div class="inquiry">
      <div class="inquiry">
        <div class="search_tag">贷后检查提醒</div>
         <div class="search">
@@ -19,7 +18,7 @@
                <li>
                 <span>检查类型：<select id="checkType" name="checkType">
                        <option value="">请选择...</option>
-	                   #dict("TASK_TYPE", $!result.filter.checkType)
+	                   #dict("TASK_TYPE", "$!result.filter.checkType")
 	                </select>
 				</span>
               </li>
@@ -39,6 +38,7 @@
               <col width="12%"/>
               <col width="14%"/>
               <col width="10%" />
+              <col width="10%" />
               <col width="10%"/>
               <col width="10%"/>
               <col width="10%"/>
@@ -50,6 +50,7 @@
               <th nowrap="nowrap">客户号</th>
               <th nowrap="nowrap">任务类型</th>
               <th nowrap="nowrap">任务生成时间</th>
+               <th nowrap="nowrap">任务截止时间</th>
               <th nowrap="nowrap">贷款总金额</th>
               <th nowrap="nowrap">贷款余额</th>
               <th nowrap="nowrap">审批状态</th>
@@ -65,6 +66,7 @@
               <col width="12%"/>
               <col width="14%"/>
               <col width="10%" />
+              <col width="10%" />
               <col width="10%"/>
               <col width="10%"/>
               <col width="10%"/>
@@ -75,8 +77,13 @@
               <td nowrap="nowrap">$!obj.chineseName</td>
               <td nowrap="nowrap">$!obj.cardId</td>
               <td nowrap="nowrap">$!obj.cusId</td>
+              #if($!obj.checkDescribe != $null)
+              <td nowrap="nowrap" title="$!obj.checkDescribe" >$!obj.checkDescribe</td>
+              #else
               <td nowrap="nowrap">#dictVal("TASK_TYPE",$!obj.taskType)</td>
+              #end
               <td nowrap="nowrap">$!obj.taskCreateDate</td>
+              <td nowrap="nowrap">$!obj.taskRequestTime</td>
               <td nowrap="nowrap">$format.formatNumber(2,$!obj.LoanTotlAmt)</td>
               <td nowrap="nowrap">$format.formatNumber(2,$!obj.loanBalance)</td>
               <td nowrap="nowrap">#dictVal("APPROVE_STATUS",$!obj.approveStatus)</td>
@@ -96,7 +103,6 @@
     </div>
     <div class="clear"></div>
     </div>
-  </div>
 </body>
 <script language="javascript" type="text/javascript">
 	var layout = new TableLayout(2);
@@ -112,6 +118,9 @@
 					var url="${contextPath}/afterloan/afterloancheck/iframe.page?id="+clientNo+"&cardId="+cardId+"&taskId="+taskId;
 					window.location.href = url;
 				}
+			}
+			else{
+				topWin.Dialog.message("请选择一条记录！");
 			}
 		});
 	});

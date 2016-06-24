@@ -1,5 +1,7 @@
 package com.cardpay.pccredit.afterloan.model;
 
+import java.util.Date;
+
 import com.wicresoft.jrad.base.database.model.BusinessModel;
 import com.wicresoft.jrad.base.database.model.ModelParam;
 
@@ -58,6 +60,15 @@ public class O_CLPM_ACC_LOAN extends BusinessModel{
 	private String twelveClassTime;
 	private String srcSysId;
 	private String odsDateTime;
+	
+	private String customerId;
+	
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
 	public String getSeqno() {
 		return seqno;
 	}

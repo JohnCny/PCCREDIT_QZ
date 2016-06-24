@@ -4,20 +4,29 @@
 package com.cardpay.pccredit.manager.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.axis.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cardpay.pccredit.customer.filter.MaintenanceFilter;
 import com.cardpay.pccredit.manager.dao.ManagerBelongMapDao;
 import com.cardpay.pccredit.manager.dao.comdao.ManagerBelongMapComdao;
 import com.cardpay.pccredit.manager.filter.ManagerBelongMapFilter;
+import com.cardpay.pccredit.manager.model.CenterBelongMap;
+import com.cardpay.pccredit.manager.model.KhjljxbcForm;
 import com.cardpay.pccredit.manager.model.ManagerBelongMap;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.cardpay.pccredit.manager.web.ManagerBelongMapForm;
+import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.modules.privilege.model.TreeNode;
@@ -32,6 +41,8 @@ import com.wicresoft.jrad.modules.privilege.model.TreeNode;
 public class ManagerBelongMapService {
 	
 	public static String IMAGEURL="manager.png";
+	
+	public static String CenterUrl = "organization.gif";
 	
 	public static String HEADIMAGEURL="head_organization.gif";
 	
@@ -48,19 +59,27 @@ public class ManagerBelongMapService {
 	 * 根节点开始获取tree json
 	 * @return
 	 */
-	public String getManagerBelongTree() {
-		ManagerBelongMap root  = managerBelongMapDao.getManagerBelongRoot();
+	public Map<String,String> getManagerBelongTree() {
+		List<ManagerBelongMap> roots  = managerBelongMapDao.getManagerBelongRoot();
 		boolean focus = true;
-		TreeNode rootNode = new TreeNode(root.getChildId(), root.getParentId(), "Root", "", "", "",
-				HEADIMAGEURL, focus, focus, true, focus, focus);
-		
-		this.managerBelongTree(rootNode, root.getChildId());
-		
-		JSONObject jsonStr = JSONObject.fromObject(rootNode);
-		if (jsonStr == null) {
-			return "{}";
+		String selectId = "";
+		String selectName = "";
+		List<TreeNode> tree = new ArrayList<TreeNode>();
+		for(ManagerBelongMap root : roots){
+			TreeNode rootNode = new TreeNode(root.getChildId(), root.getParentId(), root.getCenterName(), "", "", "",
+					CenterUrl, focus, focus, true, focus, focus);
+			
+			selectId = root.getId();
+			selectName = root.getCenterName();
+			this.managerBelongTree(rootNode, root.getChildId());
+			tree.add(rootNode);
+			focus = false;
 		}
-		return jsonStr.toString();
+		
+		JSONArray json = JSONArray.fromObject(tree); 
+		Map<String,String> retMap = new HashMap<String,String>();
+		retMap.put(json.toString(), selectId + "_" + selectName);
+		return retMap;
 	}
 
 	/**
@@ -88,7 +107,7 @@ public class ManagerBelongMapService {
 	 * @param parentId
 	 * @return
 	 */
-	public String getManagerBelongTreeById(String parentId) {
+	/*public String getManagerBelongTreeById(String parentId) {
 		TreeNode treeNode = null;
 		if(StringUtils.isEmpty(parentId)){
 			ManagerBelongMap root  = managerBelongMapDao.getManagerBelongRoot();
@@ -109,7 +128,7 @@ public class ManagerBelongMapService {
 			return "{}";
 		}
 		return jsonStr.toString();
-	}
+	}*/
 
 	/**
 	 * 分页查询
@@ -129,8 +148,18 @@ public class ManagerBelongMapService {
 	 */
 	public void insertBelongMap(ManagerBelongMap managerBelongMap) {
 		commonDao.insertObject(managerBelongMap);
+		
 	}
 
+	/**
+	 * 插入操作
+	 * @param CenterBelongMap
+	 */
+	public void insertCenter(ManagerBelongMap managerBelongMap) {
+		String sql = "insert into manager_belong_map (id,child_id,center_name)values('"+managerBelongMap.getId()+"','"+managerBelongMap.getId()+"','"+managerBelongMap.getCenterName()+"')";
+		commonDao.queryBySql(sql, null);
+	}
+	
 	/**
 	 * 根据Id删除
 	 * @param id
@@ -213,5 +242,50 @@ public class ManagerBelongMapService {
 		}
 		
 	}
+	
+	
+	public List<AccountManagerParameterForm>  findSubListManagerByManagerId(IUser user){
+		//客户经理list
+		 List<AccountManagerParameterForm>  forms = new ArrayList<AccountManagerParameterForm>();
+		 
+		 List<ManagerBelongMapForm> childBelongMapList = managerBelongMapDao.findChildId(user.getId());
+		 if(childBelongMapList != null && childBelongMapList.size() > 0){
+				StringBuffer belongChildIds = new StringBuffer();
+				belongChildIds.append("(");
+				for(ManagerBelongMapForm belongMapForm : childBelongMapList){
+					belongChildIds.append("'").append(belongMapForm.getChildId()).append("'").append(",");
+				}
+				belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+				belongChildIds.append(")");
+				return managerBelongMapDao.findAccountManagerParameterByChildIds(belongChildIds.toString());
+		 }
+		return forms;
+	}
+	
+	
+	
+	public List<AccountManagerParameterForm>  findAllManager(){
+		 return managerBelongMapDao.findAllManager();
+	}
+	
+	public QueryResult<KhjljxbcForm> findManJxList(MaintenanceFilter filter){
+		List<KhjljxbcForm> plans = managerBelongMapDao.findManJxList(filter);
+		int size = managerBelongMapDao.findManJxCountList(filter);
+		QueryResult<KhjljxbcForm> qr = new QueryResult<KhjljxbcForm>(size,plans);
+		return qr;
+	}
+
+	//将所选的客户经理及其下属按照原结构转移到目标下
+	public void change2Target(ManagerBelongMap managerBelongMap, ManagerBelongMap target) {
+		managerBelongMap.setParentId(target.getChildId());
+		commonDao.updateObject(managerBelongMap);
+		
+	}
+
+	public void delete_center(ManagerBelongMap managerBelongMap) {
+		// TODO Auto-generated method stub
+		commonDao.deleteObject(ManagerBelongMap.class, managerBelongMap.getId());
+	}
+	
 
 }

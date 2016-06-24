@@ -22,6 +22,9 @@ public class Divisional extends BaseModel{
 	private Date createdTime;
 	private String modifiedBy;
 	private Date modifiedTime;
+	
+	private String changeBelong;
+	
 	public String getId() {
 		return id;
 	}
@@ -106,5 +109,10 @@ public class Divisional extends BaseModel{
 	public void setModifiedTime(Date modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
-	
+	public String getChangeBelong() {
+		return changeBelong;
+	}
+	public void setChangeBelong(String changeBelong) {
+		this.changeBelong = changeBelong;
+	}
 }

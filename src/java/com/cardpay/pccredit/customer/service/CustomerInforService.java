@@ -52,7 +52,10 @@ import com.cardpay.pccredit.intopieces.model.CustomerApplicationRecom;
 import com.cardpay.pccredit.intopieces.model.IntoPieces;
 import com.cardpay.pccredit.intopieces.model.QzApplnDcnr;
 import com.cardpay.pccredit.intopieces.model.VideoAccessories;
+import com.cardpay.pccredit.ipad.constant.IpadConstant;
+import com.cardpay.pccredit.ipad.model.CustomerInfoIpad;
 import com.cardpay.pccredit.ipad.model.ProductAttribute;
+import com.cardpay.pccredit.product.service.ProductService;
 import com.cardpay.pccredit.system.constants.NodeAuditTypeEnum;
 import com.cardpay.pccredit.system.constants.YesNoEnum;
 import com.cardpay.pccredit.system.model.Dict;
@@ -64,10 +67,16 @@ import com.cardpay.workflow.models.WfProcessInfo;
 import com.cardpay.workflow.models.WfStatusInfo;
 import com.cardpay.workflow.models.WfStatusResult;
 import com.cardpay.workflow.service.ProcessService;
+import com.dc.eai.data.Array;
+import com.dc.eai.data.CompositeData;
+import com.dc.eai.data.Field;
+import com.dc.eai.data.FieldAttr;
+import com.dc.eai.data.FieldType;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
 import com.wicresoft.jrad.base.database.id.IDGenerator;
 import com.wicresoft.jrad.base.database.model.BusinessModel;
 import com.wicresoft.jrad.base.database.model.QueryResult;
+import com.wicresoft.jrad.modules.privilege.model.User;
 
 /**
  * 
@@ -96,6 +105,9 @@ public class CustomerInforService {
 	
 	@Autowired
 	private ECIFService eCIFService;
+	
+	@Autowired
+	private ProductService productService;
 	
 	/**
 	 * 得到该客户经理下的客户数量
@@ -201,8 +213,6 @@ public class CustomerInforService {
 		return commonDao.findObjectsByFilter(VideoAccessories.class, filter);
 	}
 	
-	
-	
 	/**
 	 * 按id查找相应的客户基本信息
 	 * @param customerInforId
@@ -248,6 +258,13 @@ public class CustomerInforService {
 	public List<Dict> findNationality(){
 		List<Dict> nationalities = customerInforDao.findNationality();
 		return nationalities;
+	}
+	/**
+	 * 根据dictType获取字典
+	 */
+	public List<Dict> findDict(String dict_type){
+		List<Dict> dict = customerInforDao.findDict(dict_type);
+		return dict;
 	}
 	/**
 	 * 获取证件类型
@@ -1423,12 +1440,13 @@ public class CustomerInforService {
 	/**
 	 * 查询客户是否已有进件流程
 	 */
-	public CustomerApplicationInfo ifProcess(String customerId){
+	public List<CustomerApplicationInfo> ifProcess(String customerId,String appStatus){
 		CustomerApplicationInfoFilter info = new CustomerApplicationInfoFilter();
 		info.setCustomerId(customerId);
-		List<CustomerApplicationInfo> listApplicationInfo = customerinforcommDao.ifProcess(customerId);
+		info.setStatus(appStatus);
+		List<CustomerApplicationInfo> listApplicationInfo = customerinforcommDao.ifProcess(customerId,appStatus);
 		if(listApplicationInfo.size()>0){
-			return listApplicationInfo.get(0);
+			return listApplicationInfo;
 		}else{
 			return null;
 		}
@@ -1458,4 +1476,14 @@ public class CustomerInforService {
 		}
 	}
 	
+	//根据登陆名查询userid
+	public List<User> findUserByLogin(String login){
+		return customerinforcommDao.findUserByLogin(login);
+	}
+	
+	//检查是否允许进件
+	public int checkCanApplyOrNot(String custId, String userId) {
+		// TODO Auto-generated method stub
+		return customerInforDao.checkCanApplyOrNot(custId);
+	}
 }

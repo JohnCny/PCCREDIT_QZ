@@ -17,13 +17,13 @@ import com.cardpay.pccredit.QZBankInterface.model.Circle;
 import com.cardpay.pccredit.QZBankInterface.service.CircleService;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.constant.JRadConstants;
@@ -80,6 +80,8 @@ public class IntopiecesOnelevelControl extends BaseController{
 				"/intopieces/intopieces_wait/intopiecesApprove_onelevel", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -113,11 +115,11 @@ public class IntopiecesOnelevelControl extends BaseController{
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
 			String appId = request.getParameter("id");
-
+			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
 			request.setAttribute("serialNumber", process.getSerialNumber());
 			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 			request.setAttribute("objection", "false");
 			//查找审批金额
 			Circle circle = circleService.findCircleByAppId(appId);
@@ -125,9 +127,9 @@ public class IntopiecesOnelevelControl extends BaseController{
 			request.setAttribute("examineAmount", circle.getContractAmt());
 			
 			//先开户 后通过applicationId查找circle并放款 
-			String rtn = circleService.updateCustomerInforCircle_ESB(circle);
+			String rtn = circleService.updateCustomerInforCircle_ESB(circle,user);
 			if("放款成功".equals(rtn)){
-				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
+				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
 				returnMap.put(JRadConstants.SUCCESS, true);
 				returnMap.addGlobalMessage(CHANGE_SUCCESS);
 				returnMap.put("retMsg",rtn);

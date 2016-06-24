@@ -21,7 +21,7 @@
 				</span>
               </li>
               <li>
-                <span>客户经理号：<input type="text" name="managerId" value='$!filter.managerId' /></span>
+                <span>日期：<input type="text" name="endDate" value='$!date.format("yyyy-MM-dd",$!filter.endDate)' onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
               </li>
               <li>
                 <span>客户名称：<input type="text" name="clientName" value='$!filter.clientName' /></span>
@@ -121,9 +121,11 @@
             #end
           </table>
         </div>
-      </div>		
+      </div>	
+      <div class="pagebar">	
         <div class="clear"></div>
       </div>
+    </div>
     </div>
 </body>
 <script language="javascript" type="text/javascript">

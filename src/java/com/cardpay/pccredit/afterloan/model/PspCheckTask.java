@@ -35,6 +35,10 @@ public class PspCheckTask extends BusinessModel{
 	private String contactInformation;
 	private String repaymentOther;//还款情况说明
 	
+	private String checkDescribe;//记录所有贷款检查种类
+	private String uploadFlag;
+	private String fallbackReason;
+	
 	public String getTaskId() {
 		return taskId;
 	}
@@ -167,7 +171,23 @@ public class PspCheckTask extends BusinessModel{
 	public void setRepaymentOther(String repaymentOther) {
 		this.repaymentOther = repaymentOther;
 	}
-	
-	
+	public String getCheckDescribe() {
+		return checkDescribe;
+	}
+	public void setCheckDescribe(String checkDescribe) {
+		this.checkDescribe = checkDescribe;
+	}
+	public String getUploadFlag() {
+		return uploadFlag;
+	}
+	public void setUploadFlag(String uploadFlag) {
+		this.uploadFlag = uploadFlag;
+	}
+	public String getFallbackReason() {
+		return fallbackReason;
+	}
+	public void setFallbackReason(String fallbackReason) {
+		this.fallbackReason = fallbackReason;
+	}
 	
 }

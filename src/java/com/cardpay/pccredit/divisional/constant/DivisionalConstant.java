@@ -11,6 +11,7 @@ public class DivisionalConstant {
 	public static final String RECEIVED = "received";
 	public static final String REJECT = "reject";
 	public static final String DISTRIBUTION = "distribution";
+	public static final String RETURN = "return";
 	public static final String UPLOADSUCCESS = "上传成功";
 	public static final String UPLOADERROR = "上传失败";
 	public static final String UPLOADERRORC = "上传失败,正在移交卡中心";

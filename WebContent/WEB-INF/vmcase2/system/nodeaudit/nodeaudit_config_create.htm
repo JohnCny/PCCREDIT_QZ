@@ -31,7 +31,7 @@
               <td>&nbsp;</td>
               <td><label for="nodeTypeView">节点类型:</label></td>
               <td>
-               <select id="nodeTypeView" name="nodeTypeView" disabled="disabled">
+               <select id="nodeTypeView" name="nodeTypeView" readonly>
                 #dict("NODETYPE", $!nodeType)
                </select>
               </td>
@@ -96,7 +96,7 @@
 	function selectNodeConfigUsers() {
 		
 		
- Dialog.tablePage("${contextPath}/system/approvaluser/browse.page","选择审批人员","get","",function(){
+ Dialog.tablePage("${contextPath}/system/approvaluser/browse.page?selectval=$!nodeAudit.auditUserIds","选择审批人员","get","",function(){
 			 
 			 var val = window.top.$("#selectval").val(); 
 			 if(val !=""){
@@ -124,7 +124,7 @@
 			 window.top.$("#selectval").val("");
 			 window.top.$("#tablePage_diaog").dialog("close");
 			 
-		 },800,750);
+		},700,500);
 	}
 	
 	</script>

@@ -42,15 +42,16 @@
          </div>
 			<div class="pagebar">
 				<div class="controlbtn">
-					#btnpriv("create") <a id="id_create_button" class="btn_g"
-						href="javascript:void(0);" title="#i18n('button.create.hint')">#i18n("button.create")</a>
-					#end 
-					#btnpriv("subturnother") <a id="id_change_button" class="btn_g"
-						href="javascript:void(0);" title="选中的下属转移至弹出选择的客户经理下">下属转至</a>
-					#end
-					#btnpriv("delete") <a id="id_delete_button" class="btn_g"
-						href="javascript:void(0);" title="#i18n('button.delete.hint')">#i18n("button.delete")</a>
-					#end
+						<a id="id_create_button" class="btn_g"
+						href="javascript:void(0);" title="创建客户经理">创建客户经理</a>
+						<a id="id_delete_button" class="btn_g"
+						href="javascript:void(0);" title="删除客户经理">删除客户经理</a>
+						<a id="id_center_create_button" class="btn_g"
+						href="javascript:void(0);" title="创建中心">创建中心</a>
+						<a id="id_center_delete_button" class="btn_g"
+						href="javascript:void(0);" title="删除中心">删除中心</a>
+						<a id="id_change_button" class="btn_g"
+						href="javascript:void(0);" title="选中的下属转移至弹出选择的客户经理下">转至</a>
 				</div>
 				#parse ("common/pagination.htm")
 				<div class="clear"></div>
@@ -59,7 +60,10 @@
 	<div id="selectChangeDialog" title="选择要转入的客户经理" style="display: none; resize: none; z-index: 2000">
       <form id="selectChangeForm">
         <div class="forms">
-	 	   	<span>目标经理：</span><select id="selectTarget" name="selectTarget">
+	 	   	<span>请选择：</span><select id="selectTarget" name="selectTarget" width="80px">
+	 	   	#foreach($obj in $roots)
+	 	   		<option value="$!obj.id">$!obj.centerName</option>
+	 	   	#end
             </select>
         </div>
       </form>
@@ -72,47 +76,31 @@
 	    var placeHeight = $(p_place).outerHeight(true);
 	    var layout = new TableLayout(3,placeHeight,0.73);
 		window.top.currentWindow.setLayout(layout);
+		var tmpHtml= "";
 		$(document).ready(function() {
-		var opsObj = new Object();
-		opsObj.formObj = $("#submitForm");
-		opsObj.createUrl = "${modulePath}/create.page?parentId=$!organization.parentId&userName=$!organization.userName";
-		opsObj.changeUrl = "${modulePath}/change.json";
-		opsObj.deleteUrl = "${modulePath}/delete.json";
-		opsObj.browseUrl = "${modulePath}/browse.page";
+			tmpHtml = $("#selectTarget").html();
+		var createUrl = "${modulePath}/create.page?parentId=$!organization.parentId&userName=$!organization.userName";
+		var changeUrl = "${modulePath}/change.json";
+		var deleteUrl = "${modulePath}/delete.json";
+		var browseUrl = "${modulePath}/browse.page";
+		var deleteCenterUrl = "${modulePath}/delete_center.json";
 		
+		$("#id_center_create_button").click(function() {
+            window.location.href = "${modulePath}/center_create.page";
+        });
 		
-		if (opsObj.createUrl) {
-	        $("#id_create_button").click(function() {
-	            var url = opsObj.createUrl;
-	            if (opsObj.formObj) {
-	                // 回调URL
-	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
-	                if (callBackUrlObj) {
-	                	if(url.indexOf("?")>=0){
-	                		url += "&" + $.param({
-		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
-		                    });
-	                	}else{
-		                    url += "?" + $.param({
-		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
-		                    });
-	                	}
-	                }
-	            }
-	            window.location.href = url;
-	        });
-	    }
+		$("#id_create_button").click(function() {
+            var url = createUrl;
+            window.location.href = url;
+        });
+		
 		$("#id_change_button").click(function() {
             if ($(".checkbox :checked").length == 1) {
-                $("#id_change_button").unbind();
                 var rowid = $($(".checkbox :checked")[0]).attr("value");
-                var url = opsObj.changeUrl + "?id=" + rowid;
-                
+                var url = changeUrl + "?id=" + rowid;
                 var selectTargetList =  $("#selectTargetList").val();
                 var selectTargetListArr = selectTargetList.split("=");
-                
-                
-                if(selectTargetListArr.length >= 3){
+                //if(selectTargetListArr.length >= 3){
                 	var htm = "";
                 	for(var i=0; i<selectTargetListArr.length; i++) {
                         var selectTargetArrStr = selectTargetListArr[i];
@@ -123,18 +111,18 @@
                             }                    	
                         }
                     }
-                    $("#selectTarget").html(htm);
+                	
+                    $("#selectTarget").html(tmpHtml+htm);
                     
-                    Dialog.form("#selectChangeForm", "选择要转移的客户经理", function(){
+                    Dialog.form("#selectChangeForm", "选择要转移至的中心或团队长", function(){
                 		var selectTargetId = window.top.$("#selectTarget").val();
-                		$.post(opsObj.changeUrl, {
+                		$.post(changeUrl, {
 	                        id: rowid,
 	                        targetId :selectTargetId
 	                    },
 	                    function(data, textStatus, jqXhr) {
 	                        if (data.success) {
-	                        	parent.addTreeNode();
-	                            window.location.reload(true);
+	        	            	parent.location.reload();
 	                        } else {
 // 	                            Dialog.message(data.message);
 	                        }
@@ -142,41 +130,55 @@
                 		
                 		window.top.$("#form_diaog").dialog("close");
                 	}, null, 400, 200);
-                } else {
-                	Dialog.message("同层次没有其他客户经理不能做此操作");
-                }
+                //} else {
+                //	Dialog.message("同层次没有其他客户经理不能做此操作");
+                //}
             } else {
                 Dialog.message("请选择一行");
             }
         });
 
-		if (opsObj.deleteUrl) {
-	        $("#id_delete_button").click(function() {
-	            if ($(".checkbox :checked").length == 1) {
-	                var rowid = $($(".checkbox :checked")[0]).attr("value");
-	                Dialog.confirm("确定删除所选行吗？", "提示",
-	                function() {
-	                    $.post(opsObj.deleteUrl, {
-	                        id: rowid
-	                    },
-	                    function(data, textStatus, jqXhr) {
-	                        if (data.success) {
-	                        	parent.addTreeNode();
-	                            window.location.reload(true);
-	                        } else {
-// 	                            Dialog.message(data.message);
-	                        }
-	                    });
-	                });
-	            } else {
-	                Dialog.message("请选择一行");
-	            }
-	        });
-	    }
+		$("#id_delete_button").click(function() {
+            if ($(".checkbox :checked").length == 1) {
+                var rowid = $($(".checkbox :checked")[0]).attr("value");
+                Dialog.confirm("确定删除所选行吗？", "提示",
+                function() {
+                    $.post(deleteUrl, {
+                        id: rowid
+                    },
+                    function(data, textStatus, jqXhr) {
+                        if (data.success) {
+        	            	parent.location.reload();
+                        } else {
+//	                            Dialog.message(data.message);
+                        }
+                    });
+                });
+            } else {
+                Dialog.message("请选择一行");
+            }
+        });
 	
-		initClickEvent();
-	    
-		//prepareOperations(opsObj);
+		$("#id_center_delete_button").click(function() {
+			$("#selectTarget").html(tmpHtml);
+            
+            Dialog.form("#selectChangeForm", "选择要删除的中心", function(){
+        		var selectTargetId = window.top.$("#selectTarget").val();
+        		$.post(deleteCenterUrl, {
+                    targetId :selectTargetId
+                },
+                function(data, textStatus, jqXhr) {
+                    if (data.success) {
+    	            	parent.location.reload();
+                    } else {
+//                         Dialog.message(data.message);
+                    }
+                });
+        		
+        		window.top.$("#form_diaog").dialog("close");
+        	}, null, 400, 200);
+        });
+
 	});
 </script>
 #parse ("common/iframe_page_footer.htm")

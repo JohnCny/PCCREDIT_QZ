@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.system.constants.NodeAuditTypeEnum;
 import com.cardpay.pccredit.system.filter.NodeAuditFilter;
 import com.cardpay.pccredit.system.model.NodeAudit;
 import com.cardpay.pccredit.system.model.NodeControl;
@@ -286,4 +288,120 @@ public class NodeAuditController implements JRadConstants {
 
 		return returnMap;
 	}
+	
+	/**
+	 * 配置冻结、解冻流程节点信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "browse_quotafreezeorthawcfg.page")
+	public AbstractModelAndView browse_quotafreezeorthawcfg(HttpServletRequest request) {
+		NodeAuditFilter filter = new NodeAuditFilter();
+		filter.setRequest(request);
+		filter.setProductId(Constant.QUOTAFREEZEORTHAW_ID);
+		filter.setNodeType(NodeAuditTypeEnum.Quotafreezeorthaw.name());
+		QueryResult<NodeAuditForm> firstresult = nodeAuditService.findProductsNodeAuditByFilter(filter);
+		//不存在结束节点则创建个结束节点
+		if(firstresult.getTotalCount()<1){
+			NodeAuditForm nodeAudit = new NodeAuditForm();
+			User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
+			nodeAudit.setCreatedBy(user.getId());
+			nodeAudit.setCreatedTime(new Date());
+			nodeAudit.setModifiedBy(user.getId());
+			nodeAudit.setModifiedTime(new Date());
+			nodeAudit.setProductId(Constant.QUOTAFREEZEORTHAW_ID);
+			nodeAudit.setIsstart("NO");
+			nodeAudit.setIsend("YES");
+			nodeAudit.setNodeName("结束");
+			nodeAudit.setNodeType(NodeAuditTypeEnum.Quotafreezeorthaw.name());
+			nodeAuditService.insertNodeAudit(nodeAudit);
+		}
+		QueryResult<NodeAuditForm> result = nodeAuditService.findProductsNodeAuditByFilter(filter);
+		JRadPagedQueryResult<NodeAuditForm> pagedResult = new JRadPagedQueryResult<NodeAuditForm>(filter, result);
+		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_config_browse", request);
+		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("productId", Constant.QUOTAFREEZEORTHAW_ID);
+		mv.addObject("nodeType", NodeAuditTypeEnum.Quotafreezeorthaw.name());
+		return mv;
+	}
+
+	/**
+	 * 配置授信信息维护节点信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "browse_sxinfocfg.page")
+	public AbstractModelAndView browse_sxinfocfg(HttpServletRequest request) {
+		NodeAuditFilter filter = new NodeAuditFilter();
+		filter.setRequest(request);
+		filter.setProductId(Constant.SX_INFO);
+		filter.setNodeType(NodeAuditTypeEnum.SXInfo.name());
+		QueryResult<NodeAuditForm> firstresult = nodeAuditService.findProductsNodeAuditByFilter(filter);
+		//不存在结束节点则创建个结束节点
+		if(firstresult.getTotalCount()<1){
+			NodeAuditForm nodeAudit = new NodeAuditForm();
+			User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
+			nodeAudit.setCreatedBy(user.getId());
+			nodeAudit.setCreatedTime(new Date());
+			nodeAudit.setModifiedBy(user.getId());
+			nodeAudit.setModifiedTime(new Date());
+			nodeAudit.setProductId(Constant.SX_INFO);
+			nodeAudit.setIsstart("NO");
+			nodeAudit.setIsend("YES");
+			nodeAudit.setNodeName("结束");
+			nodeAudit.setNodeType(NodeAuditTypeEnum.SXInfo.name());
+			nodeAuditService.insertNodeAudit(nodeAudit);
+		}
+		QueryResult<NodeAuditForm> result = nodeAuditService.findProductsNodeAuditByFilter(filter);
+		JRadPagedQueryResult<NodeAuditForm> pagedResult = new JRadPagedQueryResult<NodeAuditForm>(filter, result);
+		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_config_browse", request);
+		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("productId", Constant.SX_INFO);
+		mv.addObject("nodeType", NodeAuditTypeEnum.SXInfo.name());
+		return mv;
+	}
+	
+	/**
+	 * 配置专案信息维护节点信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "browse_zainfomationcfg.page")
+	public AbstractModelAndView browse_zainfomationcfg(HttpServletRequest request) {
+		NodeAuditFilter filter = new NodeAuditFilter();
+		filter.setRequest(request);
+		filter.setProductId(Constant.ZA_INFO);
+		filter.setNodeType(NodeAuditTypeEnum.ZAInfo.name());
+		QueryResult<NodeAuditForm> firstresult = nodeAuditService.findProductsNodeAuditByFilter(filter);
+		//不存在结束节点则创建个结束节点
+		if(firstresult.getTotalCount()<1){
+			NodeAuditForm nodeAudit = new NodeAuditForm();
+			User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
+			nodeAudit.setCreatedBy(user.getId());
+			nodeAudit.setCreatedTime(new Date());
+			nodeAudit.setModifiedBy(user.getId());
+			nodeAudit.setModifiedTime(new Date());
+			nodeAudit.setProductId(Constant.ZA_INFO);
+			nodeAudit.setIsstart("NO");
+			nodeAudit.setIsend("YES");
+			nodeAudit.setNodeName("结束");
+			nodeAudit.setNodeType(NodeAuditTypeEnum.ZAInfo.name());
+			nodeAuditService.insertNodeAudit(nodeAudit);
+		}
+		QueryResult<NodeAuditForm> result = nodeAuditService.findProductsNodeAuditByFilter(filter);
+		JRadPagedQueryResult<NodeAuditForm> pagedResult = new JRadPagedQueryResult<NodeAuditForm>(filter, result);
+		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_config_browse", request);
+		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("productId", Constant.ZA_INFO);
+		mv.addObject("nodeType", NodeAuditTypeEnum.ZAInfo.name());
+		return mv;
+	}
+	
+	
 }

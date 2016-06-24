@@ -6,31 +6,63 @@
   <div class="content_main">
     <div class="contentinner">
       <div class="place">
-        <div class="title">进件查询</div>
+        <div class="title">进件查询(管理岗)</div>
       </div>
       <div class="inquiry">
-       <div class="search_tag">进件查询</div>
+       <div class="search_tag">进件查询(管理岗)</div>
         <div class="search">
           <form id="queryForm" action="${contextPath}/intopieces/intopiecesqueryAll/browseAll.page">
           <ul>
               <li>
                 <span>客户名称：<input type="text" id="chineseName" name="chineseName" value="$!result.filter.chineseName" /></span>
               </li>
-               <li>
+              <li>
                 <span>证件号码：<input type="text" id="cardId" name="cardId" value="$!result.filter.cardId" /></span>
               </li>
-              <!-- <li>
+              <li>
+                <span>客户经理：
+                	<select type="text" id="cus_mgr_id" name="cus_mgr_id">
+	                	<option value="">请选择</option>
+	                	#foreach ($obj in $blg_cus_ls)
+	                	<option value="$!obj.TypeCode" #if($!result.filter.cus_mgr_id == $!obj.TypeCode) selected #end>$!obj.TypeName</option>
+	                	#end
+                	</select>
+                </span>
+              </li>
+	          <li>
+	          	  <span><input type="checkbox" name="check_approve_flag" value="1" #if($!$!result.filter.check_approve_flag) checked="checked" #end />终审日期：
+	          	  <input type="text" name="startDate" value='$!date.format("yyyy-MM-dd",$!result.filter.startDate)' onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              <li>
+                  <span><input type="text" name="endDate" value='$!date.format("yyyy-MM-dd",$!result.filter.endDate)' onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              <li>
+	              <span>产品名称：<select id="productId" name="productId">
+	              		   <option value="ALL">请选择</option>
+		                   #dict("ProductName", $!$!result.filter.productId)
+		                </select>
+		          </span>
+	          </li>
+              <li>
                 <span>进件状态：<select id="status" name="status" value="$!result.filter.status" >
                 <option  value="" >ALL</option>
                 <option #if($!result.filter.status=='save') selected="selected" #end value="save">暂存 </option>
-                <option #if($!result.filter.status=='audit') selected="selected" #end value="audit">已申请 </option>
-                <option #if($!result.filter.status=='nopass') selected="selected" #end value="nopass">申请未通过 </option>
-                <option #if($!result.filter.status=='refuse') selected="selected" #end value="refuse">被拒绝</option>
+                <option #if($!result.filter.status=='audit' || $!result.filter.status=='RETURNAPPROVE') selected="selected" #end value="audit">已申请 </option>
+                <option #if($!result.filter.status=='refuse') selected="selected" #end value="refuse">拒绝</option>
                 <option #if($!result.filter.status=='approved') selected="selected" #end value="approved">审批结束  </option>
-                <option #if($!result.filter.status=='succeed') selected="selected" #end value="succeed">申请成功</option>
+                 <option #if($!result.filter.status=='returnedToFirst') selected="selected" #end value="returnedToFirst">退回客户经理</option>
                 </select>
-              </li> -->
-               
+                </span>
+              </li>
+              <li>
+	              <span>&nbsp;&nbsp;续授信：&nbsp;&nbsp;
+	              	 	<select id="isContinue" name="isContinue">
+	              		   <option value="">ALL</option>
+		                   <option value="YES" #if($!result.filter.isContinue == 'YES') selected #end>是</option>
+		                   <option value="NO" #if($!result.filter.isContinue == 'NO') selected #end>否</option>
+		                </select>
+		          </span>
+	          </li>
               <li class="search_button">
                 <input type="button" value="#i18n('button.browse')" class="search_button_inquiry"
                   title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" onclick="javascript:this.form.submit();"/>
@@ -44,9 +76,10 @@
               <col width="5%" />
               <col width="15%" />
               <col width="15%"/>
-              <col width="20%"/>
+              <col width="10%"/>
               <col width="15%"/>
               <col width="15%"/>
+              <col width="5%" />
               <col />
             </colgroup>
             <tr class="title">
@@ -57,6 +90,7 @@
               <th nowrap="nowrap">申请额度</th>
               <th nowrap="nowrap">状态</th>
               <th nowrap="nowrap">进度</th>
+              <th nowrap="nowrap">续授信</th>
             </tr>
           </table>
         </div>
@@ -66,14 +100,15 @@
               <col width="5%" />
               <col width="15%" />
               <col width="15%"/>
-              <col width="20%"/>
+              <col width="10%"/>
               <col width="15%"/>
               <col width="15%"/>
+              <col width="5%" />
               <col />
             </colgroup>
             #foreach ($intoPieces in $result.items)
             <tr>
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!{intoPieces.id}_$!{intoPieces.customerId}"/></td>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!{intoPieces.id}_$!{intoPieces.customerId}_$!{intoPieces.status}_$!intoPieces.productId"/></td>
               <td nowrap="nowrap">$!intoPieces.chineseName</td>
               <td nowrap="nowrap">$!intoPieces.cardId</td>
               <td nowrap="nowrap">#dictVal("ProductName",$!intoPieces.productId)</td>
@@ -82,26 +117,35 @@
 	              #if($!intoPieces.status=='audit')已申请  
 	              #elseif($!intoPieces.status=='save')暂存 
 	              #elseif($!intoPieces.status=='nopass')申请未通过 
-	              #elseif($!intoPieces.status=='refuse')被拒绝
+	              #elseif($!intoPieces.status=='refuse')拒绝
 	              #elseif($!intoPieces.status=='RETURNAPPROVE')审核退回
 	              #elseif($!intoPieces.status=='approved')审批结束  
-	              #elseif($!intoPieces.status=='succeed')申请成功 
+	              #elseif($!intoPieces.status=='succeed')申请成功
+	              #elseif($!intoPieces.status=='returnedToFirst')退回客户经理
 	              #end
               </td>
                <td nowrap="nowrap">$!intoPieces.nodeName</td>
+               <td nowrap="nowrap">
+               		#if($!intoPieces.isContinue != $null)
+               			是
+               		#else
+               			否
+               		#end
+               </td>
             </tr>
             #end
           </table>
         </div>
       </div>
       <div class="pagebar">
-        <div class="controlbtn"><a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('NO')">查看审批记录</a>
-
-        <div class="controlbtn">
-
+        <div class="controlbtn"><a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录</a>
         <a class="btn_g" href="javascript:void(0);" title="查看申请信息" onclick="viewIntoPicesApproveDisplay('NO')">查看申请信息</a>
-        #btnpriv("scan")<a class="btn_g" href="javascript:void(0);" title="影像补扫" onclick="scan('NO')">影像补扫</a>#end
-
+       	<a class="btn_g" href="javascript:void(0);" title="删除申请信息" onclick="deleteApp();">删除申请信息</a>
+        <!-- -->  #btnpriv("scan")<a class="btn_g" href="javascript:void(0);" title="影像补扫" onclick="scan('NO')">影像补扫</a>#end
+        <a class="btn_g" href="javascript:void(0);" title="已贷款客户信息导出" onclick="exportApprovedInfo()">已贷款客户信息导出</a>
+        <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> -->
+          <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>
+        <a id="id_upload_button" class="btn_g" title="导入调查模板">导入调查模板</a>
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -122,6 +166,55 @@
 		opsObj.deleteUrl = "${modulePath}/delete.json";
 		opsObj.browseUrl = "${modulePath}/browse.page";
 		opsObj.exportUrl = "${modulePath}/export.page";
+		
+		//查看调查模板
+		$("#id_report_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				var url = "${contextPath}/intopieces/intopiecesapprove/report_khxx.page?appId=" + rowid.split("_")[0];
+				
+				var isInRisk = false;
+  				$.ajax({
+						url : "${contextPath}/intopieces/intopiecesapprove/isInBlacklist.json?id="+rowid.split("_")[0],
+						type : "get",
+						async: false,
+						success : function(data) {
+							if (data.success) {
+								if(data.isInList){
+									isInRisk = true;
+								}
+							}else{
+								window.top.Dialog.message("系统出现异常,请联系管理员");
+					    	}
+						}
+			    });
+  				
+  				if(isInRisk){
+  				   window.top.Dialog.message("未导入调查模板");
+  				   return;
+  				}
+				
+				if (opsObj.formObj) {
+	                // 回调URL
+	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+	                if (callBackUrlObj) {
+	                	if(url.indexOf("?")>=0){
+	                		url += "&" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}else{
+		                    url += "?" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}
+	                }
+	            }
+				window.location.href = url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    });
 		prepareOperations(opsObj);
 		
 	});
@@ -153,15 +246,21 @@
 			Dialog.message("请选择要被查看的进件!");
 		}
 	}
-
+	
 	//flag: 1:为影像补扫入口。null：内部审核
 	function scan(flag){
 		var id = null;
 		var appId = null;
+		var status = null;
 		$("input[name='checkbox']:checked").each(function() {
 			appId = $(this).val().split("_")[0];
 			id = $(this).val().split("_")[1];
+			status = $(this).val().split("_")[2];
 		});
+		if(status == "save"){
+			Dialog.message("该进件未勾选待上传资料清单，无法补扫!");
+			return;
+		}
 		if(id!=null){
 			var url="${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=" + appId;
 			window.location.href = url;
@@ -171,5 +270,83 @@
 		}
 	}
 	
+	function exportApprovedInfo(){
+		var url="${contextPath}/intopieces/intopiecesqueryAll/exportApprovedInfo.page";
+		window.location.href = url;
+	}
+	
+	
+	//add 导入调查模板
+	$("#id_upload_button").click(function() {
+        if ($(".checkbox :checked").length == 1) {
+        	var custId = getCurrentRowId().split("_")[1];
+			var appId = getCurrentRowId().split("_")[0];
+			var prodId = getCurrentRowId().split("_")[3];
+			
+            var url = "${contextPath}/intopieces/intopiecesqueryAll/reportImport.page?customerId="+custId+"&productId="+prodId+"&applicationId="+appId;
+            window.location.href = url;
+        } else {
+            Dialog.message("请选择一行");
+        }
+    });
+	
+	//删除进件
+	function deleteApp() {
+		if ($(".checkbox :checked").length == 1) {
+			var custId = getCurrentRowId().split("_")[1];
+			var appId = getCurrentRowId().split("_")[0];
+			var sec = getCurrentRowId().split("_")[2];
+			if(sec =='approved'){
+				Dialog.message("流程已结束，无法删除");
+				return;
+			}   
+			if(custId!=null){
+				Dialog.confirm("确定删除申请吗？", "提示",
+	                function() {
+						var url = "${contextPath}/intopieces/intopiecesapprove/delete_apply.json?id="+custId+"&appId="+appId;
+		   	        	$.ajax({
+							url : url,
+							type : "get",
+							success : function(data) {
+								if (data.success) {
+									topWin.Dialog.message("删除成功！");
+									window.location.reload(true);
+								}
+								else{
+									topWin.Dialog.message(data.message);
+							    }
+							}
+						});
+	                });
+			}
+		}else{
+			Dialog.message("请选择一条记录!");
+		}
+    }
+	
+	var idTmr = "";
+	function startExcel(){
+		var appId = null;
+		$("input[name='checkbox']:checked").each(function() {
+			appId = $(this).val().split("_")[0];
+		});
+		if(appId!=null){
+			var OExcel;
+			var oWorkbook;
+			oExcel = new ActiveXObject("Excel.Application");
+			var url = "${url}/system/startexcel/startExcel.json?appId="+appId;
+			oExcel.Workbooks.Open(url);
+			oExcel.DisplayAlerts = false;
+			oExcel.Visible = true;
+			idTmr = window.setInterval("Cleanup();",1000);
+		
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	function Cleanup(){
+		window.clearInterval(idTmr);
+		CollectGarbage();
+	}
 </script>
 #parse ("common/iframe_page_footer.htm")

@@ -37,7 +37,10 @@ var validator = $($formName).validate({
 		openAcctDate:{required:true},
 		
 		feeAmount:{required:true,number:true},
-		feeAcctNo:{required:true}
+		feeAcctNo:{required:true},
+		czdz:{required:true},
+		shenHeRen1:{required:true},
+		shenHeRen2:{required:true}
      },
 messages:
     {
@@ -66,7 +69,7 @@ messages:
 		globalId:{required:"证件号码不能为空"},
 		issDate:{required:"签发日期不能为空"},
 		globalEffDate:{required:"证件有效日期不能为空"},
-		address:{required:"地址不能为空"},
+		address:{required:"户籍地址不能为空"},
 		birthDate:{required:"出生日期不能为空"},
 		signDate:{required:"签约日期不能为空"},
 		//expiryDate:{required:"信用到期日期不能为空"},
@@ -77,7 +80,10 @@ messages:
 		openAcctDate:{required:"开户日期不能为空"},
 		
 		feeAmount:{required:"费用金额不能为空",number:"费用金额只能为数字"},
-		feeAcctNo:{required:"费用账号不能为空"}
+		feeAcctNo:{required:"费用账号不能为空"},
+		czdz:{required:"常住地址不能为空"},
+		shenHeRen1:{required:"录入岗不能为空"},
+		shenHeRen2:{required:"评审岗不能为空"}
    },
 	errorPlacement : function(error, element) {
 		element.after(error);

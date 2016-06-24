@@ -9,9 +9,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cardpay.pccredit.QZBankInterface.model.Circle;
 import com.cardpay.pccredit.common.UploadFileTool;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.dao.CustomerApplicationInfoDao;
 import com.cardpay.pccredit.intopieces.dao.CustomerApplicationIntopieceWaitDao;
@@ -130,7 +130,7 @@ public class CustomerApplicationIntopieceWaitService {
 			examineAmount = (Double.parseDouble(examineAmount) * 100) + "";
 		}
 		//applicationStatus 必须是ApproveOperationTypeEnum中的通过，退回，拒绝三个类型
-		String examineResutl = processService.examine(serialNumber, loginId, applicationStatus, examineAmount);
+		String examineResutl = processService.examine(serialNumber, loginId, applicationStatus, examineAmount,null);
 		//更新单据状态
 	    if (examineResutl.equals(ApproveOperationTypeEnum.REJECTAPPROVE.toString()) ||
 	    		examineResutl.equals(ApproveOperationTypeEnum.RETURNAPPROVE.toString()) ||
@@ -166,10 +166,10 @@ public class CustomerApplicationIntopieceWaitService {
 	    if(Constant.APPROVED_INTOPICES.equalsIgnoreCase(customerApplicationInfo.getStatus())){
 	    	intoPiecesService.exportData(applicationId, customerId, null);
 	    }
-		if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApplicationStatusEnum.RETURNAPPROVE)) {
+		if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApproveOperationTypeEnum.RETURNAPPROVE.toString())) {
 			String fallbackReason = request.getParameter("reason");
 			customerApplicationProcess.setFallbackReason(fallbackReason);
-		} else if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApplicationStatusEnum.REJECTAPPROVE)) {
+		} else if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApproveOperationTypeEnum.REJECTAPPROVE.toString())) {
 			String refusalReason = request.getParameter("reason");
 			customerApplicationProcess.setRefusalReason(refusalReason);
 		}
@@ -202,17 +202,9 @@ public class CustomerApplicationIntopieceWaitService {
 			int size = customerApplicationIntopieceWaitDao.CountIntopieceWaitFormByUsered(filter);
 			QueryResult<CustomerApplicationIntopieceWaitForm> qs = new QueryResult<CustomerApplicationIntopieceWaitForm>(size, listCAI);
 			return qs;
-
+	
 		}
 		
-	//手动搜件
-	public QueryResult<CustomerApplicationIntopieceWaitForm> recieveIntopieceWaitFormM(CustomerApplicationProcessFilter filter) {
-		List<CustomerApplicationIntopieceWaitForm> listCAI = customerApplicationIntopieceWaitDao.IntopieceWaitFormM(filter);
-		int size = customerApplicationIntopieceWaitDao.CountIntopieceWaitFormM(filter);
-		QueryResult<CustomerApplicationIntopieceWaitForm> qs = new QueryResult<CustomerApplicationIntopieceWaitForm>(size, listCAI);
-		return qs;
-
-	}
 	
 	// 查询需要团队初审拒件的进件
 	public QueryResult<CustomerApplicationIntopieceWaitForm> IntopieceChushenRejectForm() {
@@ -231,7 +223,13 @@ public class CustomerApplicationIntopieceWaitService {
 
 	}
 	
-	public void updateCustomerApplicationProcessBySerialNumberApplicationInfo1(HttpServletRequest request) throws Exception {
+	public boolean getNextIsEnd(HttpServletRequest request){
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		String loginId = user.getId();
+		String serialNumber = request.getAttribute("serialNumber").toString();
+		return processService.getNextIsEnd(serialNumber,loginId,ApproveOperationTypeEnum.APPROVE.toString());
+	}
+	public void updateCustomerApplicationProcessBySerialNumberApplicationInfo1(HttpServletRequest request,Circle circle) throws Exception {
 		CustomerApplicationInfo customerApplicationInfo = new CustomerApplicationInfo();
 		CustomerApplicationProcess customerApplicationProcess = new CustomerApplicationProcess();
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -248,7 +246,7 @@ public class CustomerApplicationIntopieceWaitService {
 			examineAmount = (Double.parseDouble(examineAmount) * 100) + "";
 		}
 		//applicationStatus 必须是ApproveOperationTypeEnum中的通过，退回，拒绝三个类型
-		String examineResutl = processService.examine(serialNumber, loginId, applicationStatus, examineAmount);
+		String examineResutl = processService.examine(serialNumber, loginId, applicationStatus, examineAmount,request.getParameter("reason"));
 		//更新单据状态
 	    if (examineResutl.equals(ApproveOperationTypeEnum.REJECTAPPROVE.toString()) ||
 	    		examineResutl.equals(ApproveOperationTypeEnum.RETURNAPPROVE.toString()) ||
@@ -281,13 +279,15 @@ public class CustomerApplicationIntopieceWaitService {
 			
 			customerApplicationProcess.setNextNodeId(examineResutl);
 		}
-		if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApplicationStatusEnum.RETURNAPPROVE)) {
+		if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApproveOperationTypeEnum.RETURNAPPROVE.toString())) {
 			String fallbackReason = request.getParameter("reason");
 			customerApplicationProcess.setFallbackReason(fallbackReason);
-		} else if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApplicationStatusEnum.REJECTAPPROVE)) {
+		} else if (StringUtils.isNotEmpty(applicationStatus) && applicationStatus.equals(ApproveOperationTypeEnum.REJECTAPPROVE.toString())) {
 			String refusalReason = request.getParameter("reason");
 			customerApplicationProcess.setRefusalReason(refusalReason);
 		}else{
+			String auditReason = request.getParameter("reason");
+			customerApplicationProcess.setAuditOpinion(auditReason);//审批意见
 			customerApplicationProcess.setRefusalReason("");
 			customerApplicationProcess.setFallbackReason("");
 		}
@@ -300,6 +300,9 @@ public class CustomerApplicationIntopieceWaitService {
 //		customerApplicationProcess.setDelayAuditUser(user.getId());//清空字段值 
 		customerApplicationIntopieceWaitDao.updateCustomerApplicationProcessBySerialNumber(customerApplicationProcess);
 
+		circle.setModifiedBy(user.getId());
+		circle.setModifiedTime(new Date());
+		commonDao.updateObject(circle);
 	}
 	
 }

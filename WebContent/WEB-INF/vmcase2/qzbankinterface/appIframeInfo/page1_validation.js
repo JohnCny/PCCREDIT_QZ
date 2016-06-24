@@ -29,7 +29,7 @@ var validator = $($formName).validate({
 		bussEmployeeNum:{number:true},
 		
 		maritalGlobalId:{idcard:true},
-		familyNum:{number:true}
+		familyNum:{number:true,min:1,max:99}
      },
 messages:
     {
@@ -61,7 +61,7 @@ messages:
 		bussEmployeeNum:{number:"雇员人数只能为数字"},
 		
 		//maritalGlobalId:{idcard:""},
-		familyNum:{number:"家庭人数只能为数字"}
+		familyNum:{number:"家庭人数只能为数字",min:"家庭人数不能小于1",max:"家庭人数不能大于99"}
    },
 	errorPlacement : function(error, element) {
 		element.after(error);

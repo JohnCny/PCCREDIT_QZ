@@ -28,7 +28,6 @@ import com.cardpay.pccredit.customer.filter.VideoAccessoriesFilter;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
@@ -37,9 +36,17 @@ import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentList;
 import com.cardpay.pccredit.intopieces.model.QzApplnHtqdtz;
 import com.cardpay.pccredit.intopieces.model.QzApplnNbscyjb;
 import com.cardpay.pccredit.intopieces.service.AttachmentListService;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationInfoService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.ipad.model.ProductAttribute;
+import com.cardpay.pccredit.product.service.ProductService;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
+import com.cardpay.workflow.models.WfProcessRecord;
+import com.cardpay.workflow.models.WfStatusInfo;
+import com.cardpay.workflow.models.WfStatusQueueRecord;
+import com.cardpay.workflow.models.WfStatusResult;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -62,15 +69,15 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 
 	@Autowired
 	private IntoPiecesService intoPiecesService;
-
+	@Autowired
+	private ProductService productService;
 	@Autowired
 	private CustomerInforService customerInforService;
 	
 	@Autowired
-	private CustomerInforService customerInforservice;
-	
-	@Autowired
 	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
+	@Autowired
+	private CustomerApplicationInfoService customerApplicationInfoService;
 	@Autowired
 	private CustomerApplicationProcessService customerApplicationProcessService;
 	
@@ -103,6 +110,8 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 				"/intopieces/intopieces_wait/intopiecesApprove_xingzhengend", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -181,27 +190,39 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
 			request.setAttribute("serialNumber", process.getSerialNumber());
 			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 			request.setAttribute("objection", "false");
 			//查找审批金额
 			Circle circle = circleService.findCircleByAppId(appId);
-			if(StringUtils.isBlank(circle.getClientNo())){
-				returnMap.put(JRadConstants.SUCCESS, false);			
-				returnMap.put("retMsg", "客户号不能为空~！");
-				return returnMap;
-			}
+			
 			request.setAttribute("examineAmount", circle.getContractAmt());
 			
-			//先开户 后通过applicationId查找circle并放款 
-			String rtn = circleService.updateCustomerInforCircle_ESB(circle);
-			if("放款成功".equals(rtn)){
-				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
-				returnMap.put(JRadConstants.SUCCESS, true);
-				returnMap.put("retMsg", rtn);
+			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+			
+			//2016-01-13流程调整 判断是否旧流程，旧流程的话需要调用放款接口
+			if(customerApplicationIntopieceWaitService.getNextIsEnd(request)){
+				if(StringUtils.isBlank(circle.getClientNo())){
+					returnMap.put(JRadConstants.SUCCESS, false);			
+					returnMap.put("retMsg", "客户号不能为空~！");
+					return returnMap;
+				}
+				
+				//先开户 后通过applicationId查找circle并放款 
+				String rtn = circleService.updateCustomerInforCircle_ESB(circle,user);
+				if("放款成功".equals(rtn)){
+					customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
+					returnMap.put(JRadConstants.SUCCESS, true);
+					returnMap.put("retMsg", rtn);
+				}
+				else{
+					returnMap.put(JRadConstants.SUCCESS, false);			
+					returnMap.put("retMsg", rtn);
+				}
 			}
 			else{
-				returnMap.put(JRadConstants.SUCCESS, false);			
-				returnMap.put("retMsg", rtn);
+				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
+				returnMap.put(JRadConstants.SUCCESS, true);
+				returnMap.put("retMsg", "保存成功");
 			}
 			
 		} catch (Exception e) {
@@ -224,6 +245,8 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 		String appId = RequestHelper.getStringValue(request, "appId");
 		String type = RequestHelper.getStringValue(request, "type");
 		String operate = RequestHelper.getStringValue(request, "operate");
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		String loginId = user.getLogin();
 		if (StringUtils.isNotEmpty(appId)) {
 			List<QzApplnHtqdtz> qzTz = intoPiecesService.getTzList(appId);
 			mv.addObject("appId", appId);
@@ -231,6 +254,7 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 			mv.addObject("type", type);
 			mv.addObject("returnUrl", intoPiecesService.getReturnUrl(operate));
 		}
+		mv.addObject("loginId",loginId);
 		return mv;
 	}
 	/**
@@ -269,7 +293,7 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 		String appId = RequestHelper.getStringValue(request, "appId");
 		String ifHideUser = RequestHelper.getStringValue(request, "ifHideUser");
 		if (StringUtils.isNotEmpty(customerInforId)) {
-			CustomerInfor customerInfor = customerInforservice.findCustomerInforById(customerInforId);
+			CustomerInfor customerInfor = customerInforService.findCustomerInforById(customerInforId);
 			mv.addObject("customerInfor", customerInfor);
 			mv.addObject("customerId", customerInfor.getId());
 			mv.addObject("appId", appId);
@@ -288,23 +312,12 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 			String appId = request.getParameter("appId");
 			String operate = request.getParameter("operate");
 			String nodeName = request.getParameter("nodeName");
-<<<<<<< HEAD
-			if(Integer.parseInt(nodeName) > nodeNo){
-				returnMap.put(JRadConstants.SUCCESS, false);
-				returnMap.put(JRadConstants.MESSAGE, "退回进件不能退回至当前节点的后面~！");
-			}
-			if("1".equals(nodeName)){
-				intoPiecesService.checkDoNotToManager(appId,request,Integer.parseInt(nodeName),nodeNo);
-			}else{
-				intoPiecesService.returnAppln(appId, request,Integer.parseInt(nodeName),nodeNo);
-=======
 			//退回客户经理和其他岗位不一致
 			if("1".equals(nodeName)){
 				
 				intoPiecesService.checkDoNotToManager(appId,request);
 			}else{
 				intoPiecesService.returnAppln(appId, request,nodeName);
->>>>>>> chinhBy-master
 			}
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
@@ -313,6 +326,33 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 		}
 		return returnMap;
 	}
+	
+	//进件查询入口
+	@ResponseBody
+	@RequestMapping(value = "iframe_cardapprove.page")
+	public AbstractModelAndView iframeApproveCard(HttpServletRequest request) {
+		JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/iframe_approve", request);
+		String customerInforId = RequestHelper.getStringValue(request, ID);
+		String appId = RequestHelper.getStringValue(request, "appId");
+		CustomerApplicationInfo appInfo = customerApplicationInfoService.findById(appId);
+		com.cardpay.pccredit.product.model.ProductAttribute pro = productService.findProductAttributeById(appInfo.getProductId());
+		String ifHideUser = RequestHelper.getStringValue(request, "ifHideUser");
+		if (StringUtils.isNotEmpty(customerInforId)) {
+			CustomerInfor customerInfor = customerInforService.findCustomerInforById(customerInforId);
+			mv.addObject("customerInfor", customerInfor);
+			mv.addObject("customerId", customerInfor.getId());
+			mv.addObject("appId", appId);
+			if(!pro.getDefaultType().equals("3")){
+				mv.addObject("operate", Constant.status_query);
+			}
+			else{
+				mv.addObject("operate", Constant.status_query_anjudai);
+			}
+			mv.addObject("ifHideUser", ifHideUser);
+		}
+		return mv;
+	}
+		
 	//进件查询(卡中心)入口
 	@ResponseBody
 	@RequestMapping(value = "iframe_approve_query.page")
@@ -320,33 +360,22 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 		JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/iframe_approve", request);
 		String customerInforId = RequestHelper.getStringValue(request, ID);
 		String appId = RequestHelper.getStringValue(request, "appId");
+		CustomerApplicationInfo appInfo = customerApplicationInfoService.findById(appId);
+		com.cardpay.pccredit.product.model.ProductAttribute pro = productService.findProductAttributeById(appInfo.getProductId());
 		String ifHideUser = RequestHelper.getStringValue(request, "ifHideUser");
 		if (StringUtils.isNotEmpty(customerInforId)) {
-			CustomerInfor customerInfor = customerInforservice.findCustomerInforById(customerInforId);
+			CustomerInfor customerInfor = customerInforService.findCustomerInforById(customerInforId);
 			mv.addObject("customerInfor", customerInfor);
 			mv.addObject("customerId", customerInfor.getId());
 			mv.addObject("appId", appId);
-			mv.addObject("operate", Constant.status_cardquery);
+			if(!pro.getDefaultType().equals("3")){
+				mv.addObject("operate", Constant.status_cardquery);
+			}
+			else{
+				mv.addObject("operate", Constant.status_anjudai);
+			}
 			mv.addObject("ifHideUser", ifHideUser);
 		}
 		return mv;
 	}
-	//进件查询入口
-		@ResponseBody
-		@RequestMapping(value = "iframe_cardapprove.page")
-		public AbstractModelAndView iframeApproveCard(HttpServletRequest request) {
-			JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/iframe_approve", request);
-			String customerInforId = RequestHelper.getStringValue(request, ID);
-			String appId = RequestHelper.getStringValue(request, "appId");
-			String ifHideUser = RequestHelper.getStringValue(request, "ifHideUser");
-			if (StringUtils.isNotEmpty(customerInforId)) {
-				CustomerInfor customerInfor = customerInforservice.findCustomerInforById(customerInforId);
-				mv.addObject("customerInfor", customerInfor);
-				mv.addObject("customerId", customerInfor.getId());
-				mv.addObject("appId", appId);
-				mv.addObject("operate", Constant.status_query);
-				mv.addObject("ifHideUser", ifHideUser);
-			}
-			return mv;
-		}
 }

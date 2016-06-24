@@ -85,6 +85,12 @@
 						#end
 						/>
 					</td>
+					<td class="table-label">核查人员签字</td>
+					<td>
+						<input type="text" name="hcryqz1" value="$!qzApplnNbscyjb.hcryqz1">
+						</td>
+				</tr>
+				<tr>	
 					<td class="table-label">客户资料是否完整：</td>
 					<td>
 						<label><input type="radio" value="1" name="isComplete" #if($!qzApplnNbscyjb.isComplete==$null ||$!qzApplnNbscyjb.isComplete =='1') checked #end/>是</label>
@@ -111,23 +117,16 @@
 	
 	$(document).ready(function() {	
 		if("${type}"=="readonly"){
-			//$("input[type='text']").attr("disabled",true);
-<<<<<<< HEAD
-			$("input[type='radio']").attr("disabled",true);
-			$("input[type='checkbox']").attr("disabled",true);
-			$("select").attr("disabled",true);
-			$("textarea").attr("disabled",true);
-=======
+			//$("input[type='text']").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
 			$("input[type='radio']").attr("readonly",true);
 			$("input[type='checkbox']").attr("readonly",true);
-			$("select").attr("readonly",true);
-			$("textarea").attr("readonly",true);
->>>>>>> chinhBy-master
+			$("select").attr("readonly",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
+			$("textarea").attr("readonly",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
 		}
 		//保存
 		$("#id_save_button").click(function() {
 			if(submitFlag == 1){
-				alert("请勿重复提交!")
+				alert("等待后台响应,请勿重复提交!")
 				return;
 			}
 			submitFlag = 1;

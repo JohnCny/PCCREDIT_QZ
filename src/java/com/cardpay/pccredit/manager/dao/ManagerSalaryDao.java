@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.cardpay.pccredit.manager.filter.ManagerSalaryFilter;
 import com.cardpay.pccredit.manager.model.ManagerSalary;
+import com.cardpay.pccredit.manager.model.ManagerSalaryForm;
 import com.cardpay.pccredit.manager.model.SalaryParameter;
 import com.wicresoft.util.annotation.Mapper;
 
@@ -21,7 +22,7 @@ public interface ManagerSalaryDao {
 	 * @param filter
 	 * @return
 	 */
-	public List<ManagerSalary> findManagerSalarysByFilter(ManagerSalaryFilter filter);
+	public List<ManagerSalaryForm> findManagerSalarysByFilter(ManagerSalaryFilter filter);
 	
 	/**
 	 * 统计记录数
@@ -81,7 +82,6 @@ public interface ManagerSalaryDao {
 	 * @return
 	 */
 	public String getRewardIncentiveInformation(@Param("year") int year,@Param("month") int month,@Param("id") String id);
-	
-	
+	public int findManagerSalaryCount(@Param("year")int year, @Param("month")int month);
 	
 }

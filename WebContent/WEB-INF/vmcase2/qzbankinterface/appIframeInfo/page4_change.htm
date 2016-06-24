@@ -49,7 +49,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 					<td class="table-label">证件类型：<font color="#ff0000">*</font></td>
 					<td>
 						<select name="globalType">
-							<option value="001" #if($!qzApplnDbrxx.globalType=='001') selected #end>身份证</option>
+							<option value="100" #if($!qzApplnDbrxx.globalType=='100') selected #end>身份证</option>
 							<option value="130" #if($!qzApplnDbrxx.globalType=='130') selected #end>户口簿</option>
 							<option value="140" #if($!qzApplnDbrxx.globalType=='140') selected #end>护照</option>
 							<option value="026" #if($!qzApplnDbrxx.globalType=='026') selected #end>其他</option>
@@ -232,7 +232,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				#foreach ($obj in $fc_ls)
 				<tr>
 					<td><input type="text" class="input" name="addr_${obj.lsh}" value="$!obj.addr"/></td>	
-					<td><input type="text" class="input" name="price_${obj.lsh}" value="$!obj.price"/></td>					
+					<td><input type="text" class="input" name="fc_price_${obj.lsh}" value="$!obj.price"/></td>					
 					<td>
 						<select name="usrSituation_${obj.lsh}">
 							<option value="1" #if($!obj.usrSituation=='1') selected #end>自住</option>
@@ -269,7 +269,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 				#foreach ($obj in $jdc_ls)
 				<tr>
 					<td><input type="text" class="input" name="cardNo_${obj.lsh}" value="$!obj.cardNo"/></td>	
-					<td><input type="text" class="input" name="price_${obj.lsh}" value="$!obj.price"/></td>	
+					<td><input type="text" class="input" name="jdc_price_${obj.lsh}" value="$!obj.price"/></td>	
 					<td><input type="text" class="input" name="buyDate_${obj.lsh}" value="$date.format('yyyy-MM-dd', $!obj.buyDate)" onmouseover="_calendar()" readonly/></td>				
 					<td>
 						<select name="haveCopy_1_${obj.lsh}">
@@ -291,7 +291,9 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 	</div>
 </form>	
 <div class="controlbtn">
-	<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
+	#if($!type==$null)
+		<a id="id_save_button" class="btn_g" href="javascript:void(0);" title="提交">提交</a>
+	#end
 	<a href="javascript:history.back();" class="btn_gr">返回</a>
 </div>
 	<script type="text/javascript">			
@@ -302,10 +304,17 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 		#parse ("qzbankinterface/appIframeInfo/page4_validation.js")
 		
 		$(document).ready(function() {	
+			if("${type}"=="readonly"){
+				$("input[type='text']").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
+				$("input[type='radio']").attr("disabled",true);
+				$("input[type='checkbox']").attr("disabled",true);
+				$("select").attr("disabled",true).css({"background-color":"#fff","color":"#000","font-color":"#000"});
+			}
+			
 			//保存
 			$("#id_save_button").click(function() {
 				if(submitFlag == 1){
-					alert("请勿重复提交!")
+					alert("等待后台响应,请勿重复提交!")
 					return;
 				}
 				submitFlag = 1;
@@ -319,7 +328,7 @@ var timestr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth
 						success : function(data) {
 							if (data.success) {
 								topWin.Dialog.message("保存成功！");
-								window.location.href = "${contextPath}/intopieces/intopiecesapprove/page4_list.page?id=${qzApplnDbrxx.customerId}";
+								window.location.href = "${contextPath}/intopieces/intopiecesapprove/page4_list.page?id=${qzApplnDbrxx.customerId}&appId=${qzApplnDbrxx.applicationId}";
 							}
 							else{
 								topWin.Dialog.message("保存失败！");

@@ -31,9 +31,10 @@
               <col width="5%" />
               <col width="15%" />
               <col width="15%"/>
-              <col width="20%"/>
+              <col width="10%"/>
               <col width="15%"/>
               <col width="15%"/>
+              <col width="5%" />
             </colgroup>
             <tr class="title">
               <th nowrap="nowrap"></th>
@@ -43,6 +44,7 @@
               <th nowrap="nowrap">申请额度</th>
               <th nowrap="nowrap">状态</th>
               <th nowrap="nowrap">进度</th>
+              <th nowrap="nowrap">续授信</th>
             </tr>
           </table>
         </div>
@@ -52,13 +54,14 @@
               <col width="5%" />
               <col width="15%" />
               <col width="15%"/>
-              <col width="20%"/>
+              <col width="10%"/>
               <col width="15%"/>
               <col width="15%"/>
+              <col width="5%" />
             </colgroup>
             #foreach ($intoPieces in $result.items)
             <tr>
-             <td class="checkbox"><input type="radio" name="checkbox" value="$!{intoPieces.customerId}@$!{intoPieces.id}@$!intoPieces.status"/></td>
+             <td class="checkbox"><input type="radio" name="checkbox" value="$!{intoPieces.customerId}@$!{intoPieces.id}@$!intoPieces.status@$!intoPieces.productId"/></td>
               <td nowrap="nowrap">$!intoPieces.chineseName</td>
               <td nowrap="nowrap">$!intoPieces.cardId</td>
               <td nowrap="nowrap">#dictVal("ProductName",$!intoPieces.productId)</td>
@@ -67,11 +70,11 @@
 	              #if($!intoPieces.status=='audit')已申请  
 	              #elseif($!intoPieces.status=='save')暂存 
 	              #elseif($!intoPieces.status=='nopass')申请未通过 
-	              #elseif($!intoPieces.status=='refuse')被拒绝
+	              #elseif($!intoPieces.status=='refuse')拒绝
 	              #elseif($!intoPieces.status=='RETURNAPPROVE')审核退回
 	              #elseif($!intoPieces.status=='approved')审批结束  
-	              #elseif($!intoPieces.status=='succeed')申请成功 
-	              #elseif($!intoPieces.status=='returnedToFirst')退回客户经理 
+	              #elseif($!intoPieces.status=='succeed')申请成功
+	              #elseif($!intoPieces.status=='returnedToFirst')退回客户经理
 	              #end
               </td>
               #if($!intoPieces.status=='returnedToFirst')
@@ -79,6 +82,14 @@
                #else
                <td nowrap="nowrap">$!intoPieces.nodeName</td>
                #end
+               
+               <td nowrap="nowrap">
+               		#if($!intoPieces.isContinue != $null)
+               			是
+               		#else
+               			否
+               		#end
+               </td>
             </tr>
             #end
           </table>
@@ -86,12 +97,15 @@
       </div>
       <div class="pagebar">
         <div class="controlbtn">
+        	<a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录</a>
             <a class="btn_g" id="id_displaykaihu_button" href="javascript:void(0);" title="查看开户信息">查看开户信息</a>
         	<a id="id_create_button_1" class="btn_g" href="javascript:void(0);" title="修改申请信息">修改申请信息</a>
         	<a id="id_create_button_2" class="btn_g" href="javascript:void(0);" title="创建申请信息">创建申请信息</a>
         	<a id="id_delete_button" class="btn_g" href="javascript:void(0);" title="删除申请信息">删除申请信息</a>
 			<a id="id_apply_button" class="btn_g" href="javascript:void(0);" title="申请">申请贷款</a>
 			<a id="id_add_button" class="btn_g" title="初审拒件记录">补充上会记录</a>
+			<a id="id_continue_button" class="btn_g" title="续授信">续授信</a>
+			<a id="id_upload_button" class="btn_g" title="导入调查模板">导入调查模板</a>
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -117,12 +131,16 @@
 					Dialog.message("已申请贷款,请勿重复提交！");
 					return;
 				} 
+				if(sec=='refuse'){
+					Dialog.message("该笔贷款已被拒绝，无法再次提交！");
+					return;
+				} 
 				if(rowId!=null){
 					Dialog.confirm("确定提交申请吗？", "提示",
 		                function() {
 							var url = "${modulePath}/save_apply.json?id="+rowId+"&appId="+appId;
 			   	        	$.ajax({
-			   	        		timeout : 500,
+			   	      
 								url : url,
 								type : "get",
 								success : function(data) {
@@ -147,8 +165,8 @@
 				var rowId = getCurrentRowId().split("@")[0];
 				var appId = getCurrentRowId().split("@")[1];
 				var sec = getCurrentRowId().split("@")[2];
-			 	  if(sec=='audit' || sec=='RETURNAPPROVE'){
-					Dialog.message("已申请进件，无法继续添加进件信息！");
+			 	  if(sec=='audit' || sec=='RETURNAPPROVE' || sec=='approved'){
+					Dialog.message("已申请进件，无法修改进件信息！");
 					return;
 				}   
 				if(rowId!=null){
@@ -186,7 +204,7 @@
 								type : "get",
 								success : function(data) {
 									if (data.success) {
-										topWin.Dialog.message("保存成功！");
+										topWin.Dialog.message("删除成功！");
 										window.location.reload(true);
 									}
 									else{
@@ -218,8 +236,50 @@
 				Dialog.message("请选择一条记录!");
 			}
 	    });
+		
+		//续授信
+		$("#id_continue_button").click(function() {
+			var url="${modulePath}/selectProduct.page?isContinue=continue";
+			window.location.href = url;
+	    });		
+		
+		//导入调查模板
+		$("#id_upload_button").click(function() {
+            if ($(".checkbox :checked").length == 1) {
+            	var custId = getCurrentRowId().split("@")[0];
+				var appId = getCurrentRowId().split("@")[1];
+				var sec = getCurrentRowId().split("@")[2];
+				var prodId = getCurrentRowId().split("@")[3];
+			    if(sec=='audit' || sec=='RETURNAPPROVE' || sec=='approved'){
+					Dialog.message("进件状态非退回或者未审批,不可导入调查模板!");
+					return;
+				}   
+			    
+                var url = "${contextPath}/intopieces/intopiecesapprove/reportImport.page?customerId="+custId+"&productId="+prodId+"&applicationId="+appId;
+                window.location.href = url;
+            } else {
+                Dialog.message("请选择一行");
+            }
+        });
+					
 		prepareOperations(opsObj);
+		
+		
 	});
+	
+	function viewIntoPicesApproveHistory(ifHideUser){
+		var id = null;
+		$("input[name='checkbox']:checked").each(function() {
+			id = $(this).val().split("@")[1];
+		});
+		if(id!=null){
+			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
+			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	
 </script>
    <script src="${contextPath}/js/customerInfor/customer_infor.js"></script>
 #parse ("common/iframe_page_footer.htm")

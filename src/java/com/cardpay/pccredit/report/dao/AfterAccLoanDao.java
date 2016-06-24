@@ -1,6 +1,11 @@
 package com.cardpay.pccredit.report.dao;
 
+import java.util.Date;
 import java.util.List;
+
+
+
+
 
 
 
@@ -16,6 +21,9 @@ import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.report.model.AccLoanCollectInfo;
 import com.cardpay.pccredit.report.model.AccLoanInfo;
 import com.cardpay.pccredit.report.model.AccLoanOverdueInfo;
+import com.cardpay.pccredit.report.model.HomeTips;
+import com.cardpay.pccredit.report.model.PsNormIntAmt;
+import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.util.annotation.Mapper;
 
 /**
@@ -39,7 +47,8 @@ public interface AfterAccLoanDao {
 	public int getAfterAccLoanCount(OClpmAccLoanFilter filter);
 	/**
      * 客户逾期清单
-     * @param filter
+     * @param filter 
+     * '03'收款收息账号
      * @return
      */
 	public List<AccLoanOverdueInfo> getLoanOverdue(OClpmAccLoanFilter filter);
@@ -57,4 +66,11 @@ public interface AfterAccLoanDao {
 	 * @return
 	 */
 	public List<AccLoanInfo> getAfterAccLoanByCustomerId(@Param("customerId")String customerId);
+	
+	//查询借据对应当月的还计划表
+	public List<PsNormIntAmt> getPsNormIntAmt(OClpmAccLoanFilter filter);
+	public int getPsNormIntAmtCount(OClpmAccLoanFilter filter);
+	public List<PsNormIntAmt> getPsNormIntAmtList(OClpmAccLoanFilter filter);
+	
+	public List<HomeTips> getPsNormIntAmtListForHome(@Param("userId")String userId,@Param("endDate")Date endDate);
 }

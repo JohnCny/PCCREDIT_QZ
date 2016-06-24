@@ -1,4 +1,12 @@
 #parse ("common/iframe_page_header.htm")
+<style type="text/css">
+	.spry{background:#ebebe4;border:1px solid #dcdcdc;margin-left:3px;width:310px;height:80px;overflow:auto;}
+	.spry ul li{padding:3px 5px;}
+	.spry ul li:hover{background:#ddd;}
+	.spry ul img{float:right;margin-top:3px;display:none;}
+	.spry ul li:hover img{display:block;}
+	.add-spry{margin-top:-25px;margin-left:320px;width:25px;height:25px;}
+</style>
 <body class="whitebg">
     <div class="content_main">
     <div class="contentinner">
@@ -28,11 +36,22 @@
             </tr>
             <tr>
               <td><label for="auditUserNames">审批人员:</label></td>
-              <td><input type="text" id="auditUserNames" name="auditUserNames" value="$!nodeAudit.auditUserNames" onclick="selectNodeConfigUsers()" readonly="readonly"/></td>
+              <td>
+              	<div class="spry">
+              		<ul>
+              			#set($num=0)
+              			#foreach($obj in $!nodeAudit.auditUserIds.split(","))								
+							<li><img src="${uicasePath}/images/delete.png" onclick="deleteThis('$obj')"/>$!nodeAudit.auditUserNames.split(",")[$num]</li>		
+							#set($num=$num+1)
+						#end
+              		</ul>
+              	</div>
+				<img src="${uicasePath}/images/add.png" class="add-spry" onclick="selectNodeConfigUsers()"/>
+              </td>
               <td>&nbsp;</td>
               <td><label for="nodeTypeView">节点类型:</label></td>
               <td>
-               <select id="nodeTypeView" name="nodeTypeView" disabled="disabled">
+               <select id="nodeTypeView" name="nodeTypeView" readonly>
                 #dict("NODETYPE", $!nodeType)
                </select>
               </td>
@@ -94,11 +113,21 @@
 	      });
 	});
 	
+	function deleteThis(userId){
+		var tmp = $("#auditUserIds").val();
+		var tmpArr = $("#auditUserIds").val().split(",");
+		for(var i = 0;i<tmpArr.length;i++){
+			if(userId == tmpArr[i]){
+				$("ul li:eq("+i+")").remove();
+			}
+		}
+		tmp = tmp.replace(userId+",","").replace(","+userId,"").replace(userId,"");
+		$("#auditUserIds").val(tmp);
+	}
 	
 	function selectNodeConfigUsers() {
 		
-		
- Dialog.tablePage("${contextPath}/system/approvaluser/browse.page","选择审批人员","get","",function(){
+ Dialog.tablePage("${contextPath}/system/approvaluser/browse.page?selectval="+$("#auditUserIds").val(),"选择审批人员","get","",function(){
 			 
 			 var val = window.top.$("#selectval").val(); 
 			 if(val !=""){
@@ -116,19 +145,25 @@
 			 }
 			 if(auditUserIds !=""){
 				 auditUserIds = auditUserIds.substring(0,auditUserIds.length - 1);
-				 $("#auditUserIds").val(auditUserIds);
+				 $("#auditUserIds").val($("#auditUserIds").val() + "," + auditUserIds);
 			 }
               if(auditUserNames !=""){
             	  auditUserNames =  auditUserNames.substring(0,auditUserNames.length - 1);
             	 
-            	  $("#auditUserNames").val(auditUserNames);
+            	  //$("#auditUserNames").val(auditUserNames);
+            	  var htm = $("ul").html();
+            	  var tmpArr = auditUserNames.split(",");
+            	  for(var i = 0;i<tmpArr.length;i++){
+            		  htm += '<li><img src="${uicasePath}/images/delete.png" onclick="deleteThis(\''+auditUserIds.split(",")[i]+'\')"/>'+tmpArr[i]+'</li>'
+            	  }
+            	  $("ul").html(htm);
 			 }
 			
 			 }
 			 window.top.$("#selectval").val("");
 			 window.top.$("#tablePage_diaog").dialog("close");
 			 
-		 },800,750);
+		 },700,500);
 	}
 	
 	

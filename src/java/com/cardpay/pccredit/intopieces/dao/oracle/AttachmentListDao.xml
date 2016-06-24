@@ -21,6 +21,24 @@
 		<result property="createdTime" column="CREATED_TIME" />
 	</resultMap>
 	
+    <resultMap id="ResultMapAttachmentBatch" type="com.cardpay.pccredit.intopieces.model.QzApplnAttachmentBatch">
+        <result property="id" column="ID" />
+		<result property="attId" column="ATT_ID" />
+		<result property="type" column="TYPE" />
+		<result property="name" column="NAME" />
+		<result property="folder" column="FOLDER" />
+		<result property="isUpload" column="IS_UPLOAD" />
+	</resultMap>
+	
+    <resultMap id="ResultMapAttachmentDetail" type="com.cardpay.pccredit.intopieces.model.QzApplnAttachmentDetail">
+		<result property="id" column="ID" />
+		<result property="batchId" column="BATCH_ID" />
+		<result property="originalName" column="ORIGINAL_NAME" />
+		<result property="picSize" column="PIC_SIZE" />
+		<result property="isUpload" column="IS_UPLOAD" />
+		<result property="fileNo" column="FILE_NO" />
+	</resultMap>
+	
 	<select id="findAttachmentList" resultMap="ResultMapAttachmentList">
 		 select * 
 		 from qz_appln_attachment_list   
@@ -37,6 +55,52 @@
 		 where 1=1
 	 	<if test="applicationId != null and applicationId != '' ">
 			AND APPLICATION_ID=#{applicationId}
+		</if>
+	</select>
+	
+	<select id="findAttachmentBatchByAppId" resultMap="ResultMapAttachmentBatch">
+		 select * 
+		 from qz_appln_attachment_batch   
+		 where (att_id,buss_type) in (
+		 select id,buss_type
+		 from qz_appln_attachment_list 
+		 where 1=1
+	 	<if test="applicationId != null and applicationId != '' ">
+			AND APPLICATION_ID=#{applicationId}
+		</if>
+		)
+	</select>
+	
+	<select id="findDetailByFilter" resultMap="ResultMapAttachmentDetail">
+	    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+			FROM (
+			
+	    select * from qz_appln_attachment_detail
+	    where batch_id = #{batchId}
+	    
+	    <if test="originalName != null and originalName != '' ">
+			AND ORIGINAL_NAME=#{originalName}
+		</if>
+		<if test="isUpload != null and isUpload != '' ">
+			AND IS_UPLOAD=#{isUpload}
+		</if>
+	    <![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+	</select>
+	
+	<select id="findDetailCountByFilter" resultType="int">
+	    select count(*) from qz_appln_attachment_detail
+	    where batch_id = #{batchId}
+	    
+	    <if test="originalName != null and originalName != '' ">
+			AND ORIGINAL_NAME=#{originalName}
+		</if>
+		<if test="isUpload != null and isUpload != '' ">
+			AND IS_UPLOAD=#{isUpload}
 		</if>
 	</select>
 	

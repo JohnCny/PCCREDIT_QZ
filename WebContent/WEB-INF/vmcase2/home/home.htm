@@ -1,6 +1,37 @@
 #parse ("common/iframe_page_header.htm")
 <link rel="stylesheet" type="text/css" href="${uicasePath}/css/home_style.css" />
+<style type="text/css">
+	.ui-main{margin-top:70px;}
+	.position {position: fixed;z-index: 1;left: 0px;right: 0px;font-size:15px;border-bottom: 1px solid #cccccc;background: #f5f5f5;line-height: 47px;padding-left: 10px;color: #555555;}
+	.position span {color: #4c8fbd;display:inline-block;margin-right:50px;}
+	
+	.ui-right{min-height:100px;}
+	.ui-left{min-height:410px;width:95%;}
+	.ui-user .right {width: 220px;}
+	
+	.rcap{width:100%;}
+	.rcap td{color:#383838;font-size:15px;border-bottom:1px solid #ededed;padding:10px 50px;}
+	.rcap .time{text-align:center;width:200px;color:#a6a6a6;}
+	
+	.dialog{position:fixed;bottom:0;right:0;width:400px;background:#fafafa;border:1px solid #d0d0d0;}
+	.dialog-head{clear:both;padding:5px 0 5px 10px;border-bottom:1px solid #d9d9d9;background:url(${uicasePath}/images/list_bg_c.png);color:#fff;font-weight:bold;font-size:20px;}
+	.dialog-head img{float:right;width:25px;height:25px;margin:3px 10px 0 0;cursor:pointer;}
+	.mynav li{font-size:16px;padding-left:20px;line-height:40px;background:#f9f9f9;border-bottom:1px solid #d3d3d3;color:#333333;cursor:pointer;}
+	.mynav .active{background:#fff;}
+	.mynav .tip{width:20px;height:20px;padding-left:10px;margin-right:5px;vertical-align:text-bottom;}
+	.mynav .open{float:right;width:10px;height:6px;margin-right:20px;margin-top:17px;}
+	.second-nav{max-height:170px;overflow:auto;margin-left:-20px;display:none;}
+	.second-nav table{width:90%;margin:0 auto;margin-bottom:10px;border-collapse:collapse;}
+	.second-nav table tr td,.second-nav table tr th{text-align:center;border:1px solid #b7b7b7;}
+	.second-nav table tr th{background: #2080d2;color:#fff;}
+</style>
 <body>
+	<div class="position">
+		用户名：<span>$!accountManagerParameter.displayName</span>
+		层级：<span>#dictVal('CUSTOMERMANAGERLEVEL',$!accountManagerParameter.levelInformation)</span>
+		职位：<span>$!rolename</span>
+		所属机构：<span>$!organizationname</span>
+	</div>
    <div class="ui-main">
       <div class="wrap clearfix">
 	     <div class="ui-left f_l">
@@ -11,257 +42,45 @@
 			   <li>
                     <a href="javascript:void(0)">明天</a>
                </li>
-			   <li>
-                    <a href="javascript:void(0)">后天</a>
-               </li>
-			   <li>
-                    <a href="javascript:void(0)">$!day1号</a>
-               </li>
-			   <li>
-                    <a href="javascript:void(0)">$day2号</a>
-               </li>
 			</ul>
 			<div class="tabContent" style="display:block;">
-			   <div class="ui-item slide-item">
+				<div class="ui-item slide-item">
 			      <div class="hd clearfix">
-				     <span>待处理事项</span>
-					 <em></em>
+				     <span>日程安排</span>
 				  </div>
-				  <div class="bd">
-				     <ul class="list">
-					    <li>
-						   <a href="#">
-						      <span>营销客户计划</span>
-							  <em>$!marketing</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>进件分配</span>
-							  <em>$!divisional</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>补充调查进件</span>
-							  <em>$!applicationInfo</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>拒绝进件</span>
-							  <em>$!applicationReject</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>客户维护计划 </span>
-							  <em>$!maintenance</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>客户信息渠道维护计划</span>
-							  <em>$!officerChannels</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>客户催收计划</span>
-							  <em>$!collection</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>风险事项警示</span>
-							  <em>$!riskNumber</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>问责</span>
-							  <em>$!abilityNumber</em>
-						   </a>
-						</li> 
-                        <li>
-						   <a href="#">
-						      <span>产品发布</span>
-							  <em>$!productNumber</em>
-						   </a>
-						</li>
-						#if($!roleName=='客户经理角色')
-						<li>
-						   <a href="${contextPath}/afterloan/afterloancheck/browse.page">
-						      <span><font color="#FF0000">贷后需检查的客户数</font></span>
-							  <em><font color="#FF0000">$!loanCount</font></em>
-						   </a>
-						</li>
-						#end
-						#if($!roleName!='客户经理角色')
-						<li>
-						   <a href="${contextPath}/afterloan/afterloanremind/remind.page">
-						      <span><font color="#FF0000">贷后检查提醒</font></span>
-							  <em><font color="#FF0000">$!remindCount</font></em>
-						   </a>
-						</li>
-						#end
-					 </ul>
-				  </div>
-			   </div>
-			</div>
-			<div class="tabContent">
-			   <div class="ui-item slide-item">
-			      <div class="hd clearfix">
-				     <span>待处理事项</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-						<li>
-						   <a href="#">
-						      <span>今日计划营销客户</span>
-							  <em>5</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>今日计划维护客户   </span>
-							  <em>2</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>7日内预期还款</span>
-							  <em>2</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>新品发布</span>
-							  <em>5</em>
-						   </a>
-						</li>
-					 </ul>
-				  </div>
-			   </div>
-			</div>
-			<div class="tabContent">
-			   <div class="ui-item slide-item">
-			      <div class="hd clearfix">
-				     <span>待处理事项</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-						<li>
-						   <a href="#">
-						      <span>今日计划营销客户</span>
-							  <em>4</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>今日计划维护客户   </span>
-							  <em>4</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>7日内预期还款</span>
-							  <em>4</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>新品发布</span>
-							  <em>3</em>
-						   </a>
-						</li>
-					 </ul>
-				  </div>
-			   </div>
-			</div>
-			<div class="tabContent">
-			   <div class="ui-item slide-item">
-			      <div class="hd clearfix">
-				     <span>待处理事项</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-						<li>
-						   <a href="#">
-						      <span>今日计划营销客户</span>
-							  <em>3</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>今日计划维护客户   </span>
-							  <em>2</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>7日内预期还款</span>
-							  <em>3</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>新品发布</span>
-							  <em>3</em>
-						   </a>
-						</li>
-					 </ul>
-				  </div>
-			   </div>
-			</div>
-			<div class="tabContent">
-			   <div class="ui-item slide-item">
-			      <div class="hd clearfix">
-				     <span>待处理事项</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-						<li>
-						   <a href="#">
-						      <span>今日计划营销客户</span>
-							  <em>2</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>今日计划维护客户   </span>
-							  <em>2</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>7日内预期还款</span>
-							  <em>2</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>新品发布</span>
-							  <em>3</em>
-						   </a>
-						</li>
-					 </ul>
-				  </div>
-			   </div>
+				  <table class="rcap">
+					<tr>
+						<td class="time">13:00~14:00</td>
+						<td>会议</td>
+					</tr>
+					<tr>
+						<td class="time">15:00~16:00</td>
+						<td>审贷会</td>
+					</tr>
+					<tr>
+						<td class="time">15:00~16:00</td>
+						<td>审贷会</td>
+					</tr>
+					<tr>
+						<td class="time">15:00~16:00</td>
+						<td>审贷会</td>
+					</tr>
+					<tr>
+						<td class="time">15:00~16:00</td>
+						<td>审贷会</td>
+					</tr>
+				  </table>				
+			   </div>			   
 			</div>
 		 </div>
-		 <div class="ui-right f_r">
+		 <!-- <div class="ui-right f_r">
 		    <div class="ui-user">
 			   <div class="hd"><a>用户信息</a>
 			   </div>
 			   <div class="bd">
 			      <div class="left">
-				     <img src="${uicasePath}/images/img_01.png" />
-				  </div>
+				     <!-- <img src="${uicasePath}/images/img_01.png" /> -->
+				  <!-- </div>
 				  <div class="right">
 				     <span>用户名：$!accountManagerParameter.displayName</span>
 				      #if($!accountManagerParameter.levelInformation)
@@ -269,7 +88,6 @@
 				     #end
 					 <span>职位：$!rolename</span>
 					 <span>所属机构：$!organizationname</span>
-					 <span>授信权限：$!doubleApply</span>
 				  </div>
 			   </div>
 			</div>
@@ -286,163 +104,157 @@
 			      <span>待</span>
 				  <em>$!wait</em>
 			   </a>
-			</div>
-			<div class="ui-item2 slide-item">
-			      <div class="hd clearfix">
-				     <span>进件状况</span>
-				     <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-					    <li>
-						   <a href="#">
-						      <span>进件数量</span>
-						      <em>$!UserApplicationInfo</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>审批通过数量</span>
-						      <em>$!UserApplicationSuccess</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>补充调查数量</span>
-						      <em>$!UserApplicationNopass</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>拒绝数量</span>
-						      <em>$!UserApplicationRefuse</em>
-						   </a>
-						</li>
-						
-					 </ul>
-				  </div>
-		   </div>
-            <div class="ui-item2 slide-item">
-			      <div class="hd clearfix">
-				     <span>奖励激励状况</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-					    <li>
-						   <a href="#">
-						      <span>上月奖励激励金额</span>
-						      <em>$!reward</em>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>风险保证余额</span>
-						      <em>$!riskGuarantee</em>
-						   </a>
-						</li>
-						
-					 </ul>
-				  </div>
-			   </div>
-		    <div class="ui-item2 slide-item">
-			      <div class="hd clearfix">
-				     <span>客户经理经营状况</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-					    <li>
-						   <a href="#">
-						      <span>授信余额</span>
-						      <em>$!credit</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>用信余额</span>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>逾期余额</span>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>客户贡献余额</span>
-						   </a>
-						</li>
-						
-						
-					 </ul>
-				 
-				     <ul class="list">
-					    <li>
-						   <a href="#">
-						      <span>管户数</span>
-						      <em>$!customer</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>逾期客户数</span>
-						      <em>$!riskCustomer</em>
-						   </a>
-						</li>
-                        <li>
-						   <a href="#">
-						      <span>核销客户数</span>
-						      <em>$!verificationCustomer</em>
-						   </a>
-						</li>
-						
-						
-					 </ul>
-				  </div>
-		   </div>
-	   	    <div class="ui-item2 slide-item">
-			      <div class="hd clearfix">
-				     <span>通知</span>
-					 <em></em>
-				  </div>
-				  <div class="bd">
-				     <ul class="list">
-					    <li>
-						   <a href="#">
-						      <span>待审会通知</span>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>客户原始资料变更通知</span>
-						   </a>
-						</li><li>
-						   <a href="#">
-						      <span>培训通知</span>
-						   </a>
-						</li>
-						<li>
-						   <a href="#">
-						      <span>考察成绩通知</span>
-						   </a>
-						</li><li>
-						   <a href="#">
-						      <span>其他通知</span>
-						   </a>
-						</li>
-						
-					 </ul>
-				  </div>
-                  
-		   </div>
+			</div> -->
 		 </div>
 	  </div>
    </div>
-   
+   <div class="dialog">
+   		<div class="dialog-head">
+   			信息提醒
+   			<img src="${uicasePath}/images/close.png" id="close" onclick="openDialog(this)"/>
+   			<img src="${uicasePath}/images/open.png" id="open" style="display:none;" onclick="openDialog(this)"/>
+   		</div>
+   		<div class="dialog-content">
+   			<ul class="mynav">
+				<li>
+					<div onclick="showMenu(this)">
+						用信预警提示<img src="${uicasePath}/images/secondNav0.png" class="open"/>
+					</div>
+					<div class="second-nav">
+						<table>
+							<tr>
+								<th>客户经理</th>
+								<th>授信总额</th>
+								<th>用信总额</th>
+								<th>百分比</th>
+							</tr>
+							#foreach($obj in $tips1)
+								#if($obj.percent >= 70)
+									<tr>
+										<td>$obj.userName</td>
+										<td>$obj.allCreditAmount</td>
+										<td>$obj.usedCreditAmount</td>
+										<td>$obj.percent%</td>
+									</tr>
+								#end
+							#end
+						</table>					
+					</div>					
+				</li>
+				<li>
+					<div onclick="showMenu(this)">
+						贷后预警提醒<img src="${uicasePath}/images/secondNav0.png" class="open"/>
+					</div>
+					<div class="second-nav">
+						<table>
+							<tr>
+								<th>客户经理</th>
+								<th>过期10天笔数</th>
+								<th>过期30天笔数</th>
+							</tr>
+							#foreach($obj in $tips2)
+								#if($obj.endDateNum != 0 || $obj.remindDateNum != 0)
+									<tr>
+										<td>$obj.userName</td>
+										<td>$obj.endDateNum</td>
+										<td>$obj.remindDateNum</td>
+									</tr>
+								#end
+							#end
+						</table>					
+					</div>		
+				</li>
+				<li>
+					<div onclick="showMenu(this)">
+						21日还息提醒<img src="${uicasePath}/images/secondNav0.png" class="open"/>
+					</div>
+					<div class="second-nav">
+						<table>
+							<tr>
+								<th>客户名</th>
+								<th>应还利息</th>
+								<th>已还利息</th>
+								<th>欠息</th>
+							</tr>
+							#foreach($obj in $tips3)
+								#if($obj.ownAmt > 0 )
+									<tr>
+										<td>$obj.clientName</td>
+										<td>$obj.psAmt元</td>
+										<td>$obj.setlAmt元</td>
+										<td>$obj.ownAmt元</td>
+									</tr>
+								#end
+							#end
+						</table>					
+					</div>		
+				</li>
+				<li>
+					<div onclick="showMenu(this)">
+						即将到期客户<img src="${uicasePath}/images/secondNav0.png" class="open"/>
+					</div>
+					<div class="second-nav">
+						<table>
+							<tr>
+								<th>客户名</th>
+								<th>借据金额</th>
+								<th>到期日期</th>
+							</tr>
+							#foreach($obj in $tips4)
+								<tr>
+									<td>$obj.clientName</td>
+									<td>$obj.loanAmt</td>
+									<td>$obj.expiryDate</td>
+								</tr>
+							#end
+						</table>					
+					</div>		
+				</li>	
+				<li>
+					<div onclick="showMenu(this)">
+						已到期客户<img src="${uicasePath}/images/secondNav0.png" class="open"/>
+					</div>
+					<div class="second-nav">
+						<table>
+							<tr>
+								<th>客户名</th>
+								<th>借据金额</th>
+								<th>到期日期</th>
+							</tr>
+							#foreach($obj in $tips5)
+								<tr>
+									<td>$obj.clientName</td>
+									<td>$obj.loanAmt</td>
+									<td>$obj.expiryDate</td>
+								</tr>
+							#end
+						</table>				
+					</div>		
+				</li>	
+			</ul>
+   		</div>
+   </div>
 </body>
 
 <script>
+function openDialog(obj){//dialog展开与折叠
+	//alert($('.dialog-content').display())
+	if($('.dialog-content').css('display')=='none'){
+		$('.dialog-content').show();
+		$(obj).hide();
+		$("#close").show();
+	}
+	else{
+		$('.dialog-content').hide();
+		$(obj).hide();
+		$("#open").show();
+	}
+}
+function showMenu(obj){
+	$(".second-nav").hide();
+	$(obj).parent().find(".second-nav").show();
+	
+}
 	     $(".tabs li").click(function() {
 				if (this.className != "selectTag") {
 					$(this).siblings(".selectTag").removeClass("selectTag");

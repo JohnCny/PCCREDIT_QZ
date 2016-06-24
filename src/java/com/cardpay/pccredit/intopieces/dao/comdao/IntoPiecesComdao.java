@@ -282,19 +282,31 @@ public class IntoPiecesComdao {
 	 * @return
 	 */
 	public List<ApproveHistoryForm> findApproveHistoryByDataId(String id, String dataType){
-		String sql = "select s.status_name, t.examine_result, su.display_name, t.examine_amount, t.start_examine_time " +
+		String sql = "select s.status_name, (case T.examine_result "
+	      	  + "when  'APPROVE' then '通过' "
+		      + "when  'RETURNAPPROVE' then '退回'   "
+		      + "when  'RETURNTOFIRST' then '退回客户经理'  "
+		      + "when  'REJECTAPPROVE' then '拒绝'  "
+		      + "when  'NORMALEND' then '流程结束' end) || ',' || t.reason as examine_result, su.display_name, t.examine_amount, t.start_examine_time " +
 				" from wf_status_queue_record t left join wf_status_info s on t.current_status = s.id " +
 				" left join wf_process_record pr on t.current_process = pr.id";
 		if(dataType.equals("application")){
 			sql += " left join customer_application_process aa on pr.id = aa.serial_number" +
 					" left join sys_user su on t.examine_user = su.id " +
-					" where aa.application_id = #{id}";
+					" where aa.application_id = #{id} and su.display_name is not null and T.examine_result not in ('RETURNAPPROVE','RETURNTOFIRST','REJECTAPPROVE')";
 		} else if(dataType.equals("amountadjustment")){
 			sql += " left join amount_adjustment_process aa on pr.id = aa.serial_number" +
 					" left join sys_user su on t.examine_user = su.id " +
-					" where aa.amount_adjustment_id = #{id}";
+					" where aa.amount_adjustment_id = #{id}  ";
 		}
-		sql += " order by t.start_examine_time desc";
+		
+		sql += " union select r.node_name as status_name," +
+       "r.operate_type ||','|| r.Remark as examine_result," +
+       " r.user_name as display_name,"+
+       " '' as examine_amount,"+
+       " r.created_time as start_examine_time " +
+				" from qz_appln_process_result r where r.application_id=#{id}";
+		sql += " order by start_examine_time desc";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 		
@@ -331,6 +343,78 @@ public class IntoPiecesComdao {
 		}
 	}
 	
+	/**
+	 * 查找冻结解冻审批中的节点
+	 * @param id
+	 * @return
+	 */
+	public String findQuotaProgress(String id){
+		String sql = "select wsi.STATUS_NAME from "
+				+ "quota_process cap,wf_process_record wpr,wf_status_queue_record wsqr,wf_status_info wsi "
+				+ "where "
+				+ "cap.circle_id = #{id} "
+				+ "and cap.SERIAL_NUMBER = wsqr.CURRENT_PROCESS "
+				+ "and wpr.wf_status_queue_record = wsqr.id "
+				+ "and wsqr.current_status = wsi.id ";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		List<HashMap<String, Object>> list = commonDao.queryBySql(sql, params);
+		if(list != null && list.size() > 0){
+			HashMap<String, Object> map = list.get(0);
+			return (String) map.get("STATUS_NAME");
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 查找冻结解冻审批中的节点
+	 * @param id
+	 * @return
+	 */
+	public String findQuotaProgressSx(String id){
+		String sql = "select wsi.STATUS_NAME from "
+				+ "quota_process_sx cap,wf_process_record wpr,wf_status_queue_record wsqr,wf_status_info wsi "
+				+ "where "
+				+ "cap.circle_id = #{id} "
+				+ "and cap.SERIAL_NUMBER = wsqr.CURRENT_PROCESS "
+				+ "and wpr.wf_status_queue_record = wsqr.id "
+				+ "and wsqr.current_status = wsi.id ";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		List<HashMap<String, Object>> list = commonDao.queryBySql(sql, params);
+		if(list != null && list.size() > 0){
+			HashMap<String, Object> map = list.get(0);
+			return (String) map.get("STATUS_NAME");
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 查找冻结解冻审批中的节点
+	 * @param id
+	 * @return
+	 */
+	public String findQuotaProgressZa(String id){
+		String sql = "select wsi.STATUS_NAME from "
+				+ "quota_process_za cap,wf_process_record wpr,wf_status_queue_record wsqr,wf_status_info wsi "
+				+ "where "
+				+ "cap.za_id = #{id} "
+				+ "and cap.SERIAL_NUMBER = wsqr.CURRENT_PROCESS "
+				+ "and wpr.wf_status_queue_record = wsqr.id "
+				+ "and wsqr.current_status = wsi.id ";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		List<HashMap<String, Object>> list = commonDao.queryBySql(sql, params);
+		if(list != null && list.size() > 0){
+			HashMap<String, Object> map = list.get(0);
+			return (String) map.get("STATUS_NAME");
+		} else {
+			return null;
+		}
+	}
+	
 	public Float checkApplyQuota(String userId,String productId){
 		String sql = "select * from MANAGER_PRODUCTS_CONFIGURATION t where exists (select 1 from ACCOUNT_MANAGER_PARAMETER f where t.customer_manager_level = f.level_information and f.user_id = '"+userId+"' and t.product_id = '"+productId+"')";
 		List<ManagerProductsConfiguration> list = commonDao.queryBySql(ManagerProductsConfiguration.class, sql, null);
@@ -343,96 +427,6 @@ public class IntoPiecesComdao {
 		}else{
 			return null;
 		}
-	}
-	
-	//查询进件信息
-	/* 查询进价信息 */
-	public QueryResult<IntoPieces> findintoPiecesByFilterWF(IntoPiecesFilter filter) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		String id = filter.getId();
-		String chineseName  = filter.getChineseName();
-		String userId = filter.getUserId();
-		String cardId = filter.getCardId();
-		params.put("userId", userId);
-		
-		StringBuffer sql = new StringBuffer("SELECT cai. ID,cai.customer_id,cai.chinese_name,cai.product_id,cai.card_id,cai.apply_quota,cai.status,cai.Created_Time ");
-		sql.append("FROM ");
-		sql.append("(SELECT * FROM WF_STATUS_QUEUE_RECORD WHERE EXAMINE_USER = #{userId}) wsqr ");
-		sql.append("LEFT JOIN ( SELECT T.ID, T.customer_id, b.chinese_name, T.product_id, b.card_id, circle.CONTRACT_AMT as apply_quota, T.status, T.SERIAL_NUMBER ,T.Created_Time ");
-		sql.append("FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID ");
-<<<<<<< HEAD
-=======
-		sql.append("LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id ");
-		sql.append(") cai ");
-		sql.append("ON wsqr.CURRENT_PROCESS = CAI.SERIAL_NUMBER where 1=1 ");
->>>>>>> chinhBy-master
-		if(StringUtils.trimToNull(cardId)!=null||StringUtils.trimToNull(chineseName)!=null){
-			if(StringUtils.trimToNull(cardId)!=null&&StringUtils.trimToNull(chineseName)!=null){
-			    sql.append(" and (cai.card_id like '%"+cardId+"%' or cai.chinese_name like '%"+chineseName+"%' )");
-			}else if(StringUtils.trimToNull(cardId)!=null&&StringUtils.trimToNull(chineseName)==null){
-				params.put("cardId", cardId);
-				sql.append(" and cai.card_id like '%'||#{cardId}||'%' ");
-			}else if(StringUtils.trimToNull(cardId)==null&&StringUtils.trimToNull(chineseName)!=null){
-				params.put("chineseName", chineseName);
-				sql.append(" and cai.chinese_name like '%'||#{chineseName}||'%' ");
-			}
-		}
-		sql.append("union ");
-		sql.append("SELECT T.ID, T.customer_id, b.chinese_name, T.product_id, b.card_id, circle.CONTRACT_AMT as apply_quota, T.status, T.Created_Time ");
-<<<<<<< HEAD
-		sql.append("FROM customer_application_info T LEFT JOIN basic_customer_information b ON T .customer_id = b. ID ");
-=======
-		sql.append("FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID ");
-		sql.append("LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id ");
-		sql.append("where b.user_id = #{userId} ");
->>>>>>> chinhBy-master
-		if(StringUtils.trimToNull(cardId)!=null||StringUtils.trimToNull(chineseName)!=null){
-			if(StringUtils.trimToNull(cardId)!=null&&StringUtils.trimToNull(chineseName)!=null){
-			    sql.append(" and (b.card_id like '%"+cardId+"%' or b.chinese_name like '%"+chineseName+"%' )");
-			}else if(StringUtils.trimToNull(cardId)!=null&&StringUtils.trimToNull(chineseName)==null){
-				params.put("cardId", cardId);
-				sql.append(" and b.card_id like '%'||#{cardId}||'%' ");
-			}else if(StringUtils.trimToNull(cardId)==null&&StringUtils.trimToNull(chineseName)!=null){
-				params.put("chineseName", chineseName);
-				sql.append(" and b.chinese_name like '%'||#{chineseName}||'%' ");
-			}
-		}
-<<<<<<< HEAD
-		sql.append("LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id ");
-		sql.append("where b.user_id = #{userId} ");
-=======
->>>>>>> chinhBy-master
-		//sql.append("order by created_time desc");
-		return commonDao.queryBySqlInPagination(IntoPieces.class, sql.toString(), params,
-				filter.getStart(), filter.getLimit());
-	}
-	
-	//查询进件信息
-	/* 查询进价信息 */
-	public QueryResult<IntoPieces> findintoPiecesAllByFilter(IntoPiecesFilter filter) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		String id = filter.getId();
-		String chineseName = filter.getChineseName();
-		String userId = filter.getUserId();
-		String cardId = filter.getCardId();
-		
-		StringBuffer sql = new StringBuffer("SELECT T.ID, T.customer_id, b.chinese_name, T.product_id, b.card_id, circle.CONTRACT_AMT as apply_quota, T.status ");
-		sql.append("FROM customer_application_info T inner JOIN basic_customer_information b ON T .customer_id = b. ID ");
-		if(StringUtils.trimToNull(cardId)!=null||StringUtils.trimToNull(chineseName)!=null){
-			if(StringUtils.trimToNull(cardId)!=null&&StringUtils.trimToNull(chineseName)!=null){
-			    sql.append(" and (b.card_id like '%"+cardId+"%' or b.chinese_name like '%"+chineseName+"%' )");
-			}else if(StringUtils.trimToNull(cardId)!=null&&StringUtils.trimToNull(chineseName)==null){
-				params.put("cardId", cardId);
-				sql.append(" and b.card_id like '%'||#{cardId}||'%' ");
-			}else if(StringUtils.trimToNull(cardId)==null&&StringUtils.trimToNull(chineseName)!=null){
-				params.put("chineseName", chineseName);
-				sql.append(" and b.chinese_name like '%'||#{chineseName}||'%' ");
-			}
-		}
-		sql.append("LEFT JOIN QZ_IESB_FOR_CIRCLE circle on T.id = circle.application_id ");
-		sql.append(" order by T.created_time desc");
-		return commonDao.queryBySqlInPagination(IntoPieces.class, sql.toString(), params,
-				filter.getStart(), filter.getLimit());
 	}
 		
 }

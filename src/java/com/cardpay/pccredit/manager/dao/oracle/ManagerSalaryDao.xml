@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cardpay.pccredit.manager.dao.ManagerSalaryDao">
-	<resultMap id="ResultMap" type="com.cardpay.pccredit.manager.model.ManagerSalary">
+	<resultMap id="ResultMap" type="com.cardpay.pccredit.manager.model.ManagerSalaryForm">
 		<result property="id" column="id" />
 		<result property="customerId" column="customer_id" />
 		<result property="rewardIncentiveInformation" column="reward_incentive_information" />
@@ -19,6 +19,7 @@
 		<result property="modifiedBy" column="modified_by" />
 		<result property="modifiedTime" column="modified_time" />
 		<result property="createdBy" column="created_by" />
+		<result property="own" column="own" />
 	</resultMap>
 	
 	<select id="findManagerSalarysByFilter" resultMap="ResultMap" 
@@ -26,7 +27,8 @@
 		SELECT * FROM
 			(SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
-					SELECT salary.*, usr.display_name as managerName
+					SELECT salary.*, usr.display_name as managerName,
+					(salary.REWARD_INCENTIVE_INFORMATION+salary.BASE_PAY+salary.RETURN_PREPARE_AMOUNT-salary.DEDUCT_AMOUNT) as own
 					  FROM manager_salary salary
 					 INNER join sys_user usr
     				    ON usr.id = salary.customer_id
@@ -340,4 +342,46 @@
 		DELETE FROM manager_salary a
 		  WHERE a.year=#{year} and a.month=#{month}
 	</delete>
+	
+	<select id="findManagerSalaryCount" resultType="int">
+		SELECT count(*)
+		   FROM manager_salary salary
+		  WHERE 1=1
+			AND salary.month=#{month}
+			AND salary.year=#{year}
+	</select>
+	
+	<delete id="deleteManagerAssessmentByYearAndMonth">
+		DELETE FROM TY_MANAGER_ASSESSMENT a
+		  WHERE a.year=#{year} and a.month=#{month}
+	</delete>
+	
+	
+	<insert id="copyManagerScore" >
+	    insert into TY_MANAGER_ASSESSMENT										  									 
+				  (id,                                                                   
+				   year,                                                                 
+				   month,                                                                
+				   customer_id,                                                          
+				   score,                                                                
+				   total_score,                                                          
+				   create_time,                                                          
+				   create_user,                                                          
+				   customer_name,                                                        
+				   remark)                                                               
+				  (select sys_guid(),                                                    
+				          s.data_year,                                                   
+				          s.data_month,                                                  
+				          s.assessor,                                                    
+				          '',                                                            
+				          s.total_score,                                                 
+				          s.created_time,                                                
+				          s.created_time,                                                
+				          u.display_name,                                                
+				          OTHER_EVALUATION                                               
+				     from manager_assessment_score s,sys_user u where u.id =s.assessor and s.data_year=#{year} and s.data_month=#{month})  
+	</insert>
+	
+	
+	
 </mapper>

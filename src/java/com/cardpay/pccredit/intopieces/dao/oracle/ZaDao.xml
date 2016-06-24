@@ -12,6 +12,9 @@
 		<result property="sug" column="SUG" />
 		<result property="createdBy" column="CREATED_BY" />
 		<result property="createdTime" column="CREATED_TIME" />
+		<result property="serialnumber" column="SERIALNUMBER" />
+		<result property="processStatus" column="PROCESS_STATUS" />
+		<result property="quotaProcessId" column="QUOTA_PROCESS_ID" />
 	</resultMap>
     
 	<select id="findZaById" resultMap="ResultMap">
@@ -60,5 +63,85 @@
 		 CODE as code,
 		 SUG as sug
 		 from qz_appln_za 
+	</select>
+	
+	<select id="findZasApproved" resultType="com.cardpay.pccredit.intopieces.model.QzApplnZaReturnMap">
+		 select 
+		 ID as id,
+		 ORIGINATOR as originator,
+		 INITIATOR as initiator,
+		 to_char(INIT_DATE,'yyyy-mm-dd') as initDate,
+		 NAME as name,
+		 ADDRESS as address,
+		 CODE as code,
+		 SUG as sug
+		 from qz_appln_za 
+		 where PROCESS_STATUS = 'approved'
+	</select>
+	
+	<select id="getZaWFByFilter" parameterType="com.cardpay.pccredit.intopieces.filter.QuotaFreezeOrThawFilter"
+	    resultMap="ResultMap">
+		SELECT * FROM (
+	    SELECT ROW_.*,ROWNUM ROWNUM_
+			FROM (
+		select c.*,qp.id as QUOTA_PROCESS_ID
+	    FROM qz_appln_za c,
+	    QUOTA_PROCESS_ZA qp,
+	       NODE_AUDIT N,NODE_AUDIT_USER p
+	    where 1=1
+	    and c.serialnumber = qp.serial_number
+	    and c.process_status != 'returnedToFirst' and c.process_status != 'refuse' and c.process_status != 'approved'
+	    and N.ID=qp.NEXT_NODE_ID
+	    and qp.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+			
+		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
+			<if test='filterTeamLeader=="1"'>
+				and u.user_id in ( 
+					select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+					mbm.child_id 
+					FROM 
+					manager_belong_map mbm 
+					LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+					WHERE 
+					amp.user_id = #{userId})
+					union select #{userId} as user_id from dual)
+			</if>
+		</if>
+      
+		<![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+	</select>
+	
+	<select id="getZaCountWFByFilter" parameterType="com.cardpay.pccredit.intopieces.filter.QuotaFreezeOrThawFilter"
+	    resultType="int">
+		SELECT count(*)
+			FROM (
+		select c.*
+	    FROM qz_appln_za c,
+	    QUOTA_PROCESS_ZA qp,
+	       NODE_AUDIT N,NODE_AUDIT_USER p
+	    where 1=1
+	    and c.serialnumber = qp.serial_number
+	    and c.process_status != 'returnedToFirst' and c.process_status != 'refuse' and c.process_status != 'approved'
+	    and N.ID=qp.NEXT_NODE_ID
+	    and qp.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+			
+		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
+			<if test='filterTeamLeader=="1"'>
+				and u.user_id in ( 
+					select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+					mbm.child_id 
+					FROM 
+					manager_belong_map mbm 
+					LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+					WHERE 
+					amp.user_id = #{userId})
+					union select #{userId} as user_id from dual)
+			</if>
+		</if>
+      )
 	</select>
 </mapper>

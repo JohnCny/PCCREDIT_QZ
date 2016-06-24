@@ -26,7 +26,6 @@ import com.cardpay.pccredit.QZBankInterface.web.IESBForECIFReturnMap;
 import com.cardpay.pccredit.customer.filter.VideoAccessoriesFilter;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
@@ -37,6 +36,7 @@ import com.cardpay.pccredit.intopieces.service.AttachmentListService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -99,6 +99,8 @@ public class IntoPiecesXindaiControl extends BaseController {
 				"/intopieces/intopieces_wait/intopiecesApprove_xindai", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -162,6 +164,7 @@ public class IntoPiecesXindaiControl extends BaseController {
 	public JRadReturnMap saveApply(HttpServletRequest request) throws SQLException {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
+			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 			String appId = request.getParameter("id");
 			//是否上传合同单
 			/*Boolean ifAddHt = intoPiecesService.getDcnrList(appId);
@@ -173,7 +176,7 @@ public class IntoPiecesXindaiControl extends BaseController {
 			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
 			request.setAttribute("serialNumber", process.getSerialNumber());
 			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 			request.setAttribute("objection", "false");
 			//查找审批金额
 			Circle circle = circleService.findCircleByAppId(appId);
@@ -184,8 +187,27 @@ public class IntoPiecesXindaiControl extends BaseController {
 				return returnMap;
 			}
 			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
+			
+			//2016-01-13流程调整 判断是否旧流程，旧流程的话需要调用放款接口
+			if(customerApplicationIntopieceWaitService.getNextIsEnd(request)){
+				//先开户 后通过applicationId查找circle并放款 
+				String rtn = circleService.updateCustomerInforCircle_ESB(circle,user);
+				if("放款成功".equals(rtn)){
+					customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
+					returnMap.put(JRadConstants.SUCCESS, true);
+					returnMap.addGlobalMessage(rtn);
+					returnMap.put("message", rtn);
+				}
+				else{
+					returnMap.put(JRadConstants.SUCCESS, false);
+					returnMap.addGlobalMessage(rtn);
+					returnMap.put("message", rtn);
+				}
+			}
+			else{
+				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
+				returnMap.addGlobalMessage(CHANGE_SUCCESS);
+			}
 		} catch (Exception e) {
 			returnMap.addGlobalMessage("保存失败");
 			returnMap.put("message", "保存失败");
@@ -226,22 +248,6 @@ public class IntoPiecesXindaiControl extends BaseController {
 			String nodeNo = "";
 			String appId = request.getParameter("appId");
 			String operate = request.getParameter("operate");//当前审批节点
-<<<<<<< HEAD
-			String nodeName = request.getParameter("nodeName");//退回目标节点（<item name="1" title="客户经理" />
-															    //<item name="2" title="初审" />
-															    //<item name="3" title="内部审查" />
-															    //<item name="4" title="授信审批" />
-															    //<item name="5" title="中心复核" />
-															    //<item name="6" title="填写合同信息" />）
-			if(operate.equals("填写合同信息")){
-				nodeNo = "6";
-			}
-			//退回客户经理和其他岗位不一致
-			if("1".equals(nodeName)){
-				intoPiecesService.checkDoNotToManager(appId,request,Integer.parseInt(nodeName),Integer.parseInt(nodeNo));
-			}else{
-				intoPiecesService.returnAppln(appId, request,Integer.parseInt(nodeName),Integer.parseInt(nodeNo));
-=======
 			String nodeName = request.getParameter("nodeName");//退回目标节点id
 			//退回客户经理和其他岗位不一致
 			if("1".equals(nodeName)){
@@ -249,7 +255,6 @@ public class IntoPiecesXindaiControl extends BaseController {
 				intoPiecesService.checkDoNotToManager(appId,request);
 			}else{
 				intoPiecesService.returnAppln(appId, request,nodeName);
->>>>>>> chinhBy-master
 			}
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {

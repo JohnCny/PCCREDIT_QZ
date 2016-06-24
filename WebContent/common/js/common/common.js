@@ -469,3 +469,76 @@ function _calendar(){
 	$(thisObj).calendar(_args);
 	$(thisObj).removeAttr("on"+thisEvent.type);
 }
+
+function browseFolderTTTTT(id,is_upload){
+	if(is_upload == 1){
+		Dialog.message("");
+	}
+	try{
+		var Message = "选择图片所在文件夹";
+		var Shell = new ActiveXObject("Shell.Application");
+		var Folder = Shell.BrowseForFolder(0,Message,64,17);//起始目录为：我的电脑
+		//var Folder = Shell.BrowseForFolder(0,Message,0);//起始目录为：桌面
+		if(Folder != null){
+			Folder = Folder.items();//返回FolderItems对象
+			Folder= Folder.item();//返回FolderItem对象
+			Folder = Folder.Path;//返回路径
+			if(Folder.charAt(Folder.length - 1) != "\\"){
+				Folder = Folder + "\\";
+			}
+			//document.getElementById(path).value = Folder;
+			Dialog.load();
+			$.ajax({
+				type:'post',
+				url:"${contextPath}/intopieces/intopiecesapprove/browse_folder.page",
+				data : { "id":id,"Folder":Folder},
+				success:function(msg){
+					Dialog.closeLoad();
+					if(msg.success == true){
+						topWin.Dialog.message(msg.message);
+					}else{
+						topWin.Dialog.message(msg.message);
+					}
+					window.location.reload();
+				}
+			});
+		}
+	}
+	catch(e){
+		alert(e.message);
+	}
+}
+
+//字符串转日期
+function dateToDate(date){
+	var arr = date.split("-");
+	sDate = new Date(arr[0],arr[1]-1,arr[2]);
+	return sDate;
+}
+
+//加月份
+function addMonth(date,num){
+	num = parseInt(num,10);
+	var sDate = dateToDate(date);
+	
+	var sYear = sDate.getFullYear();
+	var sMonth = sDate.getMonth()+1;
+	var sDay = sDate.getDate();
+	
+	var eYear = sYear;
+	var eMonth = sMonth+num;
+	var eDay = sDay;
+	
+	while(eMonth > 12){
+		eYear++;
+		eMonth -=12;
+	}
+	
+	var eDate = new Date(eYear,eMonth-1,eDay);
+	
+	while(eDate.getMonth() != eMonth - 1){
+		eDay --;
+		eDate = new Date(eYear,eMonth-1,eDay);
+	}
+	return eDate;
+}

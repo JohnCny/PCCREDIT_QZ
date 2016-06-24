@@ -560,6 +560,14 @@ function importData(url) {
 }
 
 function importCustomer(reloadUrl){
+	if($("#file").val()==""){
+		Dialog.message("请选择导入文件");
+		return;
+	}
+	var uploadTip = document.getElementById("uploadTip");
+	var uploadButton = document.getElementById("uploadButton");
+	uploadTip.style.display='inline';
+	uploadButton.disabled='true';
 	$("#excelForm").ajaxSubmit({
 		dataType : 'json',
 		type : "post",

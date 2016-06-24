@@ -21,6 +21,8 @@ public class ManagerBelongMapForm extends BaseForm{
 	
 	private String levelInformation;
 	
+	private String centerName;
+	
 	public String getParentId() {
 		return parentId;
 	}
@@ -59,5 +61,13 @@ public class ManagerBelongMapForm extends BaseForm{
 
 	public void setLevelInformation(String levelInformation) {
 		this.levelInformation = levelInformation;
+	}
+
+	public String getCenterName() {
+		return centerName;
+	}
+
+	public void setCenterName(String centerName) {
+		this.centerName = centerName;
 	}
 }

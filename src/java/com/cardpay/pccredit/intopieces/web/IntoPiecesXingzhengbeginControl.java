@@ -26,7 +26,6 @@ import com.cardpay.pccredit.QZBankInterface.web.IESBForECIFReturnMap;
 import com.cardpay.pccredit.customer.filter.VideoAccessoriesFilter;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
@@ -42,6 +41,7 @@ import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.intopieces.service.JyxxService;
 import com.cardpay.pccredit.intopieces.service.NbscyjbService;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -106,6 +106,8 @@ public class IntoPiecesXingzhengbeginControl extends BaseController {
 				"/intopieces/intopieces_wait/intopiecesApprove_xingzhengbegin", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -175,13 +177,13 @@ public class IntoPiecesXingzhengbeginControl extends BaseController {
 			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
 			request.setAttribute("serialNumber", process.getSerialNumber());
 			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 			request.setAttribute("objection", "false");
 			//查找审批金额
 			Circle circle = circleService.findCircleByAppId(appId);
 			
 			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
+			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
 			returnMap.addGlobalMessage("保存失败");
@@ -202,27 +204,15 @@ public class IntoPiecesXingzhengbeginControl extends BaseController {
 	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
-			int nodeNo = 3;//内部审核
 			String appId = request.getParameter("appId");
 			String operate = request.getParameter("operate");
 			String nodeName = request.getParameter("nodeName");
-<<<<<<< HEAD
-			if(Integer.parseInt(nodeName) > nodeNo){
-				returnMap.put(JRadConstants.SUCCESS, false);
-				returnMap.put(JRadConstants.MESSAGE, "退回进件不能退回至当前节点的后面~！");
-			}
-			if("1".equals(nodeName)){
-				intoPiecesService.checkDoNotToManager(appId,request,Integer.parseInt(nodeName),nodeNo);
-			}else{
-				intoPiecesService.returnAppln(appId, request,Integer.parseInt(nodeName),nodeNo);
-=======
 			//退回客户经理和其他岗位不一致
 			if("1".equals(nodeName)){
 				
 				intoPiecesService.checkDoNotToManager(appId,request);
 			}else{
 				intoPiecesService.returnAppln(appId, request,nodeName);
->>>>>>> chinhBy-master
 			}
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
@@ -251,7 +241,7 @@ public class IntoPiecesXingzhengbeginControl extends BaseController {
 		CustomerInfor customerInfo = customerInforService.findCustomerInforById(intoPiecesService.findCustomerApplicationInfoByApplicationId(appId).getCustomerId());
 		mv.addObject("customerInfo", customerInfo);
 		//修改为appid查询
-		QzApplnJyxx qzApplnJyxx = jyxxService.findJyxx(null, appId);
+		QzApplnJyxx qzApplnJyxx = jyxxService.findJyxx(customerInfo.getId(), null);
 		mv.addObject("qzApplnJyxx", qzApplnJyxx);
 		
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);

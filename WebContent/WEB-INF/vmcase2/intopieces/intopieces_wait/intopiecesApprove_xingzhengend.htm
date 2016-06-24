@@ -39,6 +39,7 @@
               <col width="10%"/>
               <col width="10%"/>
               <col width="13%"/>
+              <col width="5%" />
             </colgroup>
             <tr class="title">
               <th nowrap="nowrap"></th>
@@ -50,6 +51,7 @@
               <th nowrap="nowrap">审核状态</th>
               <th nowrap="nowrap">申请时间</th>
               <th nowrap="nowrap">节点名称</th>
+              <th nowrap="nowrap">续授信</th>
             </tr>
           </table>
         </div>
@@ -65,6 +67,7 @@
               <col width="10%"/>
               <col width="10%"/>
               <col width="13%"/>
+              <col width="5%" />
             </colgroup>
            #foreach ($wait in $result.items)
             <tr>
@@ -78,6 +81,13 @@
               <td nowrap="nowrap">#dictVal("applicationStatus",$!wait.status) </td>
               <td nowrap="nowrap">$!date.format("yyyy-MM-dd HH:mm:ss",$!wait.auditTime)</td>
               <td nowrap="nowrap">$!wait.nodeName</td>
+              <td nowrap="nowrap">
+               		#if($!wait.isContinue != $null)
+               			是
+               		#else
+               			否
+               		#end
+               </td>
             </tr>
             #end
 
@@ -86,11 +96,14 @@
         </div>
       <div class="pagebar">
         <div class="controlbtn">
+        	<a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录</a>
         	<a id="id_display_button" class="btn_g" href="javascript:void(0);" title="查看申请信息">查看申请信息</a>
         	<!-- <a id="id_show_button" class="btn_g" href="javascript:void(0);"  title="上传扫描件">查看扫描件</a>
 	         <a id="id_apply_button" class="btn_g" href="javascript:void(0);"  title="决议单">决议单</a>
 	         <a id="id_syjy_button" class="btn_g" href="javascript:void(0);"  title="审议纪要">审议纪要</a>
 			<a id="id_in_button" class="btn_g" title="审批通过">审批通过</a> -->
+			 <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> -->
+          <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -104,6 +117,58 @@
 	var layout = new TableLayout(2);
 	window.top.currentWindow.setLayout(layout);
 	$(document).ready(function() {
+		 var opsObj = new Object();
+			opsObj.formObj = $("#submitForm");
+			
+			//查看调查模板
+			$("#id_report_button").click(function() {
+				if ($(".checkbox :checked").length == 1) {
+					var rowid = $("input[name='checkbox']:checked").val();
+					var url = "${contextPath}/intopieces/intopiecesapprove/report_khxx.page?appId=" + rowid.split("@")[0];
+					
+					var isInRisk = false;
+	  				$.ajax({
+							url : "${contextPath}/intopieces/intopiecesapprove/isInBlacklist.json?id="+rowid.split("@")[0],
+							type : "get",
+							async: false,
+							success : function(data) {
+								if (data.success) {
+									if(data.isInList){
+										isInRisk = true;
+									}
+								}else{
+									window.top.Dialog.message("系统出现异常,请联系管理员");
+						    	}
+							}
+				    });
+	  				
+	  				if(isInRisk){
+	  				   window.top.Dialog.message("未导入调查模板");
+	  				   return;
+	  				}
+					
+					if (opsObj.formObj) {
+		                // 回调URL
+		                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+		                if (callBackUrlObj) {
+		                	if(url.indexOf("?")>=0){
+		                		url += "&" + $.param({
+			                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+			                    });
+		                	}else{
+			                    url += "?" + $.param({
+			                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+			                    });
+		                	}
+		                }
+		            }
+					window.location.href = url;
+				}
+				else{
+					Dialog.message("请选择一行!");
+				}
+		    });
+		
 		$("#id_apply_button").click(function() {
 			if ($(".checkbox :checked").length == 1) {
                 var applicationId= $($(".checkbox :checked")[0]).attr("value").split("@")[0];
@@ -172,6 +237,44 @@
 		})
 	});
 	
+
+	function viewIntoPicesApproveHistory(ifHideUser){
+		var id = null;
+		$("input[name='checkbox']:checked").each(function() {
+			id = $(this).val().split("@")[0];
+		});
+		if(id!=null){
+			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
+			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	
+	var idTmr = "";
+	function startExcel(){
+		var appId = null;
+		$("input[name='checkbox']:checked").each(function() {
+			appId = $(this).val().split("@")[0];
+		});
+		if(appId!=null){
+			var OExcel;
+			var oWorkbook;
+			oExcel = new ActiveXObject("Excel.Application");
+			var url = "${url}/system/startexcel/startExcel.json?appId="+appId;
+			oExcel.Workbooks.Open(url);
+			oExcel.DisplayAlerts = false;
+			oExcel.Visible = true;
+			idTmr = window.setInterval("Cleanup();",1000);
+		
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	function Cleanup(){
+		window.clearInterval(idTmr);
+		CollectGarbage();
+	}
 </script>
 
 </body>

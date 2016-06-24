@@ -14,6 +14,10 @@ public class QuotaFreezeOrThawFilter extends BusinessFilter{
 	
 	private String userId;
 
+	private String filterTeamLeader;
+	
+	private String status;
+	
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -53,6 +57,20 @@ public class QuotaFreezeOrThawFilter extends BusinessFilter{
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
-	
+
+	public String getFilterTeamLeader() {
+		return filterTeamLeader;
+	}
+
+	public void setFilterTeamLeader(String filterTeamLeader) {
+		this.filterTeamLeader = filterTeamLeader;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

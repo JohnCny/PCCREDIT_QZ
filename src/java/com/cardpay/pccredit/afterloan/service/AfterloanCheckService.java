@@ -3,6 +3,10 @@ package com.cardpay.pccredit.afterloan.service;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -14,6 +18,8 @@ import com.cardpay.pccredit.afterloan.filter.AfterLoanCheckFilter;
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.afterloan.model.O_CLPM_ACC_LOAN;
 import com.cardpay.pccredit.afterloan.model.PspCheckTask;
+import com.cardpay.pccredit.report.dao.AfterAccLoanDao;
+import com.cardpay.pccredit.report.model.HomeTips;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 
@@ -30,6 +36,9 @@ public class AfterloanCheckService {
 	
 	@Autowired
 	private AfterLoanDao afterLoanDao;
+	
+	@Autowired
+	private AfterAccLoanDao afterAccLoanDao;
 	
 	private static final Logger logger = Logger.getLogger(AfterloanCheckService.class);
 	
@@ -66,11 +75,37 @@ public class AfterloanCheckService {
 	 */
 	public QueryResult<AfterLoaninfo> findAfterLoanCheckTaskRemindByFilter(AfterLoanCheckFilter filter){
 		List<AfterLoaninfo> pList = afterLoanDao.findAfterLoanCheckTaskRemindByFilter(filter);
+		for(int i=0;i<pList.size();i++){
+			AfterLoaninfo loan = pList.get(i);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date loanCreateDate = sdf.parse(loan.getTaskCreateDate());
+				int endDate = Integer.parseInt(filter.getEnddate());
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(loanCreateDate);
+				calendar.add(Calendar.HOUR, endDate*24);
+				String TaskRequestDate = sdf.format(calendar.getTime());
+				loan.setTaskRequestTime(TaskRequestDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		int size = afterLoanDao.findAfterLoanCheckTaskCountRemindByFilter(filter);
 		QueryResult<AfterLoaninfo> qs = new QueryResult<AfterLoaninfo>(size, pList);
 		return qs;
 		
 	}
+	
+	//贷后检查历史
+	public QueryResult<AfterLoaninfo> findAfterLoanHistoryTaskByFilter(
+			AfterLoanCheckFilter filter) {
+		List<AfterLoaninfo> pList = afterLoanDao.findAfterLoanHistoryTaskByFilter(filter);
+		int size = afterLoanDao.findAfterLoanHistoryTaskCountByFilter(filter);
+		QueryResult<AfterLoaninfo> qs = new QueryResult<AfterLoaninfo>(size, pList);
+		return qs;
+	}
+	
 	/**
 	 * 根据任务id查询贷后检查任务
 	 * @param filter
@@ -113,8 +148,15 @@ public class AfterloanCheckService {
 		Connection conn = null;
 		Statement sta = null;
 		try{
-		String sql = "update psp_check_task SET  approve_status='"+pspCheckTask.getApproveStatus()+"'"
+		String sql = "update psp_check_task SET  approve_status='"+pspCheckTask.getApproveStatus()+"',"
+				+ "fallback_Reason = '"+pspCheckTask.getFallbackReason()+"' "
 				+ "where task_id='"+pspCheckTask.getTaskId()+"'";
+		
+		if(pspCheckTask.getFallbackReason() == null){
+			sql = "update psp_check_task SET  approve_status='"+pspCheckTask.getApproveStatus()+"' "
+					+ "where task_id='"+pspCheckTask.getTaskId()+"'";
+		}
+		
 		conn = commonDao.getSqlSession().getConnection();
 		sta = conn.createStatement();
 		boolean flag = sta.execute(sql);
@@ -159,7 +201,22 @@ public class AfterloanCheckService {
 	 * @param userId
 	 * @return
 	 */
-	public int findAferLoanCheckRemindCount(){
-		return afterLoanDao.findAferLoanCheckRemindCount();
+	public int findAferLoanCheckRemindCount(String limitdate,String userId){
+		return afterLoanDao.findAferLoanCheckRemindCount(limitdate,userId);
 	}
+	
+	public List<HomeTips> findAferLoanCheckRemindCountTeam(String enddate,String reminddate,String userId){
+		return afterLoanDao.findAferLoanCheckRemindCountTeam(enddate,reminddate,userId);
+	}
+	
+	public void updateTask(String taskid){
+		String sql ="update psp_check_task set upload_flag = '1' where TASK_ID = '"+taskid+"'";
+		commonDao.queryBySql(PspCheckTask.class, sql, null);
+	}
+
+	public List<HomeTips> getPsNormIntAmtListForHome(String userId,Date endDate) {
+		return afterAccLoanDao.getPsNormIntAmtListForHome(userId,endDate);
+	}
+
+	
 }

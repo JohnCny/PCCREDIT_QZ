@@ -5,6 +5,7 @@ package com.cardpay.pccredit.manager.filter;
 
 import java.util.List;
 
+import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.wicresoft.jrad.base.web.filter.BaseQueryFilter;
 
 /**
@@ -23,6 +24,26 @@ public class ManagerAssessmentScoreFilter extends BaseQueryFilter{
 	private Integer dataMonth;
 	
 	private List<String> subManagerIds;
+	private List<AccountManagerParameterForm> customerManagerIds;
+	private String customerManagerId;
+	
+
+	public List<AccountManagerParameterForm> getCustomerManagerIds() {
+		return customerManagerIds;
+	}
+
+	public void setCustomerManagerIds(
+			List<AccountManagerParameterForm> customerManagerIds) {
+		this.customerManagerIds = customerManagerIds;
+	}
+
+	public String getCustomerManagerId() {
+		return customerManagerId;
+	}
+
+	public void setCustomerManagerId(String customerManagerId) {
+		this.customerManagerId = customerManagerId;
+	}
 
 	public String getAssessedName() {
 		return assessedName;

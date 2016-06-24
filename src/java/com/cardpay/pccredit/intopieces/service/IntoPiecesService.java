@@ -21,6 +21,7 @@ import com.cardpay.pccredit.QZBankInterface.model.ECIF;
 import com.cardpay.pccredit.QZBankInterface.service.CircleService;
 import com.cardpay.pccredit.QZBankInterface.service.ECIFService;
 import com.cardpay.pccredit.QZBankInterface.web.IESBForECIFReturnMap;
+import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.common.UploadFileTool;
 import com.cardpay.pccredit.customer.model.CustomerCareersInformation;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
@@ -28,14 +29,15 @@ import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.divisional.constant.DivisionalProgressEnum;
 import com.cardpay.pccredit.divisional.constant.DivisionalTypeEnum;
 import com.cardpay.pccredit.divisional.service.DivisionalService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.dao.CustomerApplicationIntopieceWaitDao;
 import com.cardpay.pccredit.intopieces.dao.IntoPiecesDao;
 import com.cardpay.pccredit.intopieces.dao.comdao.IntoPiecesComdao;
+import com.cardpay.pccredit.intopieces.filter.AddIntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.filter.MakeCardFilter;
 import com.cardpay.pccredit.intopieces.model.ApplicationDataImport;
+import com.cardpay.pccredit.intopieces.model.ApprovedInfo;
 import com.cardpay.pccredit.intopieces.model.BasicCustomerInformationS;
 import com.cardpay.pccredit.intopieces.model.CustomerAccountData;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationCom;
@@ -47,10 +49,14 @@ import com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationRecom;
 import com.cardpay.pccredit.intopieces.model.CustomerCareersInformationS;
 import com.cardpay.pccredit.intopieces.model.IntoPieces;
+import com.cardpay.pccredit.intopieces.model.LocalExcel;
+import com.cardpay.pccredit.intopieces.model.LocalExcelCollectField;
+import com.cardpay.pccredit.intopieces.model.LocalExcelForm;
 import com.cardpay.pccredit.intopieces.model.MakeCard;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentList;
 import com.cardpay.pccredit.intopieces.model.QzApplnDbrxx;
 import com.cardpay.pccredit.intopieces.model.QzApplnDcnr;
+import com.cardpay.pccredit.intopieces.model.QzApplnDshJyd;
 import com.cardpay.pccredit.intopieces.model.QzApplnHtqdtz;
 import com.cardpay.pccredit.intopieces.model.QzApplnJyd;
 import com.cardpay.pccredit.intopieces.model.QzApplnJydBzdb;
@@ -67,11 +73,15 @@ import com.cardpay.pccredit.intopieces.web.ApproveHistoryForm;
 import com.cardpay.pccredit.intopieces.web.QzApplnSxjcForm;
 import com.cardpay.pccredit.intopieces.web.QzDcnrUploadForm;
 import com.cardpay.pccredit.product.model.AddressAccessories;
+import com.cardpay.pccredit.system.model.Dict;
 import com.cardpay.pccredit.system.model.NodeAudit;
 import com.cardpay.pccredit.system.model.NodeControl;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
 import com.cardpay.workflow.dao.WfStatusResultDao;
 import com.cardpay.workflow.models.WfProcessRecord;
 import com.cardpay.workflow.models.WfStatusQueueRecord;
+import com.cardpay.workflow.service.ProcessService;
+import com.cardpay.workflow.utils.JXLReadExcel;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.constant.JRadConstants;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
@@ -81,6 +91,22 @@ import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.web.security.LoginManager;
 import com.wicresoft.util.spring.Beans;
 
+/**    
+* @Title: IntoPiecesService.java  
+* @Package com.cardpay.pccredit.intopieces.service  
+* @Description: TODO(用一句话描述该文件做什么)  
+* @author tanwh    
+* @date 2016年6月24日 下午1:38:52  
+* @version V1.0    
+*/
+/**    
+* @Title: IntoPiecesService.java  
+* @Package com.cardpay.pccredit.intopieces.service  
+* @Description: TODO(用一句话描述该文件做什么)  
+* @author tanwh    
+* @date 2016年6月24日 下午1:38:55  
+* @version V1.0    
+*/
 @Service
 public class IntoPiecesService {
 
@@ -92,6 +118,9 @@ public class IntoPiecesService {
 	@Autowired
 	private IntoPiecesDao intoPiecesDao;
 
+	@Autowired
+	private ProcessService processService;
+	
 	@Autowired
 	private IntoPiecesComdao intoPiecesComdao;
 	
@@ -136,7 +165,10 @@ public class IntoPiecesService {
 	 */
 	public QueryResult<IntoPieces> findintoPiecesByFilter(
 			IntoPiecesFilter filter) {
-		QueryResult<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesByFilterWF(filter);
+		List<IntoPieces> pList = intoPiecesDao.findintoPiecesByFilterWF(filter);
+		int size = intoPiecesDao.findCountintoPiecesByFilterWF(filter);
+		QueryResult<IntoPieces> queryResult = new QueryResult<IntoPieces>(size, pList);
+		
 		List<IntoPieces> intoPieces = queryResult.getItems();
 		for(IntoPieces pieces : intoPieces){
 			if(pieces.getStatus().equals(Constant.SAVE_INTOPICES)){
@@ -159,7 +191,10 @@ public class IntoPiecesService {
 	
 	//中心岗查询所有进件
 	public QueryResult<IntoPieces> findintoPiecesAllByFilter(IntoPiecesFilter filter) {
-		QueryResult<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesAllByFilter(filter);
+		List<IntoPieces> pList = intoPiecesDao.findintoPiecesAllByFilter(filter);
+		int size = intoPiecesDao.findintoPiecesAllCountByFilter(filter);
+		QueryResult<IntoPieces> queryResult = new QueryResult<IntoPieces>(size, pList);
+		
 		List<IntoPieces> intoPieces = queryResult.getItems();
 		for(IntoPieces pieces : intoPieces){
 			if(pieces.getStatus().equals(Constant.SAVE_INTOPICES)){
@@ -946,21 +981,21 @@ public class IntoPiecesService {
 		CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(filter.getApplicationId());
 		request.setAttribute("serialNumber", process.getSerialNumber());
 		request.setAttribute("applicationId", process.getApplicationId());
-		request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+		request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 		request.setAttribute("objection", "false");
 		//查找审批金额
 		CustomerApplicationInfo appInfo = this.findCustomerApplicationInfoByApplicationId(process.getApplicationId());
 		Circle circle = circleService.findCircleByAppId(process.getApplicationId());
 		
 		request.setAttribute("examineAmount", circle.getContractAmt());
-		customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
+		customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
 	}
 	
 	/* 初审节点退回进件 */
 	/*
 	 * TODO 1.添加注释 2.SQL写进DAO层
 	 */
-	public void checkDoNot(QzApplnSxjcForm filter) throws Exception{
+	public void checkDoNot(QzApplnSxjcForm filter,HttpServletRequest request) throws Exception{
 		QzApplnSxjc sxjc = commonDao.findObjectById(QzApplnSxjc.class, filter.getApplicationId());
 		if(sxjc==null){
 			sxjc = new QzApplnSxjc();
@@ -977,11 +1012,21 @@ public class IntoPiecesService {
 //		commonDao.deleteObject(CustomerApplicationInfo.class, filter.getApplicationId());
 		//更新状态为--退件到申请状态
 		applicationInfo.setStatus(Constant.RETURN_INTOPICES);
+		if(applicationInfo.getChl() != null){
+			applicationInfo.setChl("0");
+		}
 		commonDao.updateObject(applicationInfo);
 		//更新客户信息--退回
 		infor.setProcessId(Constant.APPROVE_EDIT_1);
 		commonDao.updateObject(infor);
 		
+		//通过申请表ID获取流程表
+		CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(filter.getApplicationId());
+		process.setFallbackReason(request.getParameter("reason"));
+	    customerApplicationIntopieceWaitDao.updateCustomerApplicationProcessBySerialNumber(process);
+		//插入流程log表
+		insertProcessLog(filter.getApplicationId(),Constant.APPLN_TYPE_2,request,request.getParameter("reason"),process);
+				
 		//将所有相关表记录删除appId
 //		commonDao.queryBySql("update qz_appln_za_ywsqb_r set application_id=null where application_id='"+filter.getApplicationId()+"'", null);
 //		commonDao.queryBySql("update qz_appln_ywsqb set application_id=null where application_id='"+filter.getApplicationId()+"'", null);
@@ -1018,10 +1063,18 @@ public class IntoPiecesService {
 		infor.setProcessId(Constant.APPROVE_EDIT_2);
 		commonDao.updateObject(infor);
 		
+		//查找审批金额
+		Circle circle = circleService.findCircleByAppId(filter.getApplicationId());
+		
 		//通过申请表ID获取流程表
 		CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(filter.getApplicationId());
+		
+		//设置为拒绝状态
+		applicationInfo.setStatus(Constant.REFUSE_INTOPICES);
+		commonDao.updateObject(applicationInfo);
+		
 		//插入流程log表
-		insertProcessLog(filter.getApplicationId(),Constant.APPLN_TYPE_3,request,request.getParameter("jjyy"),process);
+		insertProcessLog(filter.getApplicationId(),Constant.APPLN_TYPE_3,request,request.getParameter("reason"),process);
 		
 	}
 	/**
@@ -1206,14 +1259,9 @@ public class IntoPiecesService {
 	 * 退件（退到上一节点）
 	 * distancet 退回的目标节点
 	 * current 当前节点表示
-<<<<<<< HEAD
-	 */
-	public void returnAppln(String applicationId,HttpServletRequest request, int distancet, int current) throws Exception{
-=======
 	 * nodeId 退回的节点id
 	 */
 	public void returnAppln(String applicationId,HttpServletRequest request, String nodeId) throws Exception{
->>>>>>> chinhBy-master
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String loginId = user.getId();
 		//通过申请表ID获取流程表
@@ -1222,17 +1270,7 @@ public class IntoPiecesService {
 		CustomerApplicationInfo applicationInfo= commonDao.findObjectById(CustomerApplicationInfo.class, applicationId);
 		//插入流程log表
 		insertProcessLog(applicationId,Constant.APPLN_TYPE_2,request,request.getParameter("remark"),process);
-<<<<<<< HEAD
-		//通过流程表的当前节点获取上一节点
-		NodeControl nodeControl = customerApplicationProcessService.getLastStatus(process.getNextNodeId());
-		//循环获取目标节点
-		for(int i = 0; i < current-distancet-1; i++){
-			nodeControl = customerApplicationProcessService.getLastStatus(nodeControl.getCurrentNode());
-		}
-		System.out.println("最终节点：" + nodeControl.getCurrentNode());
-=======
 
->>>>>>> chinhBy-master
 		//更新业务流程表
 		process.setNextNodeId(nodeId);
 		process.setAuditUser(loginId);
@@ -1249,15 +1287,6 @@ public class IntoPiecesService {
 	   //查找当前所处流转状态
   		WfProcessRecord wfProcessRecord = commonDao.findObjectById(WfProcessRecord.class, process.getSerialNumber());
 		
-<<<<<<< HEAD
-		//通过上一节点获取上一流程
-		WfStatusQueueRecord befoRecord = wfStatusResultDao.getLastStatus(beforeStatus);
-		//循环获取目标流程
-		for(int i = 0; i < current-distancet-1; i++){
-			befoRecord = wfStatusResultDao.getLastStatus(befoRecord.getBeforeStatus());
-		}
-		wfProcessRecord.setWfStatusQueueRecord(befoRecord.getId());
-=======
   		WfStatusQueueRecord wfStatusQueueRecord = commonDao.findObjectById(WfStatusQueueRecord.class,wfProcessRecord.getWfStatusQueueRecord());
 		
 		String currentProcess = wfStatusQueueRecord.getCurrentProcess();
@@ -1270,7 +1299,6 @@ public class IntoPiecesService {
 		List<WfStatusQueueRecord> list = commonDao.queryBySql(WfStatusQueueRecord.class, sql, params);
 		
 		wfProcessRecord.setWfStatusQueueRecord(list.get(0).getId());
->>>>>>> chinhBy-master
 		commonDao.updateObject(wfProcessRecord);
 	}
 
@@ -1307,7 +1335,7 @@ public class IntoPiecesService {
 		
 		//进入下一流转之前 先更新当前流转
 		wfStatusQueueRecord.setExamineUser(loginId);
-		wfStatusQueueRecord.setExamineResult(ApplicationStatusEnum.REJECTAPPROVE);
+		wfStatusQueueRecord.setExamineResult(ApproveOperationTypeEnum.REJECTAPPROVE.toString());
 		wfStatusQueueRecord.setStartExamineTime(new Date());
 		commonDao.updateObject(wfStatusQueueRecord);
 		
@@ -1339,7 +1367,7 @@ public class IntoPiecesService {
 		
 		//进入下一流转之前 先更新当前流转
 		wfStatusQueueRecord.setExamineUser(loginId);
-		wfStatusQueueRecord.setExamineResult(ApplicationStatusEnum.REJECTAPPROVE);
+		wfStatusQueueRecord.setExamineResult(ApproveOperationTypeEnum.REJECTAPPROVE.toString());
 		wfStatusQueueRecord.setStartExamineTime(new Date());
 		commonDao.updateObject(wfStatusQueueRecord);
 		
@@ -1379,12 +1407,18 @@ public class IntoPiecesService {
 		String sql="select * from qz_appln_jyd where customer_id='"+qzSdhjyd.getCustomerId()+"' and application_id='"+qzSdhjyd.getApplicationId()+"'";
 		List<QzApplnJyd> qz = commonDao.queryBySql(QzApplnJyd.class,sql, null);
 		if(qz.size()>0){
-			commonDao.deleteObject(QzApplnJyd.class, qz.get(0).getId());
+			//commonDao.deleteObject(QzApplnJyd.class, qz.get(0).getId());
 			commonDao.queryBySql("delete from qz_appln_jyd_gtjkr where jyd_id='"+qz.get(0).getId()+"'", null);
 			commonDao.queryBySql("delete from qz_appln_jyd_bzdb where jyd_id='"+qz.get(0).getId()+"'", null);
 			commonDao.queryBySql("delete from qz_appln_jyd_dydb where jyd_id='"+qz.get(0).getId()+"'", null);
 		}
+		if(qz.size()>0){
+			qzSdhjyd.setId(qz.get(0).getId());
+			commonDao.updateObject(qzSdhjyd);
+		}
+		else{
 			commonDao.insertObject(qzSdhjyd);
+		}
 			String jyd_id = qzSdhjyd.getId();
 			String[] gtjkrxm = request.getParameterValues("gtjkrxm");
 			String[] gtjkrhm = request.getParameterValues("gtjkrhm");
@@ -1499,11 +1533,20 @@ public class IntoPiecesService {
 		}
 			commonDao.insertObject(qzSdhjyd);
 			
+			//重新关联决议单id
+		sql="update qz_appln_jyd_bzdb set jyd_id='"+qzSdhjyd.getId()+"' where jyd_id = '"+qz.get(0).getId()+"'";
+		commonDao.queryBySql(QzApplnJyd.class,sql, null);
+		sql="update qz_appln_jyd_dydb set jyd_id='"+qzSdhjyd.getId()+"' where jyd_id = '"+qz.get(0).getId()+"'";
+		commonDao.queryBySql(QzApplnJyd.class,sql, null);
+		sql="update qz_appln_jyd_gtjkr set jyd_id='"+qzSdhjyd.getId()+"' where jyd_id = '"+qz.get(0).getId()+"'";
+		commonDao.queryBySql(QzApplnJyd.class,sql, null);
+		
 		//将决策金额和利率以及期限填入circle
 		Circle circle = circleService.findCircleByAppId(qzSdhjyd.getApplicationId());
 		circle.setContractAmt(qzSdhjyd.getJe());
 		circle.setActIntRate(qzSdhjyd.getLl());
 		circle.setTerm(qzSdhjyd.getQx());
+		circle.setSxqx(qzSdhjyd.getSxqx());//添加授信期限 自动计算授信结束日期
 		commonDao.updateObject(circle);
 	}
 	
@@ -1526,6 +1569,10 @@ public class IntoPiecesService {
 		List<QzApplnSdhjy> qz = commonDao.queryBySql(QzApplnSdhjy.class,sql, null);
 		if(qz.size()>0){
 			QzApplnSdhjy sdhjy = qz.get(0);
+			
+			String sql2="select * from qz_appln_nbscyjb where  application_id='"+appId+"'";
+			List<QzApplnNbscyjb> qz2= commonDao.queryBySql(QzApplnNbscyjb.class,sql2, null);
+			sdhjy.setDbfs(qz2.get(0).getSugGuntType());
 			return sdhjy;
 		}else{
 			QzApplnSdhjy sdhjy = new QzApplnSdhjy();
@@ -1566,6 +1613,7 @@ public class IntoPiecesService {
 		String[] zbkhjl = request.getParameterValues("zbkhjl");
 		String[] jbr = request.getParameterValues("jbr");
 		String[] bz = request.getParameterValues("bz");
+		String[] lrz = request.getParameterValues("lrz");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		if(slrq!=null){
 			for(int i=0;i<slrq.length;i++){
@@ -1580,6 +1628,7 @@ public class IntoPiecesService {
 				tz.setBz(bz[i]);
 				tz.setApplicationId(appId);
 				tz.setCreatedTime(new Date());
+				tz.setLrz(lrz[i]);
 				commonDao.insertObject(tz);
 			}
 		}
@@ -1680,135 +1729,6 @@ public class IntoPiecesService {
 		}
 	}
 	
-	/**
-	 * 保存清单至调查内容表
-	 */
-	public void addAttachList(QzApplnAttachmentList qzApplnAttachmentList){
-		String chkValue = qzApplnAttachmentList.getChkValue();
-		//工薪类
-		Map<String, String> map = new HashMap<String, String>();
-		if(qzApplnAttachmentList.getBussType().equals("1")){
-			if((Integer.parseInt(chkValue)&1) != 0){
-				map.put("1", Constant.ATTACH_LIST1);
-			}
-			if((Integer.parseInt(chkValue)&2) != 0){
-				map.put("2", Constant.ATTACH_LIST2);
-			}
-			if((Integer.parseInt(chkValue)&4) != 0){
-				map.put("4", Constant.ATTACH_LIST3);
-			}
-			if((Integer.parseInt(chkValue)&8) != 0){
-				map.put("8", Constant.ATTACH_LIST4);
-			}
-			if((Integer.parseInt(chkValue)&16) != 0){
-				map.put("16", Constant.ATTACH_LIST5);
-			}
-			if((Integer.parseInt(chkValue)&32) != 0){
-				map.put("32", Constant.ATTACH_LIST6);
-			}
-			if((Integer.parseInt(chkValue)&64) != 0){
-				map.put("64", Constant.ATTACH_LIST7);
-			}
-			if((Integer.parseInt(chkValue)&128) != 0){
-				map.put("128", Constant.ATTACH_LIST8);
-			}
-			if((Integer.parseInt(chkValue)&256) != 0){
-				map.put("256", Constant.ATTACH_LIST9);
-			}
-			if((Integer.parseInt(chkValue)&512) != 0){
-				map.put("512", Constant.ATTACH_LIST10);
-			}
-			if((Integer.parseInt(chkValue)&1024) != 0){
-				map.put("1024", Constant.ATTACH_LIST11);
-			}
-			if((Integer.parseInt(chkValue)&2048) != 0){
-				map.put("2048", Constant.ATTACH_LIST12);
-			}
-			if((Integer.parseInt(chkValue)&4096) != 0){
-				map.put("4096", Constant.ATTACH_LIST13);
-			}
-			if((Integer.parseInt(chkValue)&8192) != 0){
-				map.put("8192", Constant.ATTACH_LIST14);
-			}
-		}
-		if(qzApplnAttachmentList.getBussType().equals("2")){
-			if((Integer.parseInt(chkValue)&1) != 0){
-				map.put("1", Constant.ATTACH_LIST15);
-			}
-			if((Integer.parseInt(chkValue)&2) != 0){
-				map.put("2", Constant.ATTACH_LIST2);
-			}
-			if((Integer.parseInt(chkValue)&4) != 0){
-				map.put("4", Constant.ATTACH_LIST3);
-			}
-			if((Integer.parseInt(chkValue)&8) != 0){
-				map.put("8", Constant.ATTACH_LIST4);
-			}
-			if((Integer.parseInt(chkValue)&16) != 0){
-				map.put("16", Constant.ATTACH_LIST5);
-			}
-			if((Integer.parseInt(chkValue)&32) != 0){
-				map.put("32", Constant.ATTACH_LIST6);
-			}
-			if((Integer.parseInt(chkValue)&64) != 0){
-				map.put("64", Constant.ATTACH_LIST7);
-			}
-			if((Integer.parseInt(chkValue)&128) != 0){
-				map.put("128", Constant.ATTACH_LIST16);
-			}
-			if((Integer.parseInt(chkValue)&256) != 0){
-				map.put("256", Constant.ATTACH_LIST17);
-			}
-			if((Integer.parseInt(chkValue)&512) != 0){
-				map.put("512", Constant.ATTACH_LIST18);
-			}
-			if((Integer.parseInt(chkValue)&1024) != 0){
-				map.put("1024", Constant.ATTACH_LIST19);
-			}
-			if((Integer.parseInt(chkValue)&2048) != 0){
-				map.put("2048", Constant.ATTACH_LIST20);
-			}
-			if((Integer.parseInt(chkValue)&4096) != 0){
-				map.put("4096", Constant.ATTACH_LIST21);
-			}
-			if((Integer.parseInt(chkValue)&8192) != 0){
-				map.put("8192", Constant.ATTACH_LIST22);
-			}
-			if((Integer.parseInt(chkValue)&16384) != 0){
-				map.put("16384", Constant.ATTACH_LIST23);
-			}
-			if((Integer.parseInt(chkValue)&32768) != 0){
-				map.put("32768", Constant.ATTACH_LIST24);
-			}
-			if((Integer.parseInt(chkValue)&65536) != 0){
-				map.put("65536", Constant.ATTACH_LIST25);
-			}
-			if((Integer.parseInt(chkValue)&131072) != 0){
-				map.put("131072", Constant.ATTACH_LIST26);
-			}
-			if((Integer.parseInt(chkValue)&262144) != 0){
-				map.put("262144", Constant.ATTACH_LIST27);
-			}
-		}
-		//先删除之前调查内容
-		String sql = "delete from qz_appln_dcnr where customer_id='"+qzApplnAttachmentList.getCustomerId()+"'";
-		if(qzApplnAttachmentList.getApplicationId()==null){
-			sql+=" and application_id is null";
-		}else{
-			sql+=" and application_id ='"+qzApplnAttachmentList.getApplicationId()+"'";
-		}
-		commonDao.queryBySql(sql, null);
-		//新增调查内容
-		for(Map.Entry<String, String> entry: map.entrySet()){
-			QzApplnDcnr dcnr = new QzApplnDcnr();
-			dcnr.setApplicationId(qzApplnAttachmentList.getApplicationId());
-			dcnr.setReportId(entry.getKey());
-			dcnr.setReportName(entry.getValue());
-			dcnr.setCustomerId(qzApplnAttachmentList.getCustomerId());
-			commonDao.insertObject(dcnr);
-		}
-	}
-	
 	public String getReturnUrl(String operate){
 		if(operate==null){
 			return null;
@@ -1823,19 +1743,22 @@ public class IntoPiecesService {
 			return "/intopieces/intopieceszhongxin/zhongxin.page";
 		}else if(operate.equals(Constant.status_xinshen)){
 			return "/intopieces/intopiecesxindai/xindai.page";
+		}else if(operate.equals(Constant.status_fangkuan)){
+			return "/intopieces/intopiecesfangkuan/fangkuan.page";
 		}else if(operate.equals(Constant.status_buchong)){
 			return "/intopieces/intopiecesapprove/add_information.page";
 		}else if(operate.equals(Constant.status_cardquery)){
 			return "/intopieces/intopiecesqueryAll/browseAll.page";
+		}else if(operate.equals(Constant.status_anjudai)){
+			return "/intopieces/intopiecesqueryAll/browseAll.page";
 		}else if(operate.equals(Constant.status_query)){
 			return "/intopieces/intopiecesquery/browse.page";
-<<<<<<< HEAD
-=======
+		}else if(operate.equals(Constant.status_query_anjudai)){
+			return "/intopieces/intopiecesquery/browse.page";
 		}else if(operate.equals(Constant.status_onelevel)){
 			return "/intopieces/intopiecesonelevel/onelevel.page";
 		}else if(operate.equals(Constant.status_twolevel)){
 			return "/intopieces/intopiecestwolevel/twolevel.page";
->>>>>>> chinhBy-master
 		}else{
 			return "/intopieces/intopiecesxingzheng2/xingzhengend.page";
 		}
@@ -1934,40 +1857,20 @@ public class IntoPiecesService {
 	/*
 	 * TODO 1.添加注释 2.SQL写进DAO层
 	 */
-<<<<<<< HEAD
-	public void checkDoNotToManager(String applicationId, HttpServletRequest request, int distancet, int current) throws Exception{
-//		QzApplnSxjc sxjc = commonDao.findObjectById(QzApplnSxjc.class, applicationId);
-//		if(sxjc==null){
-//			sxjc = new QzApplnSxjc();
-//			sxjc.setApplication_id(applicationId);
-//		}
-//		sxjc.setReality(filter.getReality());
-//		sxjc.setComplete(filter.getComplete());
-//		sxjc.setStandard(filter.getStandard());
-//		commonDao.insertObject(sxjc);
-=======
 	public void checkDoNotToManager(String applicationId, HttpServletRequest request) throws Exception{
->>>>>>> chinhBy-master
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String loginId = user.getId();
 		//获取进件信息
 		CustomerApplicationInfo applicationInfo= commonDao.findObjectById(CustomerApplicationInfo.class, applicationId);
 		//获取进件流程信息
 		CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(applicationId);
+		
+		//插入流程log表
+		insertProcessLog(applicationId,Constant.APPLN_TYPE_2,request,request.getParameter("remark"),process);
+				
 		//获取客户信息
 		CustomerInfor infor = commonDao.findObjectById(CustomerInfor.class, applicationInfo.getCustomerId());
 //		commonDao.deleteObject(CustomerApplicationInfo.class, filter.getApplicationId());
-<<<<<<< HEAD
-		//通过流程表的当前节点获取上一节点
-		NodeControl nodeControl = customerApplicationProcessService.getLastStatus(process.getNextNodeId());
-		//循环获取目标节点
-		for(int i = 0; i < current-distancet-2; i++){
-			nodeControl = customerApplicationProcessService.getLastStatus(nodeControl.getCurrentNode());
-		}
-		System.out.println("最终节点：" + nodeControl.getCurrentNode());
-				//更新业务流程表
-		process.setNextNodeId(nodeControl.getCurrentNode());
-=======
 		String nodeSql = "select n.id from ("
 				+" select t.*,connect_by_isleaf isLeaf from node_control t"
 				+" start with current_node=#{currentNode}"
@@ -1979,7 +1882,6 @@ public class IntoPiecesService {
 		List<HashMap<String, Object>> nodeList = commonDao.queryBySql(nodeSql, nodeparams);
 		//更新业务流程表
 		process.setNextNodeId((String)nodeList.get(0).get("ID"));
->>>>>>> chinhBy-master
 		process.setAuditUser(loginId);
 		process.setCreatedTime(new Date());
 		process.setFallbackReason(request.getParameter("remark"));
@@ -1987,6 +1889,9 @@ public class IntoPiecesService {
 		customerApplicationIntopieceWaitDao.updateCustomerApplicationProcessBySerialNumber(process);
 		//更新状态为--退件到申请状态
 		applicationInfo.setStatus(Constant.RETURN_INTOPICES);
+		if(applicationInfo.getChl() != null){
+			applicationInfo.setChl("0");
+		}
 		commonDao.updateObject(applicationInfo);
 		//更新客户信息--退回
 		infor.setProcessId(Constant.APPROVE_EDIT_1);
@@ -1994,30 +1899,6 @@ public class IntoPiecesService {
 		//查找当前所处流转状态
   		WfProcessRecord wfProcessRecord = commonDao.findObjectById(WfProcessRecord.class, process.getSerialNumber());
 		WfStatusQueueRecord wfStatusQueueRecord = commonDao.findObjectById(WfStatusQueueRecord.class,wfProcessRecord.getWfStatusQueueRecord());
-<<<<<<< HEAD
-		//查找上一节点
-		String beforeStatus = wfStatusQueueRecord.getBeforeStatus();
-		
-		//通过上一节点获取上一流程
-		WfStatusQueueRecord befoRecord = wfStatusResultDao.getLastStatus(beforeStatus);
-		//循环获取目标流程
-		for(int i = 0; i < current-distancet-2; i++){
-			befoRecord = wfStatusResultDao.getLastStatus(befoRecord.getBeforeStatus());
-		}
-		wfProcessRecord.setWfStatusQueueRecord(befoRecord.getId());
-		commonDao.updateObject(wfProcessRecord);
-		
-		//将所有相关表记录删除appId
-		commonDao.queryBySql("update qz_appln_za_ywsqb_r set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_ywsqb set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_dbrxx set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_attachment_list set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_nbscyjb set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_iesb_for_circle set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_dcnr set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_jyd set application_id=null where application_id='"+applicationId+"'", null);
-		commonDao.queryBySql("update qz_appln_nbscyjb set application_id=null where application_id='"+applicationId+"'", null);
-=======
 		String currentProcess = wfStatusQueueRecord.getCurrentProcess();
 		String sql = "select t.* from wf_status_queue_record t " 
 					+ "where t.current_process =  #{currentProcess}"
@@ -2039,8 +1920,150 @@ public class IntoPiecesService {
 //		commonDao.queryBySql("update qz_appln_dcnr set application_id=null where application_id='"+applicationId+"'", null);
 //		commonDao.queryBySql("update qz_appln_jyd set application_id=null where application_id='"+applicationId+"'", null);
 //		commonDao.queryBySql("update qz_appln_nbscyjb set application_id=null where application_id='"+applicationId+"'", null);
->>>>>>> chinhBy-master
 				
 		
 	}
+	
+	public void deleteApply(String appId){
+		//获取进件页签（产品信息）
+		QzAppln_Za_Ywsqb_R qzappln_za_ywsqb_r = za_ywsqb_r_service.findByAppId(appId);
+		if(qzappln_za_ywsqb_r != null){
+			commonDao.deleteObject(QzAppln_Za_Ywsqb_R.class, qzappln_za_ywsqb_r.getId());
+		}
+		//业务申请表
+		QzApplnYwsqb qzApplnYwsqb = ywsqbService.findYwsqbByAppId(appId);
+		if(qzApplnYwsqb != null){
+			commonDao.deleteObject(QzApplnYwsqb.class, qzApplnYwsqb.getId());
+		}
+		//担保人appId
+		List<QzApplnDbrxx> dbrxx_ls = dbrxxService.findDbrxxByAppId(appId);
+		for(int i= 0; i < dbrxx_ls.size(); i++){
+			QzApplnDbrxx qzApplnDbrxx = dbrxx_ls.get(i);
+			commonDao.deleteObject(QzApplnDbrxx.class, qzApplnDbrxx.getId());
+		}
+		//附件appId
+		QzApplnAttachmentList qzApplnAttachmentList = attachmentListService.findAttachmentListByAppId(appId);
+		if(qzApplnAttachmentList != null){
+			//附件detail
+			String sql = "delete from QZ_APPLN_ATTACHMENT_DETAIL where batch_id in (select id from QZ_APPLN_ATTACHMENT_BATCH where att_id='"+qzApplnAttachmentList.getId()+"')";
+			commonDao.queryBySql(sql, null);
+			
+			//附件batch
+			sql = "delete from QZ_APPLN_ATTACHMENT_BATCH where att_id ='"+qzApplnAttachmentList.getId()+"'";
+			commonDao.queryBySql(sql, null);
+			
+			commonDao.deleteObject(QzApplnAttachmentList.class,qzApplnAttachmentList.getId());
+		}
+		//内部审查appId
+		QzApplnNbscyjb qzApplnNbscyjb = nbscyjbService.findNbscyjbByAppId(appId);
+		if(qzApplnNbscyjb != null){
+			commonDao.deleteObject(QzApplnNbscyjb.class,qzApplnNbscyjb.getId());
+		}
+		//审贷会决议表
+		QzApplnJyd jyd = this.getSdhjydFormAfter(appId);
+		if(jyd != null){
+			commonDao.deleteObject(QzApplnJyd.class, jyd.getId());
+		}
+		//贷款信息
+		Circle circle = circleService.findCircleByAppId(appId);
+		if(circle != null){
+			commonDao.deleteObject(Circle.class, circle.getId());
+		}
+		//进件流程表
+		CustomerApplicationProcess process = processService.findProcessByAppId(appId);
+		if(process != null){
+			commonDao.deleteObject(CustomerApplicationProcess.class, process.getId());
+		}
+		//流程申请表
+		CustomerApplicationInfo cusAppInfo = this.findCusAppInforByAppId(appId);
+		if(cusAppInfo != null){
+			commonDao.deleteObject(CustomerApplicationInfo.class, cusAppInfo.getId());
+		}
+	}
+
+	public List<Dict> findBelogCusMgr(String userId){
+		return intoPiecesDao.findBelogCusMgr(userId);
+	}
+	public List<ApprovedInfo> getApprovedInfo() {
+		return intoPiecesDao.getApprovedInfo();
+	}
+	
+	//导入调查报告
+		public void importExcel(MultipartFile file,String productId, String customerId,String appId) {
+			Map<String, String> map = UploadFileTool.uploadYxzlFileBySpring_quanz(file,customerId);
+			String fileName = map.get("fileName");
+			String url = map.get("url");
+			LocalExcel localExcel = new LocalExcel();
+			localExcel.setProductId(productId);
+			localExcel.setCustomerId(customerId);
+			localExcel.setApplicationId(appId);
+			localExcel.setCreatedTime(new Date());
+			if (StringUtils.trimToNull(url) != null) {
+				localExcel.setUri(url);
+			}
+			if (StringUtils.trimToNull(fileName) != null) {
+				localExcel.setAttachment(fileName);
+			}
+			
+			//读取excel内容
+			JXLReadExcel readExcel = new JXLReadExcel();
+			String sheet[] = readExcel.readExcelToHtml(url, true);
+			for(String str : sheet){
+				if(StringUtils.isEmpty(str)){
+					throw new RuntimeException("导入失败，请检查excel文件与模板是否一致！");
+				}
+			}
+			localExcel.setSheetKhxx(sheet[0]);
+			localExcel.setSheet_zcfz(sheet[1]);
+			localExcel.setSheetSy(sheet[2]);
+			localExcel.setDecodeType("UTF-8");
+			//删除旧模板
+			String sql = "delete from local_excel where customer_id='"+customerId+"' and product_id='"+productId+"'";
+			commonDao.queryBySql(LocalExcel.class, sql, null);
+			//添加模板
+			commonDao.insertObject(localExcel);
+			
+			//删除采集字段表信息
+			String fieldsql = "delete from LOCAL_EXCEL_COLLECT_FIELD where LOCAL_EXCEL_ID='"+localExcel.getId()+"'";
+		    commonDao.queryBySql(LocalExcel.class, fieldsql, null);
+		    
+		    LocalExcelCollectField field = new LocalExcelCollectField();
+		    field.setProductId(productId);
+		    field.setCustomerId(customerId);
+		    field.setApplicationId(appId);
+		    field.setLocalExcelId(localExcel.getId());
+		    field.setCreatedTime(new Date());
+		    field.setJynx(sheet[3]);
+		    field.setZc(sheet[4]);
+		    field.setQy(sheet[5]);
+		    field.setZcfzl(sheet[6]);
+		    field.setYye(sheet[7]);
+		    field.setNkzpsl(sheet[8]);
+			//添加采集字段表
+		    commonDao.insertObject(field);
+		}
+		
+		public LocalExcel findLocalEXcelByApplication(String appId){
+			return intoPiecesDao.findByApplication(appId);
+		}
+		
+		/* 查询调查报告信息 */
+		public QueryResult<LocalExcelForm> findLocalExcel(AddIntoPiecesFilter filter) {
+			List<LocalExcelForm> ls = intoPiecesDao.findLocalExcelForm(filter);
+			int size = intoPiecesDao.findCountByProductAndCustomer(filter);
+			QueryResult<LocalExcelForm> qr = new QueryResult<LocalExcelForm>(size,ls);
+			return qr;
+		}
+
+		
+		/** 
+		* @Title: findDsh10JydByAppId 
+		* @Description: 根据appid查找贷生活决议单
+		* @param @param appId    设定文件 
+		* @return void    返回类型 
+		* @throws 
+		*/ 
+		public QzApplnDshJyd findDsh10JydByAppId(String appId) {
+			return intoPiecesDao.findDsh10JydByAppId(appId);
+		}
 }

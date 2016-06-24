@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -58,14 +59,18 @@ public class SystemUserController extends BaseController{
 	public AbstractModelAndView browse(@ModelAttribute SystemUserFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		String selectval = request.getParameter("selectval");
+		String selectvaltmp = "";
 		List<String> selectlist = new  ArrayList<String>();
 		String [] selectvalarry =null;
-		if(selectval != null){
+		if(StringUtils.isNotEmpty(selectval)){
 		 selectvalarry= selectval.split(",");
 		 for(int i=0;i<selectvalarry.length;i++){ 
 			 selectlist.add(selectvalarry[i]);
 		 }
+		 selectvaltmp = "'" + selectval.replaceAll(",", "','") + "'";
+		 filter.setSelectvaltmp(selectvaltmp);
 	    }
+		filter.setLimit(5);
 		QueryResult<SystemUser> result = systemUserService.findSystemUserByFilter(filter);	
 		JRadPagedQueryResult<SystemUser> pagedResult = new JRadPagedQueryResult<SystemUser>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/system_user_browse", request);

@@ -33,11 +33,13 @@ import com.cardpay.pccredit.manager.service.ManagerAssessmentScoreService;
 import com.cardpay.pccredit.manager.service.ManagerSalaryService;
 import com.cardpay.pccredit.manager.service.StatisticsScheduleService;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
+import com.cardpay.pccredit.report.model.HomeTips;
 import com.cardpay.pccredit.report.model.NameValueRecord;
 import com.cardpay.pccredit.report.service.StatisticalCommonService;
 import com.cardpay.pccredit.riskControl.dao.NplsInfomationDao;
 import com.cardpay.pccredit.riskControl.service.CustomerOverdueService;
 import com.cardpay.pccredit.riskControl.service.RiskCustomerCollectionService;
+import com.cardpay.pccredit.system.model.Dict;
 import com.cardpay.pccredit.system.service.SystemUserService;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.enviroment.GlobalSetting;
@@ -152,11 +154,11 @@ public class MainController {
 		User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
 		String rolename = user.getRoles().get(0).getName();
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, 3); 
-		int day1 = calendar.get(Calendar.DAY_OF_MONTH);
-		calendar.add(Calendar.DATE, 1); 
-		int day2 = calendar.get(Calendar.DAY_OF_MONTH);
+		
+		//calendar.add(Calendar.DATE, 3); 
+		//int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+		//calendar.add(Calendar.DATE, 1); 
+		//int day2 = calendar.get(Calendar.DAY_OF_MONTH);
 		//Date date = calendar.getTime();
 		//Date day1 = DateHelper.normalizeDate(DateHelper.shiftDay(date, 3), "yyyy-MM-dd");
 		//Date day2 = DateHelper.normalizeDate(DateHelper.shiftDay(date, 4), "yyyy-MM-dd");
@@ -165,9 +167,19 @@ public class MainController {
 		//查询贷后检查任务数
 		int loanCount = afterLoanCheckService.findAferLoanCheckCountByUserId(userId);
 		//查询所检查提醒任务
-		int remindCount = afterLoanCheckService.findAferLoanCheckRemindCount();
-		//获取该用户角色
-		String roleName = accountManagerParameterService.findRoleNameByUserId(userId);
+		//获取贷后点击通知时限和截止时限
+		List<Dict> dict = customerInforService.findDict("afterloan");
+		String reminddate="";
+		String enddate="";
+		for(int i=0;i<dict.size();i++){
+			Dict dictd = dict.get(i);
+			if("reminddate".equals(dictd.getTypeCode())){
+				reminddate=dictd.getTypeName();
+			}else if("enddate".equals(dictd.getTypeCode())){
+				enddate=dictd.getTypeName();
+			}
+		}
+		//int remindCount = afterLoanCheckService.findAferLoanCheckRemindCount(enddate,userId);
 		//客户经理层级
 		String level = "";
 		if(accountManagerParameter != null ){
@@ -176,7 +188,8 @@ public class MainController {
 		String pageurl ="";
 		if(level.equals("MANA005") || level.equals("MANA003") ){
 			
-			pageurl = "home/managerhome";
+			//pageurl = "home/managerhome";
+			pageurl = "home/home";	
 		}
 		else{
 			
@@ -184,22 +197,24 @@ public class MainController {
 		
 		}
 		JRadModelAndView mv = new JRadModelAndView(pageurl, request);
-		//统计客户已授信额度
+		/*统计客户已授信额度
 		Double doubleApply=managerAssessmentScoreService.getManagerApplyQuota(userId);
 
 		HashMap<String,Integer> homeData = mainService.getHomeData(userId,0);
-		HashMap<String,Object> rightHomeData = getRightHomeData(userId);
-		String organizationname = organization.getName();
+		HashMap<String,Object> rightHomeData = getRightHomeData(userId);*/
 		mv.addObject("accountManagerParameter",accountManagerParameter);
 		mv.addObject("rolename",rolename);
+		String organizationname = organization.getName();
 		mv.addObject("organizationname",organizationname);
-		mv.addObject("doubleApply",doubleApply);
+		/*mv.addObject("doubleApply",doubleApply);
 		mv.addObject("day1",day1);
 		mv.addObject("day2",day2);
 		mv.addObject("loanCount",loanCount);
 		mv.addObject("remindCount",remindCount);
-		mv.addObject("roleName",roleName);
-		/*center*/
+		mv.addObject("remindCountTeam",remindCountTeam);
+		mv.addObject("roleName",roleName);*/
+		
+		/*center
 		mv.addObject("marketing",homeData.get("marketing"));
 		mv.addObject("divisional",homeData.get("divisional"));
 		mv.addObject("applicationReject",homeData.get("applicationReject"));
@@ -209,26 +224,32 @@ public class MainController {
 		mv.addObject("collection",homeData.get("collection"));
 		mv.addObject("riskNumber",homeData.get("riskNumber"));
 		mv.addObject("abilityNumber",homeData.get("abilityNumber"));
-		mv.addObject("productNumber",homeData.get("productNumber"));
-		/*right*/
+		mv.addObject("productNumber",homeData.get("productNumber"));*/
+		
+		/*right
 		mv.addObject("not",rightHomeData.get("not"));
 		mv.addObject("already",rightHomeData.get("already"));
-		mv.addObject("wait",rightHomeData.get("wait"));
-		/*进件状况*/
+		mv.addObject("wait",rightHomeData.get("wait"));*/
+		
+		/*进件状况
 		mv.addObject("UserApplicationInfo",rightHomeData.get("UserApplicationInfo"));
 		mv.addObject("UserApplicationSuccess",rightHomeData.get("UserApplicationSuccess"));
 		mv.addObject("UserApplicationNopass",rightHomeData.get("UserApplicationNopass"));
-		mv.addObject("UserApplicationRefuse",rightHomeData.get("UserApplicationRefuse"));
-		/*奖励激励状况*/
+		mv.addObject("UserApplicationRefuse",rightHomeData.get("UserApplicationRefuse"));*/
+		
+		/*奖励激励状况
 		mv.addObject("reward",rightHomeData.get("reward"));
-		mv.addObject("riskGuarantee",rightHomeData.get("riskGuarantee"));
-		/*客户经营状况（余额）*/
-		mv.addObject("credit",rightHomeData.get("credit"));
-		/*客户经营状况（数量）*/
+		mv.addObject("riskGuarantee",rightHomeData.get("riskGuarantee"));*/
+		
+		/*客户经营状况（余额）
+		mv.addObject("credit",rightHomeData.get("credit"));*/
+		
+		/*客户经营状况（数量
 		mv.addObject("customer",rightHomeData.get("customer"));
 		mv.addObject("riskCustomer",rightHomeData.get("riskCustomer"));
-		mv.addObject("verificationCustomer",rightHomeData.get("verificationCustomer"));
+		mv.addObject("verificationCustomer",rightHomeData.get("verificationCustomer"));*/
 		
+		/*
 		if(level.equals("MANA005") || level.equals("MANA003") ){
 			// 当前进件状况
 			mv.addObject("applicationStatusJson",statisticalCommonService.getApplicationStatusJson());
@@ -239,7 +260,26 @@ public class MainController {
 			List<NameValueRecord> cardList = statisticalCommonService.statisticalCardStatus();
 			mv.addObject("cardStatusCategoriesJson",statisticalCommonService.getCardStatusCategoriesJson(cardList));
 			mv.addObject("cardStatusValuesJson",statisticalCommonService.getCardStatusValuesJson(cardList));
-		}
+		}*/
+		
+		//新版首页
+		//用信预警提示，按客户经理维度
+		List<HomeTips> tips1 = statisticalCommonService.getUsedCreditByUserId(userId);
+		mv.addObject("tips1",tips1);
+		//贷后提醒
+		List<HomeTips> tips2 = afterLoanCheckService.findAferLoanCheckRemindCountTeam(enddate,reminddate,userId);
+		mv.addObject("tips2",tips2);
+		//21日还息提醒
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 21);
+		List<HomeTips> tips3 = afterLoanCheckService.getPsNormIntAmtListForHome(userId,calendar.getTime());
+		mv.addObject("tips3",tips3);
+		//即将到期客户(借据)
+		List<HomeTips> tips4 = statisticalCommonService.getExpiryClientNum(userId);
+		mv.addObject("tips4",tips4);
+		//已到期客户()
+		List<HomeTips> tips5 = statisticalCommonService.getAlreadyExpiryClientNum(userId);
+		mv.addObject("tips5",tips5);
 		
 		return mv;
 	}

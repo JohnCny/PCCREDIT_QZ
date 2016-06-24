@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
 import com.wicresoft.jrad.base.constant.JRadConstants;
+import com.wicresoft.jrad.base.database.dao.common.CommonDao;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
@@ -40,6 +41,7 @@ import com.wicresoft.jrad.modules.privilege.business.RoleManager;
 import com.wicresoft.jrad.modules.privilege.business.UserManager;
 import com.wicresoft.jrad.modules.privilege.filter.DepartmentFilter;
 import com.wicresoft.jrad.modules.privilege.filter.UserFilter;
+import com.wicresoft.jrad.modules.privilege.model.Department;
 import com.wicresoft.jrad.modules.privilege.model.DeptUser;
 import com.wicresoft.jrad.modules.privilege.model.Role;
 import com.wicresoft.jrad.modules.privilege.model.User;
@@ -75,6 +77,8 @@ public class UserController extends BaseController {
 	
 	@Autowired
 	private modulesComdao modulesComdao;
+	@Autowired
+	private CommonDao commonDao;
 
 	final public static String REQUEST_DEPT_ID = "deptId";
 	final public static String SESSION_DEPT_ID = "$$deptId$$";
@@ -235,6 +239,16 @@ public class UserController extends BaseController {
 				
 				user.setId(userId);
 				userManager.updateUser(user, request.getParameter("roleIds"));
+				String orgId = request.getParameter("orgId");
+				if(StringUtils.isNotEmpty(orgId)){
+					//变更机构
+					String sql = "select * from sys_dept_user where user_id = '"+userId+"'";
+					DeptUser du = commonDao.queryBySql(DeptUser.class, sql, null).get(0);
+					sql = "select * from sys_department where org_id = '"+orgId+"'";
+					Department dept = commonDao.queryBySql(Department.class, sql, null).get(0);
+					du.setDeptId(dept.getId());
+					commonDao.updateObject(du);
+				}
 				String deptId = request.getParameter("deptId");
 				returnMap.put("deptId", deptId);
 				returnMap.put(RECORD_ID, user.getId());

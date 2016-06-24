@@ -11,21 +11,47 @@
           <form id="submitForm">
             <ul>
               <li>
-                <span>客户经理：<input type="text" id="managerName" name="managerName" value="$!result.filter.managerName" maxlength="50"/></span>
+               <span>客户经理：<select id="customerManagerId" name="customerManagerId">
+                <option value="">请选择...</option>
+                #web($forms,$!result.filter.customerManagerId)
+                  </select>
+                </span> 
+                <!-- <span>客户经理：<input type="text" id="userId" name="userId" /></span> -->
               </li>
               <li>
-                <span>年份：<input type="text" id="year" name="year" value="$!result.filter.year" maxlength="50"/></span>
+               <!--  <span>年份：<input type="text" id="year" name="year" value="$!result.filter.year" maxlength="50"/></span> -->
+                <span>年份：<select id="year" name="year">
+                    <option value="">请选择</option>
+                    #dict("KHJLPGNFLB", $!result.filter.dataYear)
+                  </select>
+                </span>
               </li>
               <li>
-                <span>月份：<input type="text" id="month" name="month" value="$!result.filter.month" maxlength="50"/></span>
+				<!--<span>月份：<input type="text" id="month" name="month" value="$!result.filter.month" maxlength="50"/></span> -->
+				<span>月份：<select id="month" name="month">
+                    <option value="">请选择</option>
+                    <option value="1" >01月</option>
+                    <option value="2" >02月</option>
+                    <option value="3" >03月</option>
+                    <option value="4" >04月</option>
+                    <option value="5" >05月</option>
+                    <option value="6" >06月</option>
+                    <option value="7" >07月</option>
+                    <option value="8" >08月</option>
+                    <option value="9" >09月</option>
+                    <option value="10">10月</option>
+                    <option value="11">11月</option>
+                    <option value="12">12月</option>
+                  </select>
+                </span>
               </li>
               
               <li class="search_button">
                 <input id="id_browse_button" type="button" value="#i18n('button.browse')" class="search_button_inquiry"
                   title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" />
-                  
+                 <!--  
                   <input id="id_genertae_button" type="button" value="生成数据" class="search_button_inquiry"
-                  title="生成数据" style="height: 26px; line-height: 24px;" />
+                  title="生成数据" style="height: 26px; line-height: 24px;" /> -->
               </li>
             </ul>
           </form>
@@ -51,14 +77,12 @@
               <th nowrap="nowrap">月份</th>
               <th nowrap="nowrap">客户经理</th>
               <th nowrap="nowrap">绩效工资</th>
-<!--               <th nowrap="nowrap">扣除金额</th> -->
+			  <th nowrap="nowrap">扣除金额</th>
               <th nowrap="nowrap">底薪</th>
-              <th nowrap="nowrap">津贴</th>
-              <th nowrap="nowrap">责任工资</th>
               <th nowrap="nowrap">返还金额</th>
               <th nowrap="nowrap">存入准备金额</th>
-<!--               <th nowrap="nowrap">罚款</th> -->
               <th nowrap="nowrap">备注</th>
+              <th nowrap="nowrap">本月工资</th>
             </tr>
           </table>
         </div>
@@ -84,15 +108,13 @@
               <td nowrap="nowrap">$!managerSalary.year</td>
               <td nowrap="nowrap">$!managerSalary.month</td>
               <td nowrap="nowrap">$!managerSalary.managerName</td>
-              <td nowrap="nowrap">$format.formatNumber(4, $!managerSalary.rewardIncentiveInformation)</td>
-<!--               <td nowrap="nowrap">$!managerSalary.deductAmount</td> -->
-              <td nowrap="nowrap">$format.formatNumber(4, $!managerSalary.basePay)</td>
-              <td nowrap="nowrap">$format.formatNumber(4, $!managerSalary.allowance)</td>
-              <td nowrap="nowrap">$format.formatNumber(4, $!managerSalary.dutySalary)</td>
-              <td nowrap="nowrap">$format.formatNumber(4, $!managerSalary.returnPrepareAmount)</td>
-              <td nowrap="nowrap">$format.formatNumber(4, $!managerSalary.insertPrepareAmount)</td>
-<!--               <td nowrap="nowrap">$!managerSalary.fine</td> -->
+              <td nowrap="nowrap">$format.formatNumber(2, $!managerSalary.rewardIncentiveInformation)</td>
+              <td nowrap="nowrap">$!managerSalary.deductAmount</td>
+              <td nowrap="nowrap">$format.formatNumber(2, $!managerSalary.basePay)</td>
+              <td nowrap="nowrap">$format.formatNumber(2, $!managerSalary.returnPrepareAmount)</td>
+              <td nowrap="nowrap">$format.formatNumber(2, $!managerSalary.insertPrepareAmount)</td>
               <td nowrap="nowrap">$!managerSalary.describe</td>
+              <td nowrap="nowrap">$format.formatNumber(2, $!managerSalary.own)</td>
             </tr>
             #end
           </table>
@@ -100,6 +122,7 @@
       </div>
       <div class="pagebar">
         <div class="controlbtn">
+        <a id="id_genertae_button" class="btn_g" href="javascript:void(0);" title="生成工资">生成工资</a>
 <!--           #btnpriv("create")<a id="id_create_button" class="btn_g" href="javascript:void(0);" title="#i18n('button.create.hint')">#i18n("button.create")</a>#end  -->
 <!--           #btnpriv("change")<a id="id_change_button" class="btn_g" href="javascript:void(0);" title="#i18n('button.change.hint')">#i18n("button.change")</a>#end  -->
 <!--           #btnpriv("delete")<a id="id_delete_button" class="btn_g" href="javascript:void(0);" title="#i18n('button.delete.hint')">#i18n("button.delete")</a>#end -->
@@ -142,13 +165,39 @@
 							Dialog.message("成功");
 							window.location.href="${modulePath}/browse.page?year="+year+"&month="+month;
 						}else{
-							Dialog.message("失败");
+							Dialog.message(msg.errors.errors[0].message);
 						}
 						
 					}
 				});
 	    	}
 	    });
+	});
+	
+	$("#userId").autocomplete(contextPath+"/manager/managersalary/chooseByName.json", {
+		minChars: 0,
+		max: 12,
+		autoFill: true,
+		//mustMatch: true,
+		matchContains: false,
+		scrollHeight: 220,
+		width:250,
+		dataType:'json',
+		parse:function(data){
+			var parsed = [];
+			for(var i = 0; i < data.length; i++){
+				parsed[i] = {
+					data : data[i] ,
+					value : data[i].id,
+					result: data[i].displayName// 返回的结果显示内容 
+				};
+			}
+			return parsed;
+		}, 
+		formatItem: function(item) {// 显示下拉列表的内容
+			//return "<div style='width:50%;float:left;'> " + item.displayName + "</div><div style='width:50%;float:left;'>" + item.id + "</div>";
+			return "<div style='width:50%;float:left;'> " + item.displayName + "</div>";
+		}
 	});
 </script>
 #parse ("common/iframe_page_footer.htm")

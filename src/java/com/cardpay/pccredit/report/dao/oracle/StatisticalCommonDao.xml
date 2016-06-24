@@ -7,6 +7,18 @@
 		<result property="value" column="value" />
 	</resultMap>
 	
+	<resultMap id="ResultMapTips" type="com.cardpay.pccredit.report.model.HomeTips">
+		<result property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="allCreditAmount" column="allCreditAmount" />
+		<result property="usedCreditAmount" column="usedCreditAmount" />
+		<result property="percent" column="percent" />
+		
+		<result property="clientName" column="clientName" />
+		<result property="loanAmt" column="loanAmt" />
+		<result property="expiryDate" column="expiryDate" />
+	</resultMap>
+	
 	<select id="statisticalApplicationStatus" resultMap="ResultMap" >
 		select t.name,
 	       t.id,
@@ -83,5 +95,111 @@
 		 where t.year = to_char(sysdate, 'yyyy')
 		   and t.month = to_char(sysdate, 'MM')
 		   and t.activation_status = 1
+	</select>
+	
+	<select id="getUsedCreditByUserId" resultMap="ResultMapTips" >
+	with 
+    circle as 
+      (
+        select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+        left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+        left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+        left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+        where CAI.STATUS = 'approved'
+      ),
+    loan as 
+      (
+        select sum(CIRCLE.CONTRACT_AMT) as allCreditAmount,sum(loan.loan_balance) as usedCreditAmount,circle.manager_id 
+        from circle 
+        left join 
+        (select sum(loan_balance) as loan_balance,cont_no from O_CLPM_ACC_LOAN 
+        where prd_id in ('100084','100085') and ACC_STATUS = '1' group by cont_no)loan 
+        on circle.ret_contno = loan.cont_no
+        group by circle.manager_id 
+      ),
+    users as 
+      (
+        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+        mbm.child_id 
+        FROM 
+        manager_belong_map mbm 
+        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+        WHERE 
+        amp.user_id = #{userId})
+        union select #{userId} as user_id from dual
+      )
+
+    select nvl(allCreditAmount,0) as allCreditAmount,nvl(usedCreditAmount,0)as usedCreditAmount,
+      decode(usedCreditAmount,null,0,CAST (usedCreditAmount*100/loan.allCreditAmount as decimal (10,2))) as percent,
+      loan.manager_id as userId,su.display_name as userName
+    from 
+      loan left join sys_user su on su.id = loan.manager_id
+    where 
+     loan.manager_id in (select user_id from users) 
+	</select>
+	
+	<select id="getExpiryClientNum" resultMap="ResultMapTips" >
+		with 
+		circle as 
+	      (
+	        select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+	        left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+	        left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+	        left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+	        where CAI.STATUS = 'approved'
+	      ),
+		users as 
+	      (
+	        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+	        mbm.child_id 
+	        FROM 
+	        manager_belong_map mbm 
+	        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+	        WHERE 
+	        amp.user_id = #{userId})
+	        union select #{userId} as user_id from dual
+	      )
+      
+		select circle.client_name as clientName,loan.end_date as expiryDate
+		from o_clpm_acc_loan loan
+		left join circle on loan.cus_id = circle.client_no
+		where 
+		loan.prd_id in ('100084','100085')
+		and loan.acc_status = '1'
+		and circle.manager_id in (select user_id from users)
+		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ >= ]]> to_date(loan.end_date,'yyyy-MM-dd')-7
+		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ <= ]]> to_date(loan.end_date,'yyyy-MM-dd')
+	</select>
+	
+	<select id="getAlreadyExpiryClientNum" resultMap="ResultMapTips" >
+		with 
+		circle as 
+	      (
+	        select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+	        left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+	        left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+	        left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+	        where CAI.STATUS = 'approved'
+	      ),
+		users as 
+	      (
+	        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
+	        mbm.child_id 
+	        FROM 
+	        manager_belong_map mbm 
+	        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
+	        WHERE 
+	        amp.user_id = #{userId})
+	        union select #{userId} as user_id from dual
+	      )
+      
+		select circle.client_name as clientName,loan.end_date as expiryDate,loan.loan_amt as loanAmt
+		from o_clpm_acc_loan loan
+		left join circle on loan.cus_id = circle.client_no
+		where 
+		loan.prd_id in ('100084','100085')
+		and loan.acc_status = '1'
+		and circle.manager_id in (select user_id from users)
+		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ > ]]> to_date(loan.end_date,'yyyy-MM-dd')
 	</select>
 </mapper>

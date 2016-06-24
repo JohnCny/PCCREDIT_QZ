@@ -6,9 +6,11 @@
 <script language="javascript">
 	var docID = "";
 	var submitFlag = 0;
+	var level2_chk_value ="";
+	var parentValue = "";
 	function connectScan(){
-		var InitScanWndResult = SunScan.TestInitScanWnd("168.168.241.75", "8023");//测试环境 
-		//var InitScanWndResult = SunScan.TestInitScanWnd("168.168.214.15", "8023");//生产环境 
+		//var InitScanWndResult = SunScan.TestInitScanWnd("168.168.241.75", "8023");//测试环境 
+		var InitScanWndResult = SunScan.TestInitScanWnd("168.168.214.15", "8023");//生产环境 
 	    
 	    if (InitScanWndResult != "0")
 	    {
@@ -17,6 +19,8 @@
 	    
 	    if(parent.docID != ""){
 	    	docID = parent.docID;
+	    	level2_chk_value = parent.level2_chk_value;
+	    	parentValue = parent.parentValue;
 	        document.getElementById("docid").value=docID;
 	        SunScan.CreateTask(docID);
 	    }
@@ -24,16 +28,20 @@
     
     function submitBT(){
     	if(submitFlag == 1){
-			alert("请勿重复提交!")
+			alert("等待后台响应,请勿重复提交!")
 			return;
 		}
 		submitFlag = 1;
-    	if(confirm("确认提交吗?提交后暂不支持修改!")){
+    	if(confirm("确认提交吗?")){
     		//SunScan.SetFormNoEx("0-0021000001001000|1-0|2-0021000004001000|3-0","");
             var result = SunScan.TestSubmitImageEx("WD_CASES", "WD_IMAGES",docID);
             if (result == 200)
             {
                 var url = "${contextPath}/intopieces/intopiecesapprove/insert_sunds.json?appId=${appId}&docID="+docID;
+                if("${level}" == "level2"){
+                	url= "${contextPath}/intopieces/intopiecesapprove/insert_sunds_add.json?appId=${appId}&docID="+docID+
+                			"&level2_chk_value="+level2_chk_value+"&parentValue="+parentValue;
+                }
 				$.ajax({
 					url : url,
 					type : "get",

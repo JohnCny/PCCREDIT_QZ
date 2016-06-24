@@ -228,13 +228,13 @@ public class AmountAdjustmentService {
 		
 		AmountAdjustmentProcess amountAdjustmentProcess = amountAdjustmentComdao.findAmountAdjustmentProcess(amountAdjustmentForm.getId(), amountAdjustmentForm.getSerialNumber());
 		
-		if (StringUtils.isNotEmpty(approveStatus)&&approveStatus.equals(ApproveOperationTypeEnum.RETURNAPPROVE)) {
+		if (StringUtils.isNotEmpty(approveStatus)&&approveStatus.equals(ApproveOperationTypeEnum.RETURNAPPROVE.toString())) {
 			String fallbackReason = request.getParameter("reason");
 			amountAdjustmentProcess.setFallbackReason(fallbackReason);
-		}else if(StringUtils.isNotEmpty(approveStatus)&&approveStatus.equals(ApproveOperationTypeEnum.REJECTAPPROVE)){
+		}else if(StringUtils.isNotEmpty(approveStatus)&&approveStatus.equals(ApproveOperationTypeEnum.REJECTAPPROVE.toString())){
 			amountAdjustmentProcess.setRefusalReason(amountAdjustmentForm.getReason());
 		}
-	    String examineResutl = processService.examine(amountAdjustmentForm.getSerialNumber(), user.getId(), approveStatus, amountAdjustmentForm.getApprovalLimit());
+	    String examineResutl = processService.examine(amountAdjustmentForm.getSerialNumber(), user.getId(), approveStatus, amountAdjustmentForm.getApprovalLimit(),null);
 		
 	    //更新单据状态
 	    if (examineResutl.equals(ApproveOperationTypeEnum.REJECTAPPROVE.toString()) ||

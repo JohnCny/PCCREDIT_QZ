@@ -16,6 +16,7 @@
 		<result property="childId" column="CHILD_ID" />
 		<result property="parentId" column="PARENT_ID" />
 		<result property="isLeaf" column="IS_LEAF" />
+		<result property="centerName" column="CENTER_NAME" />
 	</resultMap>
 	
 	<resultMap id="AccountManagerParameterFormMap"
@@ -37,6 +38,27 @@
 		<result property="createdBy" column="CREATED_BY" />
 		<result property="modifiedTime" column="MODIFIED_TIME" />
 		<result property="modifiedBy" column="MODIFIED_BY" />
+	</resultMap>
+	
+	<resultMap id="managerChildIdMap" type="com.cardpay.pccredit.manager.web.ManagerBelongMapForm">
+		 <result property="childId" column="child_id" />
+	</resultMap>
+	
+	
+	<resultMap id="JxMap" type="com.cardpay.pccredit.manager.model.KhjljxbcForm">
+		 <result property="id" column="ID" />
+		 <result property="year" column="YEAR" />
+		 <result property="month" column="MONTH" />
+		 <result property="custmanagerid" column="CUSTMANAGERID" />
+		 <result property="activeCustomerNum" column="ACTIVE_CUSTOMER_NUM" />
+		 <result property="actualActiveCustomerNum" column="ACTUAL_ACTIVE_CUSTOMER_NUM" />
+		 <result property="monthActualReceiveIncome" column="MONTH_ACTUAL_RECEIVE_INCOME" />
+		 <result property="otherRetailProductAwards" column="OTHER_RETAIL_PRODUCT_AWARDS" />
+		 <result property="balanceDailyAverage" column="BALANCE_DAILY_AVERAGE" />
+		 <result property="displayName" column="DISPLAY_NAME" />
+		 <result property="overdueLoan" column="OVERDUE_LOAN" />
+		 <result property="monthAverageKpiScore" column="MONTH_AVERAGE_KPI_SCORE" />
+		 <result property="overdueLoanJd" column="OVERDUE_LOAN_JD" />
 	</resultMap>
 	
 	<select id="findManagerBelongMapByFilter" resultMap="ResultMap" 
@@ -98,6 +120,7 @@
 	<select id="getManagerBelongRoot" resultMap="managerBelongMap">
 		 SELECT * FROM manager_belong_map
 		 WHERE parent_id is null
+		 order by id
 	</select>
 	
 	<select id="findAccountManagerParameterByChildIds" resultMap="AccountManagerParameterFormMap">
@@ -108,5 +131,89 @@
 		and t.id in ${childIdInStr}
 		ORDER BY t.CREATED_TIME DESC
 	</select>
+	
+		<select id="findAllManager" resultMap="AccountManagerParameterFormMap">
+		SELECT T.*, s.DISPLAY_NAME
+		FROM ACCOUNT_MANAGER_PARAMETER T
+		LEFT JOIN SYS_USER s ON s.id = T.USER_ID
+	</select>
+	
+	
+	<select id="findChildId" resultMap="managerChildIdMap">
+		select  mbm.*
+  	    from manager_belong_map mbm
+ 		start with child_id =
+            (select amp.id
+               from manager_belong_map t
+               left join account_manager_parameter amp  on amp.id = t.child_id
+               left join sys_user su ON su.id = amp.user_id    
+              where amp.user_id = #{id}
+             ) 
+		connect by prior child_id = parent_id
+	</select>
+	
+	
+	
+	
+	<select id="findManJxList" resultMap="JxMap" parameterType="com.cardpay.pccredit.manager.filter.ManagerJxBcFilter">
+					SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+					  select  b.*,u.display_name as displayName
+				      from qz_khjl_tjzl b,sys_user u
+					  WHERE 1=1 and b.CUSTMANAGERID = u.id
+					  
+					<if test="dataYear != null and dataYear != '' ">
+						and b.year = #{dataYear}
+					</if>
+					
+					<if test="dataMonth != null and dataMonth != '' ">
+						and b.month = #{dataMonth}
+					</if>
+					
+					<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND b.CUSTMANAGERID in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+					
+					<if test="customerManagerId != null and customerManagerId != '' ">
+						AND b.CUSTMANAGERID = #{customerManagerId}
+					</if>
+		 <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	
+	<select id="findManJxCountList" resultType="int" parameterType="com.cardpay.pccredit.manager.filter.ManagerJxBcFilter">
+		select  count(*)
+				      from qz_khjl_tjzl b,sys_user u
+					  WHERE 1=1 and b.CUSTMANAGERID = u.id
+					  
+		<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 			AND b.CUSTMANAGERID in  
+	 		<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+				#{item.userId} 
+			</foreach>
+		</if>
+		
+		<if test="customerManagerId != null and customerManagerId != '' ">
+			AND b.CUSTMANAGERID =#{customerManagerId}
+		</if>
+		
+		<if test="dataYear != null and dataYear != '' ">
+						and b.year = #{dataYear}
+		</if>
+					
+		<if test="dataMonth != null and dataMonth != '' ">
+			and b.month = #{dataMonth}
+		</if>
+	</select>
 
+	<select id="findCenterByParentId" resultType="com.cardpay.pccredit.manager.model.CenterBelongMap">
+		select id,name, parent_id as parentId from CENTER_BELONG_MAP where parent_id = #{parentId}
+	</select>
 </mapper>

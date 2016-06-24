@@ -97,7 +97,9 @@
 		<result property="unitAddress" column="UNIT_ADDRESS" />
 		<result property="companySize" column="COMPANY_SIZE" />
 		<result property="unitType" column="UNIT_TYPE" />
+		<result property="unitTypeOther" column="UNIT_TYPE_OTHER" />
 		<result property="bussdistrictAddress" column="BUSSDISTRICT_ADDRESS" />
+		<result property="helpManagerName" column="HELP_MANAGER_NAME" />
 		
 	</resultMap>
 	<resultMap id="ResultMapYwsqbZygys" type="com.cardpay.pccredit.intopieces.model.QzApplnYwsqbZygys">
@@ -128,6 +130,7 @@
 	    <result property="rates" column="RATES" />
 	    <result property="repayType" column="REPAY_TYPE" />
 	    <result property="remainSum" column="REMAIN_SUM" />
+	    <result property="guaranteeMode" column="GUARANTEE_MODE" />
 	</resultMap>
 	<select id="findYwsqb" resultMap="ResultMapYwsqb">
 		 select * 

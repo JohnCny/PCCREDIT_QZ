@@ -51,6 +51,7 @@ public class WfStatusQueueRecord extends BaseModel {
 	private Date startExamineTime;
 
 	private String subprocessIsClosed;
+	private String reason;
 
 	public WfStatusQueueRecord() {
 		super();
@@ -167,6 +168,14 @@ public class WfStatusQueueRecord extends BaseModel {
 	 */
 	public void setSubprocessIsClosed(String value) {
 		this.subprocessIsClosed = value;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

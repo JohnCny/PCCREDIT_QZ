@@ -18,24 +18,33 @@ import org.springframework.stereotype.Service;
 import com.cardpay.pccredit.customer.dao.comdao.CustomerInforCommDao;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.model.CustomerManagerTarget;
+import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.manager.constant.ManagerAdjustAdviceEnum;
 import com.cardpay.pccredit.manager.constant.ManagerLevelAdjustmentConstant;
+import com.cardpay.pccredit.manager.constant.ManagerLevelConstant;
 import com.cardpay.pccredit.manager.constant.ManagerLevelEnum;
 import com.cardpay.pccredit.manager.constant.ManagerTargetType;
 import com.cardpay.pccredit.manager.dao.ManagerAssessmentScoreDao;
 import com.cardpay.pccredit.manager.dao.comdao.ManagerAssessmentScoreCommDao;
 import com.cardpay.pccredit.manager.dao.comdao.ManagerDownRuleComdao;
+import com.cardpay.pccredit.manager.dao.comdao.ManagerPromotionRuleComdao;
 import com.cardpay.pccredit.manager.filter.AccountManagerParameterFilter;
 import com.cardpay.pccredit.manager.model.DownGradeRule;
+import com.cardpay.pccredit.manager.model.Khjltjzl;
 import com.cardpay.pccredit.manager.model.ManagerAssessmentScore;
 import com.cardpay.pccredit.manager.model.ManagerLevelAdjustment;
 import com.cardpay.pccredit.manager.model.ManagerMonthTargetData;
+import com.cardpay.pccredit.manager.model.ManagerPromotionDownRule;
 import com.cardpay.pccredit.manager.model.MangerMonthAssessment;
 import com.cardpay.pccredit.manager.model.PromotionRules;
+import com.cardpay.pccredit.manager.model.TyManagerAssessment;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
+import com.wicresoft.jrad.base.database.id.IDGenerator;
 import com.wicresoft.jrad.base.database.model.QueryResult;
+import com.wicresoft.jrad.modules.privilege.filter.UserFilter;
+import com.wicresoft.jrad.modules.privilege.model.User;
 
 /**
  * 描述 ：客户经理评估标准 定时执行service
@@ -69,6 +78,14 @@ public class ManagerAssessmentScoreScheduleService {
 	@Autowired
 	private ManagerDownRuleComdao managerDownRuleComdao;
 	
+	@Autowired
+	private ManagerPromotionRuleComdao managerPromotionRuleComdao;
+	
+	@Autowired
+	private CustomerInforService customerInforService;
+	
+	@Autowired
+	private ManagerSalaryService managerSalaryService;
 	/**
 	 * 增加上一个月的客户经理评估信息
 	 */
@@ -695,4 +712,235 @@ public class ManagerAssessmentScoreScheduleService {
 		
 		commonDao.insertObject(managerAssessmentScore);
 	}
+
+	
+	
+	/**
+	 * qz
+	 * 客户经理晋降级
+	 * 每年 3,6,9,12月底生成客户经理升降级记录
+	 * 插入客户经理级别调整信息
+	 * @param 升降级规则(考核指标)
+	 * @param 客户经理实际指数
+	 */
+	public void doGenerateManagerAdjustment(){
+		try{
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+			//calendar.add(Calendar.MONTH, -1);
+			int year = calendar.get(Calendar.YEAR);
+			int month = calendar.get(Calendar.MONTH) + 1;
+			
+			//查询升降级规则
+			List<ManagerPromotionDownRule> managerPromotionRulelist = managerPromotionRuleComdao.getManagerPromotionDownRule();
+			Map<String, ManagerPromotionDownRule> GradeRulesMap = new HashMap<String, ManagerPromotionDownRule>();
+			for(ManagerPromotionDownRule Rule : managerPromotionRulelist){
+				GradeRulesMap.put(Rule.getInitialLevel(), Rule);
+			}
+			
+			AccountManagerParameterFilter filter = new AccountManagerParameterFilter();
+			// 设置每次最大查询记录数
+			filter.setLimit(50);
+			// 查询页码
+			filter.setPage(0);
+			// 查询客户经理
+			QueryResult<AccountManagerParameterForm> qs = accountManagerParameterService.findAccountManagerParametersByFilter(filter);
+			while(qs.getItems().size() != 0){
+				for(AccountManagerParameterForm accountManager : qs.getItems()){
+					Khjltjzl jx = managerSalaryService.findKhjltjzl(year, month, accountManager.getUserId());
+					//TyManagerAssessment ass = managerSalaryService.findKPI(year, month, accountManager.getUserId());
+					//季度日均用信余额
+					String	quarterAverageCreditBalance =jx.getBalanceDailyAverage();
+					//统计该客户经理下的客户数目
+					List<CustomerInfor> customerList=customerInforService.findCustomerByManagerId(accountManager.getUserId());
+					//管户数（户）
+					Integer	tubeNumber = customerList.size();
+					//逾期贷款率
+					String	overLoanRatio = jx.getOverdueLoanJd();
+					//月均KPI得分
+					String	kpiScore = jx.getMonthAverageKpiScore();
+					
+					ManagerPromotionDownRule  GradeRule = GradeRulesMap.get(accountManager.getLevelInformation());
+					if(GradeRule == null){
+						continue;
+					}
+					// a.见习个人微贷经理  季度日均用信余额:100	 管户数:10	  	逾期贷款率:0   月均KPI得分:80
+					if(ManagerLevelConstant.MANAGER_LEVEL_1.equals(accountManager.getLevelInformation())){
+						if(Double.parseDouble(quarterAverageCreditBalance)>=Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getQuarterAverageCreditBalance()) 
+								&& tubeNumber >= GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getTubeNumber()
+								&& Double.parseDouble(overLoanRatio) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getOverLoanRatio()) 
+								&& Double.parseDouble(kpiScore) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getKpiScore())){
+							//生成升级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_2,ManagerAdjustAdviceEnum.up.name(),year, month);
+						}
+					}
+					// b.初级个人微贷经理 季度日均用信余额:500	 管户数:70	            逾期贷款率:1  月均KPI得分:80
+					if(ManagerLevelConstant.MANAGER_LEVEL_2.equals(accountManager.getLevelInformation())){
+						if(Double.parseDouble(quarterAverageCreditBalance)>=Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getQuarterAverageCreditBalance())  
+								&& tubeNumber >= GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getTubeNumber()
+								&& Double.parseDouble(overLoanRatio) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getOverLoanRatio()) 
+								&& Double.parseDouble(kpiScore) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getKpiScore())){
+							//生成升级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_3,ManagerAdjustAdviceEnum.up.name(),year, month);
+						}
+						
+						if(Double.parseDouble(quarterAverageCreditBalance)<Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getQuarterAverageCreditBalance()) 
+								|| tubeNumber <GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getTubeNumber()
+								|| Double.parseDouble(overLoanRatio) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getOverLoanRatio())  
+								|| Double.parseDouble(kpiScore) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_2).getKpiScore())){
+							//生成降级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_1,ManagerAdjustAdviceEnum.down.name(),year, month);
+						}
+					}	
+					// c.中级个人微贷经理 季度日均用信余额:800	 管户数:110	 逾期贷款率:1   月均KPI得分：85
+					if(ManagerLevelConstant.MANAGER_LEVEL_3.equals(accountManager.getLevelInformation())){
+						if(Double.parseDouble(quarterAverageCreditBalance)>=Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getQuarterAverageCreditBalance()) 
+								&& tubeNumber >= GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getTubeNumber()  
+								&& Double.parseDouble(overLoanRatio) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getOverLoanRatio())
+								&& Double.parseDouble(kpiScore) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getKpiScore())){
+							//生成升级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_4,ManagerAdjustAdviceEnum.up.name(),year, month);
+						}
+						
+						if(Double.parseDouble(quarterAverageCreditBalance) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getQuarterAverageCreditBalance()) 
+								|| tubeNumber <  GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getTubeNumber() 
+								|| Double.parseDouble(overLoanRatio) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getOverLoanRatio())
+								|| Double.parseDouble(kpiScore) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_3).getKpiScore())){
+							//生成降级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_2,ManagerAdjustAdviceEnum.down.name(),year, month);
+						}
+						
+					}
+					// d.高级个人微贷经理 季度日均用信余额:1100	 管户数:140	 逾期贷款率:1   月均KPI得分:90
+					if(ManagerLevelConstant.MANAGER_LEVEL_4.equals(accountManager.getLevelInformation())){
+						if(Double.parseDouble(quarterAverageCreditBalance)>=Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getQuarterAverageCreditBalance()) 
+								&& tubeNumber >=  GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getTubeNumber() 
+								&& Double.parseDouble(overLoanRatio) <Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getOverLoanRatio())   
+								&& Double.parseDouble(kpiScore) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getKpiScore())){
+							//生成升级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_5,ManagerAdjustAdviceEnum.up.name(), year, month);
+						}
+						
+						if(Double.parseDouble(quarterAverageCreditBalance) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getQuarterAverageCreditBalance())  
+								|| tubeNumber < GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getTubeNumber() 
+								|| Double.parseDouble(overLoanRatio) >= Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getOverLoanRatio())  
+								|| Double.parseDouble(kpiScore) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_4).getKpiScore())){
+							//生成降级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_3, ManagerAdjustAdviceEnum.down.name(),year, month);
+						}
+					}
+					// e.资深个人微贷经理 季度日均用信余额:1500	 管户数:170	 逾期贷款率:1   月均KPI得分:90
+					if(ManagerLevelConstant.MANAGER_LEVEL_5.equals(accountManager.getLevelInformation())){
+						if(Double.parseDouble(quarterAverageCreditBalance) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getQuarterAverageCreditBalance()) 
+								|| tubeNumber < GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getTubeNumber() 
+								|| Double.parseDouble(overLoanRatio) >=  Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getOverLoanRatio())  
+								|| Double.parseDouble(kpiScore) < Double.parseDouble(GradeRulesMap.get(ManagerLevelConstant.MANAGER_LEVEL_5).getKpiScore())){
+							//生成降级信息
+							this.addInsertLevelAdjustment(accountManager,ManagerLevelConstant.MANAGER_LEVEL_4, ManagerAdjustAdviceEnum.down.name(),year, month);
+						}
+					}
+				}
+				// 设置查询的页码
+				filter.setPage(filter.getPage() + 1);
+				qs = accountManagerParameterService.findAccountManagerParametersByFilter(filter);
+			}
+		}catch(Exception e){
+			logger.error("客户经理升降级定时生成错误");
+			logger.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * qz
+	 * 生成降级信息
+	 * @param accountManager
+	 * @param afterLevel
+	 */
+	private void addInsertLevelAdjustment(AccountManagerParameterForm accountManager, String afterLevel,String systemadvice,int year, int month) {
+		
+		int count = managerAssessmentScoreCommDao.findManagerLevelAdjustment(accountManager.getUserId(), year, month);
+		if(count == 0){
+			ManagerLevelAdjustment managerLevelAdjustment = new ManagerLevelAdjustment();
+			managerLevelAdjustment.setIfHandled(ManagerLevelAdjustmentConstant.IFHANDLE_0);
+			managerLevelAdjustment.setSystemAdvice(systemadvice);
+			managerLevelAdjustment.setOriginalLevel(accountManager.getLevelInformation());
+			managerLevelAdjustment.setAdjustAfterLevel(afterLevel);
+			managerLevelAdjustment.setCustomerManagerId(accountManager.getUserId());
+			managerLevelAdjustment.setCreatedBy(Constant.SCHEDULES_SYSTEM_USER);
+			managerLevelAdjustment.setCreatedTime(new Date());
+			managerLevelAdjustment.setModifiedBy(Constant.SCHEDULES_SYSTEM_USER);
+			managerLevelAdjustment.setModifiedTime(new Date());
+			managerLevelAdjustment.setDataYear(year);
+			managerLevelAdjustment.setDataMonth(month);
+			commonDao.insertObject(managerLevelAdjustment);
+		}
+	}
+	
+	
+	
+	/**
+	 * 每月初定时生成当月评估表
+	 */
+	//@Scheduled(cron = "0 50 13 * * ?")
+	public void addAssessment(){
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH) +1;
+		//获取所有客户经理
+		UserFilter filter = new UserFilter();
+		filter.setUserType(1);
+		String sql = "select * from sys_user where id in (select user_id from account_manager_parameter)";
+		List<User> users = commonDao.queryBySql(User.class, sql, null);
+		//删除 当年月的评估表'"+month+"'"
+		String pgsql = "delete from ty_manager_assessment where YEAR = '"+year+ "'and MONTH = '"+month+"'";
+		commonDao.queryBySql(TyManagerAssessment.class, pgsql, null);
+		for(int i=0;i<users.size();i++){
+			TyManagerAssessment assessment = new TyManagerAssessment();
+			assessment.setId(IDGenerator.generateID());
+			assessment.setYear(year+"");
+			assessment.setMonth(month+"");
+			assessment.setCustomerId(users.get(i).getId());
+			assessment.setCustomerName(users.get(i).getDisplayName());
+			commonDao.insertObject(assessment);
+		}
+	}
+	
+	
+	
+	/**
+	 * 个人微贷中心薪酬计算
+	 * （个人微贷营销部总经理）
+	 */
+	
+	public  void calculateMonthlySalaryTy(){
+		//固定工资 + 绩效 + 福利
+		//TODO 固定工资 
+		
+		//零售业务团队长固定工资职级业绩
+		BigDecimal yj = new BigDecimal("0");
+		//上一考核期团队零售日均贷款
+		int teamLastDCredit = 800;
+		//上一考核期团队零售日均贷款基数
+		int teamLastDcreditParam = 10;
+		yj = new BigDecimal((teamLastDCredit - teamLastDcreditParam) * 0.7 + teamLastDCredit * 0.3);
+		
+		
+		//TODO 绩效工资＝应发绩效工资*绩效工资系数
+		//新任
+		//新聘任个人微贷营销部总经理绩效=保护期绩效*绩效工资系数
+		//绩效工资系数=KPI考核得分*100%；
+		
+		//非新任
+		
+		/*非新聘任个人微贷营销部总经理绩效=（团队存量贷款模拟利润×绩效系数+团队当期增量贷款模拟利润×绩效系数+团队当期存款模拟利润×绩效系数+团队当期中间业务收入×绩效系数）×对应的单价绩效工资×绩效工资系数
+				对应的单价绩效工资=当期应发个人微贷营销部总经理绩效工资总额÷（∑团队各类模拟利润总和×对应绩效系数）
+				绩效系数为：存量贷款模拟利润1；增量贷款模拟利润2；存款模拟利润0.2; 中间业务收入1；
+				绩效工资系数：按团队考核得分对应的绩效工资系数；*/
+	}
+	
+	
+	
 }

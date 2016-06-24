@@ -1,6 +1,7 @@
 package com.cardpay.pccredit.intopieces.web;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +22,6 @@ import com.cardpay.pccredit.customer.constant.CustomerInforConstant;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
@@ -33,6 +33,7 @@ import com.cardpay.pccredit.intopieces.service.AttachmentListService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationProcessService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.workflow.constant.ApproveOperationTypeEnum;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.constant.JRadConstants;
@@ -89,6 +90,7 @@ public class IntoPiecesZhongxinControl extends BaseController {
 		String loginId = user.getId();
 		filter.setLoginId(loginId);
 		filter.setNodeName(Constant.status_zhongxin);
+		filter.setFilterTeamLeader("1");
 		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.recieveIntopieceWaitForm(filter);
 		JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm> pagedResult = new JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm>(filter, result);
 
@@ -96,6 +98,8 @@ public class IntoPiecesZhongxinControl extends BaseController {
 				"/intopieces/intopieces_wait/intopiecesApprove_zhongxin", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mv.addObject("url", url);
 		return mv;
 	}
 	
@@ -116,13 +120,13 @@ public class IntoPiecesZhongxinControl extends BaseController {
 			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
 			request.setAttribute("serialNumber", process.getSerialNumber());
 			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApplicationStatusEnum.APPROVE);
+			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
 			request.setAttribute("objection", "false");
 			//查找审批金额
 			Circle circle = circleService.findCircleByAppId(appId);
 			
 			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request);
+			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
 			returnMap.addGlobalMessage(CHANGE_SUCCESS);
 		} catch (Exception e) {
 			returnMap.addGlobalMessage("保存失败");
@@ -175,8 +179,8 @@ public class IntoPiecesZhongxinControl extends BaseController {
 		IESBForECIFReturnMap ecif = eCIFService.findEcifMapByCustomerId(appInfo.getCustomerId());
 		mv.addObject("ecif",ecif);
 				
-		Circle circle = circleService.findCircleByClientNo(ecif.getClientNo());
-		mv.addObject("circle",circle);
+		List<Circle> circle_ls = circleService.findCircleByClientNo(ecif.getClientNo());
+		mv.addObject("circle",circle_ls.get(circle_ls.size()-1));
 		return mv;
 	}
 	
@@ -195,7 +199,9 @@ public class IntoPiecesZhongxinControl extends BaseController {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {
 			try {
-				Circle circle = circleService.findCircleByClientNo(clientNo);
+				List<Circle> circle_ls = circleService.findCircleByClientNo(clientNo);
+				Circle circle = circle_ls.get(circle_ls.size()-1);
+				
 				circle.setContractAmt(iesbForCircleForm.getContractAmt());
 				
 				circleService.updateCustomerInforCircle(circle);

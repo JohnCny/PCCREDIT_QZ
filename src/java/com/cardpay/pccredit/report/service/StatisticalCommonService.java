@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.cardpay.pccredit.common.PieJsonData;
 import com.cardpay.pccredit.report.dao.StatisticalCommonDao;
+import com.cardpay.pccredit.report.model.HomeTips;
 import com.cardpay.pccredit.report.model.NameValueRecord;
 
 /**
@@ -132,5 +133,17 @@ public class StatisticalCommonService {
 			pList.add(pieJsonData);
 		}
 		return pList;
+	}
+
+	public List<HomeTips> getUsedCreditByUserId(String userId) {
+		return statisticalCommonDao.getUsedCreditByUserId(userId);
+	}
+
+	public List<HomeTips> getExpiryClientNum(String userId) {
+		return statisticalCommonDao.getExpiryClientNum(userId);
+	}
+
+	public List<HomeTips> getAlreadyExpiryClientNum(String userId) {
+		return statisticalCommonDao.getAlreadyExpiryClientNum(userId);
 	}
 }

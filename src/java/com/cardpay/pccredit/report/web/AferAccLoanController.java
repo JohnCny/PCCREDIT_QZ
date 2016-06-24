@@ -9,7 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.axis.utils.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -24,10 +24,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
+import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.ipad.dao.UserIpadDao;
+import com.cardpay.pccredit.ipad.model.UserIpad;
 import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.report.filter.StatisticalFilter;
 import com.cardpay.pccredit.report.model.AccLoanInfo;
 import com.cardpay.pccredit.report.service.AferAccLoanService;
+import com.cardpay.pccredit.system.model.Dict;
+import com.ctc.wstx.util.StringUtil;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -36,6 +41,7 @@ import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
 import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.date.DateHelper;
 import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
@@ -53,6 +59,10 @@ public class AferAccLoanController extends BaseController{
 	
 	@Autowired
 	private AferAccLoanService aferAccLoanService;
+	@Autowired
+	private UserIpadDao userIpadDao;
+	@Autowired
+	private IntoPiecesService intoPiecesService;
 	
 	private static final Logger logger = Logger.getLogger(AferAccLoanController.class);
 	/**
@@ -64,7 +74,6 @@ public class AferAccLoanController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browse(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		if(filter.getStartDate() ==null){
@@ -73,10 +82,15 @@ public class AferAccLoanController extends BaseController{
 		if(filter.getEndDate()==null){
 			filter.setEndDate(new Date());
 		}
+		
+		if(StringUtils.isNotEmpty(filter.getProductId()) && filter.getProductId().equals("ALL")){//全部
+			filter.setProductId(null);
+		}
+		
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
 		filter.setUserId(userId);
-		
+				
 		QueryResult<AccLoanInfo> accloanList = aferAccLoanService.getAfterAccLoan(filter);
 		JRadPagedQueryResult<AccLoanInfo> pagedResult = new JRadPagedQueryResult<AccLoanInfo>(
 				filter, accloanList);
@@ -95,7 +109,6 @@ public class AferAccLoanController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browseAll.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browseAll(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		if(filter.getStartDate() ==null){
@@ -104,10 +117,17 @@ public class AferAccLoanController extends BaseController{
 		if(filter.getEndDate()==null){
 			filter.setEndDate(new Date());
 		}
-		//不用根据客户经理查询
-//		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-//		String userId = user.getId();
-//		filter.setUserId(userId);
+		if(StringUtils.isNotEmpty(filter.getProductId()) && filter.getProductId().equals("ALL")){//全部
+			filter.setProductId(null);
+		}
+		if(StringUtils.isNotEmpty(filter.getManagerId())){
+			User tmp = this.findByLogin(filter.getManagerId());
+			if(tmp != null){
+				filter.setUserId(tmp.getId());
+			}else{
+				filter.setUserId("999");
+			}
+		}
 		
 		QueryResult<AccLoanInfo> accloanList = aferAccLoanService.getAfterAccLoan(filter);
 		JRadPagedQueryResult<AccLoanInfo> pagedResult = new JRadPagedQueryResult<AccLoanInfo>(
@@ -116,6 +136,10 @@ public class AferAccLoanController extends BaseController{
 		mv.addObject(PAGED_RESULT, pagedResult);
 		return mv;
 		
+	}
+	
+	public User findByLogin(String login){
+		return userIpadDao.findByLogin(login);
 	}
 	
 	/**
@@ -138,9 +162,13 @@ public class AferAccLoanController extends BaseController{
 		if(filter.getEndDate()==null){
 			filter.setEndDate(new Date());
 		}
+		if(StringUtils.isNotEmpty(filter.getProductId()) && filter.getProductId().equals("ALL")){//全部
+			filter.setProductId(null);
+		}
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
 		filter.setUserId(userId);
+		
 		List<AccLoanInfo> list = aferAccLoanService.getAfterAccLoanList(filter);
 		create(list,response,filter);
 		//下载完成，返回页面
@@ -166,9 +194,17 @@ public class AferAccLoanController extends BaseController{
 		if(filter.getEndDate()==null){
 			filter.setEndDate(new Date());
 		}
-//		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-//		String userId = user.getId();
-//		filter.setUserId(userId);
+		if(StringUtils.isNotEmpty(filter.getProductId()) && filter.getProductId().equals("ALL")){//全部
+			filter.setProductId(null);
+		}
+		if(StringUtils.isNotEmpty(filter.getManagerId())){
+			User tmp = this.findByLogin(filter.getManagerId());
+			if(tmp != null){
+				filter.setUserId(tmp.getId());
+			}else{
+				filter.setUserId("999");
+			}
+		}
 		List<AccLoanInfo> list = aferAccLoanService.getAfterAccLoanList(filter);
 		create(list,response,filter);
 		//下载完成，返回页面
@@ -187,48 +223,54 @@ public class AferAccLoanController extends BaseController{
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 1);
-		cell.setCellValue("客户经理号");
+		cell.setCellValue("客户经理");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 2);
-		cell.setCellValue("所属机构");
+		cell.setCellValue("产品名称");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 3);
-		cell.setCellValue("借据号");
+		cell.setCellValue("所属机构");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 4);
-		cell.setCellValue("存款账户");
+		cell.setCellValue("借据号");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 5);
-		cell.setCellValue("账户名称");
+		cell.setCellValue("存款账户");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 6);
-		cell.setCellValue("利率");
+		cell.setCellValue("账户名称");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 7);
-		cell.setCellValue("贷款日期");
+		cell.setCellValue("利率");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 8);
-		cell.setCellValue("到期日期");
+		cell.setCellValue("授信日期");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 9);
-		cell.setCellValue("授信金额");
+		cell.setCellValue("授信到期日");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 10);
-		cell.setCellValue("贷款金额");
+		cell.setCellValue("授信金额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 11);
-		cell.setCellValue("贷款余额");
+		cell.setCellValue("贷款金额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 12);
-		cell.setCellValue("欠息总额");
+		cell.setCellValue("贷款余额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 13);
-		cell.setCellValue("起息日期");
+		cell.setCellValue("欠息总额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 14);
-		cell.setCellValue("发放日期");
+		cell.setCellValue("贷款日期");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 15);
+		cell.setCellValue("贷款到期日");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 16);
+		cell.setCellValue("结清日期");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 17);
 		cell.setCellValue("贷款状态");
 		cell.setCellStyle(style);
 		
@@ -240,45 +282,47 @@ public class AferAccLoanController extends BaseController{
 			row = sheet.createRow((int) i+1);
 			row.createCell((short) 0).setCellValue(loan.getRowIndex());
 			row.createCell((short) 1).setCellValue(loan.getManagerId());
-			row.createCell((short) 2).setCellValue(loan.getOrgName());
-			row.createCell((short) 3).setCellValue(loan.getBillNo());
-			row.createCell((short) 4).setCellValue(loan.getAcctNo());
-			row.createCell((short) 5).setCellValue(loan.getAcctName());
-			row.createCell((short) 6).setCellValue(df.format(loan.getRealityIrY()));
-			row.createCell((short) 7).setCellValue(loan.getContStartDate());
-			row.createCell((short) 8).setCellValue(loan.getContEndDate());
-			row.createCell((short) 9).setCellValue(df1.format(loan.getContAmt()));
-			row.createCell((short) 10).setCellValue(df1.format(loan.getLoanAmt()));
-			row.createCell((short) 11).setCellValue(df1.format(loan.getLoanBalance()));
-			row.createCell((short) 12).setCellValue(loan.getIntAccum()==null ? 0:loan.getIntAccum());
-			row.createCell((short) 13).setCellValue(loan.getQixiDate());
-			row.createCell((short) 14).setCellValue(loan.getDistrDate());
+			row.createCell((short) 2).setCellValue(loan.getProductName());
+			row.createCell((short) 3).setCellValue(loan.getOrgName());
+			row.createCell((short) 4).setCellValue(loan.getBillNo());
+			row.createCell((short) 5).setCellValue(loan.getAcctNo());
+			row.createCell((short) 6).setCellValue(loan.getAcctName());
+			row.createCell((short) 7).setCellValue(df.format(loan.getRealityIrY()));
+			row.createCell((short) 8).setCellValue(loan.getContStartDate());
+			row.createCell((short) 9).setCellValue(loan.getContEndDate());
+			row.createCell((short) 10).setCellValue(df1.format(loan.getContAmt()));
+			row.createCell((short) 11).setCellValue(df1.format(loan.getLoanAmt()));
+			row.createCell((short) 12).setCellValue(df1.format(loan.getLoanBalance()));
+			row.createCell((short) 13).setCellValue(loan.getIntAccum()==null ? 0:loan.getIntAccum());
+			row.createCell((short) 14).setCellValue(loan.getQixiDate());
+			row.createCell((short) 15).setCellValue(loan.getDistrDate());
+			row.createCell((short) 16).setCellValue(loan.getSettlDate());
 			if("0".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("出帐未确认");
+				row.createCell((short) 17).setCellValue("出帐未确认");
 			}else if("1".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("正常");
+				row.createCell((short) 17).setCellValue("正常");
 			}else if("2".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("正回购卖出");
+				row.createCell((short) 17).setCellValue("正回购卖出");
 			}else if("3".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("逆回购买入");
+				row.createCell((short) 17).setCellValue("逆回购买入");
 			}else if("4".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("逆回购到期");
+				row.createCell((short) 17).setCellValue("逆回购到期");
 			}else if("5".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("正回购到期");
+				row.createCell((short) 17).setCellValue("正回购到期");
 			}else if("6".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("垫款");
+				row.createCell((short) 17).setCellValue("垫款");
 			}else if("7".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("已扣款");
+				row.createCell((short) 17).setCellValue("已扣款");
 			}else if("8".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("退回未用");
+				row.createCell((short) 17).setCellValue("退回未用");
 			}
 			else if("9".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("结清/核销");	
+				row.createCell((short) 17).setCellValue("结清/核销");	
 			}else if("10".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("闭卷");	
+				row.createCell((short) 17).setCellValue("闭卷");	
 			}
 			else if("11".equals(loan.getAccStatus())){
-				row.createCell((short) 15).setCellValue("撤销");
+				row.createCell((short) 17).setCellValue("撤销");
 			}
 		}
 		String fileName = "贷款借据清单";

@@ -30,7 +30,6 @@ import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.divisional.constant.DivisionalProgressEnum;
 import com.cardpay.pccredit.divisional.constant.DivisionalTypeEnum;
 import com.cardpay.pccredit.divisional.service.DivisionalService;
-import com.cardpay.pccredit.intopieces.constant.ApplicationStatusEnum;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.constant.IntoPiecesException;
 import com.cardpay.pccredit.intopieces.dao.CustomerApplicationIntopieceWaitDao;
@@ -162,7 +161,7 @@ public class DbrxxService {
 			obj.setDbrxxId(dbrxxId);
 			obj.setLsh(i);
 			obj.setAddr(request.getParameter("addr_"+i));
-			obj.setPrice(request.getParameter("price_"+i));
+			obj.setPrice(request.getParameter("fc_price_"+i));
 			obj.setUsrSituation(request.getParameter("usrSituation_"+i));
 			obj.setHaveCopy(request.getParameter("haveCopy_"+i));
 			commonDao.insertObject(obj);
@@ -174,7 +173,7 @@ public class DbrxxService {
 			obj.setDbrxxId(dbrxxId);
 			obj.setLsh(i);
 			obj.setCardNo(request.getParameter("cardNo_"+i));
-			obj.setPrice(request.getParameter("price_"+i));
+			obj.setPrice(request.getParameter("jdc_price_"+i));
 			obj.setBuyDate(sdf.parse(request.getParameter("buyDate_"+i)));
 			obj.setHaveCopy_1(request.getParameter("haveCopy_1_"+i));
 			obj.setHaveCopy_2(request.getParameter("haveCopy_2_"+i));
@@ -214,7 +213,7 @@ public class DbrxxService {
 			obj.setDbrxxId(dbrxxId);
 			obj.setLsh(i);
 			obj.setAddr(request.getParameter("addr_"+i));
-			obj.setPrice(request.getParameter("price_"+i));
+			obj.setPrice(request.getParameter("fc_price_"+i));
 			obj.setUsrSituation(request.getParameter("usrSituation_"+i));
 			obj.setHaveCopy(request.getParameter("haveCopy_"+i));
 			commonDao.insertObject(obj);
@@ -227,7 +226,7 @@ public class DbrxxService {
 			obj.setDbrxxId(dbrxxId);
 			obj.setLsh(i);
 			obj.setCardNo(request.getParameter("cardNo_"+i));
-			obj.setPrice(request.getParameter("price_"+i));
+			obj.setPrice(request.getParameter("jdc_price_"+i));
 			obj.setBuyDate(sdf.parse(request.getParameter("buyDate_"+i)));
 			obj.setHaveCopy_1(request.getParameter("haveCopy_1_"+i));
 			obj.setHaveCopy_2(request.getParameter("haveCopy_2_"+i));
