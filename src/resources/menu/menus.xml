@@ -18,6 +18,8 @@
 			<menu id="030020" name="intopiecesfangkuan" title="放款" url="/intopieces/intopiecesfangkuan/fangkuan.page" img="" operations="browse|create"></menu>
 			<menu id="030012" name="intopiecestwolevel" title="团队长审批(安居贷)" url="/intopieces/intopiecestwolevel/twolevel.page" img="" operations="browse|create"></menu>
 			<menu id="030009" name="intopiecessonelevel" title="行长审批(安居贷)" url="/intopieces/intopiecesonelevel/onelevel.page" img="" operations="browse|create"></menu>
+			<menu id="030021" name="intopiecesdshtwolevel" title="支行审查岗(贷生活10万)" url="/intopieces/intopiecesdshtwolevel/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030022" name="intopiecesdshonelevel" title="支行负责人(贷生活10万)" url="/intopieces/intopiecesdshonelevel/browse.page" img="" operations="browse|create"></menu>
 			<menu id="030013" name="quotafreezeorthaw1" title="额度冻结/解冻(客户经理)" url="/intopieces/quotafreezeorthaw1/browse.page" img="" operations="browse|create"></menu>
 			<menu id="030014" name="quotafreezeorthaw2" title="额度冻结/解冻审批(团队长)" url="/intopieces/quotafreezeorthaw2/browse.page" img="" operations="browse|create"></menu>
 			<menu id="030015" name="quotafreezeorthaw3" title="额度冻结/解冻审批(评审)" url="/intopieces/quotafreezeorthaw3/browse.page" img="" operations="browse|create"></menu>
@@ -25,8 +27,6 @@
 			<menu id="030017" name="sxinfo1" title="信息维护申请(客户经理)" url="/intopieces/sxinfo1/browse.page" img="" operations="browse|create"></menu>
 			<menu id="030018" name="sxinfo2" title="信息维护审批(团队长)" url="/intopieces/sxinfo2/browse.page" img="" operations="browse|create"></menu>
 			<menu id="030019" name="sxinfo3" title="信息维护审批(行政)" url="/intopieces/sxinfo3/browse.page" img="" operations="browse|create"></menu>
-			<menu id="030021" name="intopiecesdshtwolevel" title="支行审查岗(贷生活10万)" url="/intopieces/intopiecesdshtwolevel/browse.page" img="" operations="browse|create"></menu>
-			<menu id="030022" name="intopiecesdshonelevel" title="支行负责人(贷生活10万)" url="/intopieces/intopiecesdshonelevel/browse.page" img="" operations="browse|create"></menu>
 			<!-- <menu id="030020" name="applyintopieces" title="申请审批进件" url="/intopieces/applyintopieces/browse.page" img="" operations="create|change|delete|display|browse"></menu> 
 			<menu id="030020" name="applyintopiecewait" title="申请件待审核" url="/intopieces/applyintopiecewait/browse.page" img="" operations="approve|applyapprove|browse"></menu>
 			<menu id="030030" name="applyintopiecesquery" title="申请件上传银联" url="/intopieces/applyintopiecesquery/applyIntopiecesQuery.page" img="" operations="exportupload|display|browse"></menu> 

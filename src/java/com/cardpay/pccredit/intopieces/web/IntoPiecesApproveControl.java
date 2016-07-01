@@ -318,10 +318,10 @@ public class IntoPiecesApproveControl extends BaseController {
 					return returnMap;
 				}*/
 				/**
-				 *判断，如果是安居贷，以下页签不用填写 
+				 *判断，如果是安居贷,贷生活10万以下，以下页签不用填写 
 				 */
 				String productType = qzappln_za_ywsqb_r.getProductType();//产品类型（3:安居贷）
-				if(!"3".equals(productType)){
+				if(!"3".equals(productType) && !"5".equals(productType)){
 					//添加附件appId
 					QzApplnAttachmentList qzApplnAttachmentList = attachmentListService.findAttachmentListByAppId(appId);
 					if(qzApplnAttachmentList == null){
@@ -345,6 +345,16 @@ public class IntoPiecesApproveControl extends BaseController {
 						return returnMap;
 					}
 				}
+				
+				if("5".equals(productType)){
+					QzApplnDshJyd dshJyd = intoPiecesService.findDsh10JydByAppId(appId);
+					if(dshJyd == null){
+						returnMap.put(JRadConstants.MESSAGE, "请先填写\"决议单\"");
+						returnMap.put(JRadConstants.SUCCESS, false);
+						return returnMap;
+					}
+				}
+				
 				Circle circle = circleService.findCircleByAppId(appId);
 				if(circle == null){
 					returnMap.put(JRadConstants.MESSAGE, "请先填写\"贷款信息\"");
@@ -520,7 +530,8 @@ public class IntoPiecesApproveControl extends BaseController {
 		mv.addObject("za_ls", za_ls);
 		mv.addObject("za_ls_json", JSONArray.fromObject(za_ls).toString());
 		//查找已配置的专案信息
-		if(qzappln_za_ywsqb_r != null && qzappln_za_ywsqb_r.getProductType() != null && qzappln_za_ywsqb_r.getProductType().equals("2")){
+		if(qzappln_za_ywsqb_r != null && qzappln_za_ywsqb_r.getProductType() != null && 
+				(qzappln_za_ywsqb_r.getProductType().equals("2") || qzappln_za_ywsqb_r.getProductType().equals("5"))){
 			QzApplnZa qzApplnZa = zaService.findZaById(qzappln_za_ywsqb_r.getZaId());
 			mv.addObject("qzApplnZa", qzApplnZa);
 		}
@@ -622,7 +633,7 @@ public class IntoPiecesApproveControl extends BaseController {
 		if(qzApplnYwsqb != null){
 			//获取产品类型，是贷生活或者安居贷就调整至page1ForLife_change
 			if(qzappln_za_ywsqb_r != null){
-				if("2".equals(qzappln_za_ywsqb_r.getProductType()) || "3".equals(qzappln_za_ywsqb_r.getProductType())){
+				if("2".equals(qzappln_za_ywsqb_r.getProductType()) || "3".equals(qzappln_za_ywsqb_r.getProductType()) || "5".equals(qzappln_za_ywsqb_r.getProductType())){
 					//获取专案信息
 					QzApplnZa qzApplnZa = zaService.findZaById(qzappln_za_ywsqb_r.getZaId());
 					mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/page1ForLife_change", request);
@@ -645,7 +656,7 @@ public class IntoPiecesApproveControl extends BaseController {
 		else{
 			//获取产品类型，是贷生活就调整至page1ForLife
 			if(qzappln_za_ywsqb_r != null){
-				if("2".equals(qzappln_za_ywsqb_r.getProductType()) || "3".equals(qzappln_za_ywsqb_r.getProductType())){
+				if("2".equals(qzappln_za_ywsqb_r.getProductType()) || "3".equals(qzappln_za_ywsqb_r.getProductType()) || "5".equals(qzappln_za_ywsqb_r.getProductType())){
 					//获取专案信息
 					QzApplnZa qzApplnZa = zaService.findZaById(qzappln_za_ywsqb_r.getZaId());
 					mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/page1ForLife", request);
@@ -701,12 +712,6 @@ public class IntoPiecesApproveControl extends BaseController {
 				//未填申请时 关联客户id
 				qzApplnYwsqb.setCustomerId(customerId);
 				qzApplnYwsqb.setApplicationId(appId);
-				
-				qzApplnJyxx.setCreatedBy(user.getId());
-				qzApplnJyxx.setCreatedTime(new Date());
-				//未填申请时 关联客户id
-				qzApplnJyxx.setCustomerId(customerId);
-				qzApplnJyxx.setApplicationId(appId);
 				
 				ywsqbService.insert_page1(qzApplnYwsqb, qzApplnJyxx,request);
 				//returnMap.put(RECORD_ID, id);
@@ -1983,16 +1988,101 @@ public class IntoPiecesApproveControl extends BaseController {
 		QzApplnDshJyd dshJyd = intoPiecesService.findDsh10JydByAppId(appId);
 		if(dshJyd != null){//修改
 			mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/dsh_10_jyd_update", request);
+			mv.addObject("dshJyd", dshJyd);
 		}else{//新增
 			mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/dsh_10_jyd", request);
 			//查询客户经理工号及对应的机构号
 			mv.addObject("managerId", user.getLogin());
 			mv.addObject("managerBrId", user.getOrganization().getId());
-			//
+			mv.addObject("managerName", user.getDisplayName());
+			//查询客户信息
+			CustomerInfor customerInfor = customerInforService.findCustomerInforById(customerId);
+			mv.addObject("customerInfor", customerInfor);
 		}
 		mv.addObject("appId", appId);
+		mv.addObject("customerId", customerId);
 		mv.addObject("operate", operate);
 		return mv;
+	}
+	
+	/** 
+	* @Title: insert_dsh_10_jyd 
+	* @Description: 新增贷生活10万及以下决议单
+	* @param @param qzApplnDshJydForm
+	* @param @param request
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @return JRadReturnMap    返回类型 
+	* @throws 
+	*/ 
+	@ResponseBody
+	@RequestMapping(value = "insert_dsh_10_jyd.json")
+	public JRadReturnMap insert_dsh_10_jyd(@ModelAttribute QzApplnDshJydForm qzApplnDshJydForm, HttpServletRequest request) throws Exception {
+		JRadReturnMap returnMap = new JRadReturnMap();
+		if (returnMap.isSuccess()) {
+			try {
+				String customerId = request.getParameter("customerId");
+				String appId = request.getParameter("appId");
+				
+				QzApplnDshJyd qzApplnDshJyd = qzApplnDshJydForm.createModel(QzApplnDshJyd.class);
+				User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
+				//未填申请时 关联客户id
+				qzApplnDshJyd.setCustomerId(customerId);
+				qzApplnDshJyd.setApplicationId(appId);
+				
+				intoPiecesService.insert_dsh_10_jyd(qzApplnDshJyd,request);
+				//returnMap.put(RECORD_ID, id);
+				returnMap.addGlobalMessage(CREATE_SUCCESS);
+				returnMap.setSuccess(true);
+			}catch (Exception e) {
+				return WebRequestHelper.processException(e);
+			}
+		}else{
+			returnMap.setSuccess(false);
+			returnMap.addGlobalError(CustomerInforConstant.CREATEERROR);
+		}
+		return returnMap;
+	}
+	
+	/** 
+	* @Title: update_dsh_10_jyd 
+	* @Description: 修改贷生活10万及以下决议单
+	* @param @param qzApplnDshJydForm
+	* @param @param request
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @return JRadReturnMap    返回类型 
+	* @throws 
+	*/ 
+	@ResponseBody
+	@RequestMapping(value = "update_dsh_10_jyd.json")
+	public JRadReturnMap update_dsh_10_jyd(@ModelAttribute QzApplnDshJydForm qzApplnDshJydForm, HttpServletRequest request) throws Exception {
+		JRadReturnMap returnMap = new JRadReturnMap();
+		if (returnMap.isSuccess()) {
+			try {
+				String customerId = request.getParameter("customerId");
+				String appId = request.getParameter("appId");
+				String id = request.getParameter("id");
+				
+				QzApplnDshJyd qzApplnDshJyd = qzApplnDshJydForm.createModel(QzApplnDshJyd.class);
+				User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
+				//未填申请时 关联客户id
+				qzApplnDshJyd.setCustomerId(customerId);
+				qzApplnDshJyd.setApplicationId(appId);
+				qzApplnDshJyd.setId(id);
+				
+				intoPiecesService.update_dsh_10_jyd(qzApplnDshJyd,request);
+				//returnMap.put(RECORD_ID, id);
+				returnMap.addGlobalMessage(CREATE_SUCCESS);
+				returnMap.setSuccess(true);
+			}catch (Exception e) {
+				return WebRequestHelper.processException(e);
+			}
+		}else{
+			returnMap.setSuccess(false);
+			returnMap.addGlobalError(CustomerInforConstant.CREATEERROR);
+		}
+		return returnMap;
 	}
 	
 	/**

@@ -1,0 +1,80 @@
+#parse ("common/iframe_page_header.htm")
+<link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<body class="whitebg">
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">${product.productName}资料信息修改</div>
+      </div>
+      <form id="id_module_form">
+          <input type="hidden" name="id" value="" />
+        <div class="forms" id="formsId">
+          <table class="rule" border="1" bordercolor="#CCCCCC" >
+          <caption>信息</caption>
+            <colgroup>
+              <col width="10%" />
+              <col width="40%" />
+              <col width="10%" />
+              <col width="40%" />
+            </colgroup>
+            <tr>
+            	<td><label for="userId">资料编号：</label></td>
+              	<td><input type="hidden" id="productId" name="productId" value="${product.id}"/>
+              		<input type="hidden" id="stufId" name="stufId" value="${stuf.id}"/>
+              		<input type="text" id="stufCode" name="stufCode" value="${stuf.stufCode}" readonly/></td>
+              	<td><label for="levelInformation">资料名称:</label></td>
+              	<td><input type="text" id="stufName" name="stufName" value="${stuf.stufName}" /></td>
+            </tr>
+            <tr>
+              	<td><label for="levelInformation">是否启用:</label></td>
+              	<td>
+              		<select id="isUseable" name="isUseable">
+              			<option value="1" #if($!stuf.isUseable == "1") selected #end>启用</option>
+              			<option value="0" #if($!stuf.isUseable == "0") selected #end>禁用</option>
+              		</select>
+              	</td>
+            	<td></td>
+              	<td></td>
+            </tr>
+          </table>
+        
+        </div>
+      </form>
+      <div class="submit">
+        <input id="id_save_button" type="button" value="保存" class="current" />
+        <input type="button" onclick="javascript:history.go(-1);" value="返回" />
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+	var layout=new FormsLayout("formsId");	
+	window.top.currentWindow.setLayout(layout);
+	#set ($formName = "'#id_module_form'")
+	$(document).ready(function() {	
+		$("#id_save_button").click(function() {
+			if($("#stufName").val() == ""){
+				topWin.Dialog.message("资料名称不能为空");
+				return;
+			}
+			var formjson = $($formName).serialize();
+   	       	var url = "${contextPath}/product/productinformation/stuf_change.json";
+			$.ajax({
+				url : url,
+				type : "get",
+				data : formjson,
+				success : function(data) {
+					if (data.success) {
+						topWin.Dialog.message("保存成功！");
+						window.location.href = "${contextPath}/product/productinformation/stufcfg.page?productId=${product.id}";
+					}
+					else{
+						topWin.Dialog.message("保存失败");
+				    }
+				}
+			});
+			      
+		})
+	});
+	</script>
+</body>
+#parse ("common/iframe_page_footer.htm")

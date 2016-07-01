@@ -129,17 +129,15 @@
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/accLoan_info.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">台账明细</li>
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>	
 	
-	#elseif($!operate=="支行负责人")	
+	#elseif($!operate=="贷生活10万支行负责人")	
 		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/accLoan_info.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">台账明细</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/accLoan_info.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">台账明细</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>	
 	
-	#elseif($!operate=="支行审查岗")	
+	#elseif($!operate=="贷生活10万支行审查岗")	
 		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">台账明细</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/accLoan_info.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">台账明细</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/create_or_change.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
 		
 	#elseif($!operate=="进件查询")	
 		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}&ifHideUser=${ifHideUser}')" style="margin-left:0;">贷款申请表</li>

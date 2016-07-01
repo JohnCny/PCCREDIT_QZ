@@ -17,7 +17,7 @@ var validator = $($formName).validate({
 		
 		managerTime:{required:true},
 		
-		yearIncome:{number:true},
+		yearIncome:{required:true,number:true},
 		profit:{number:true},
 		totalAssets:{number:true},
 		inMoney:{number:true},
@@ -53,7 +53,7 @@ messages:
 		
 		managerTime:{required:"日期不能为空"},
 		
-		yearIncome:{number:"年营业额只能为数字"},
+		yearIncome:{required:"年薪不能为空",number:"年薪只能为数字"},
 		profit:{number:"利润只能为数字"},
 		totalAssets:{number:"总资产只能为数字"},
 		inMoney:{number:"应收账款只能为数字"},

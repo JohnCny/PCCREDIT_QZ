@@ -1,0 +1,146 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">客户信息</div>
+      </div>
+      <form id="id_module_form" action="">
+        <div class="forms" id="formsId">
+          <input type="hidden" name="customerId" value="$!customerInfor.id" />
+          <input type="hidden" id="id" name="id" value="$!ID"/>
+          <table class="rule" border="1" bordercolor="#CCCCCC">
+          <caption>客户信息</caption>
+            <colgroup>
+              <col width="10%" />
+              <col width="40%" />
+              <col width="10%" />
+              <col width="40%" />
+			</colgroup>
+            <tr>
+              <td><label for="chineseName">中文姓名:</label></td>
+              <td><input type="text" id="chineseName" name="chineseName" value="$!customerInfor.chineseName" disabled="disabled"/></td>
+                <td><label>性别:</label></td>
+                <td><input type="text" id="sex" name="sex" value="#dictVal("Gender",$!customerInfor.sex)" disabled="disabled"/>
+				</td>
+            </tr>
+            <tr>
+              <td><label for="birthday">出生日期:</label></td>
+              <td><input type="text" name="birthday" id="birthday"  value="$!customerInfor.birthday" disabled="disabled"/></td>
+			  <td><label for="cardId">证件号码:</label></td>
+              <td><input type="text" name="cardId" id="cardId"  value="$!customerInfor.cardId" disabled="disabled"/></td>
+            </tr>
+            
+            <tr>
+              <td><label for="userId">移交机构:</label><font color="red">*</font></td>
+              <td><input type="text" name="orgId" id="orgId" value="$!org.name" disabled="disabled"/></td>
+              <td><label for="userId">移交用户:</label><font color="red">*</font></td>
+              <td><input type="text" name="userId" id="userId" value="$!user.displayName" disabled="disabled"/></td>
+            </tr>
+            <tr>
+              <td><label for="chineseName">请选择:</label></td>
+              <td class="checkbox"><span><input type="checkbox" id="changeBelong" name="changeBelong" value="1"
+              		#if($!divisional.changeBelong=="1") checked #end 
+              		disabled/>&nbsp;是否同时更改微贷系统中该客户的所属</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+      </form>
+      <div class="submit">
+          <a class="btn_gr" href="javascript:void(0);" onclick="divisional()" title="分配">分配</a>
+          <a class="btn_gr" href="javascript:void(0);" onclick="return_()" title="退回">退回</a>
+          <!-- <input class="current" type="button" #if(!$customerManagers)hidden="hidden" disabled="disabled"#end onclick="uploadTocardCenter()" value="上传到卡中心"/> -->
+          <a class="btn_gr" href="javascript:void(0);" onclick="javascript:history.go(-1);" title="返回" >返回</a>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+		var layout = new FormsLayout("formsId");
+		window.top.currentWindow.setLayout(layout);
+		function divisional(){
+			//提交申请
+			Dialog.load();
+			$.ajax({
+	    		type:'GET',
+	    		url:"${contextPath}/divisional/customerallot/divisional_xd.json",
+	    		data:{"id":"$!divisional.id"},
+	    		success:function(msg){
+	    			Dialog.closeLoad();
+	    			if(msg.success == true){
+	    				topWin.Dialog.message("提交信贷成功");
+	    			}else{
+	    				topWin.Dialog.message(msg.message);
+	    			}
+	    			window.location.href="${modulePath}/browse.page";
+	    		}
+	    	});
+		}
+		
+		function return_(){
+			$.ajax({
+				type:"GET",
+				url:"${modulePath}/divisional_refuse.json",
+				data:$("#id_module_form").serialize(),
+				success:function(msg){
+					if(msg.success == true){
+						topWin.Dialog.message(msg.message);
+					}else{
+						topWin.Dialog.message(msg.message);
+					}
+					window.location.href="${modulePath}/browse.page?recordId="+msg.recordId;
+				}
+			});
+		}
+		
+		//级联
+		var users_array = new Array();//用来保存为显示的select元素
+		
+		$(document).ready(function() {	
+			$("#customerManagerId").autocomplete(contextPath+"/manager/managercreate/chooseByNameInMgr.json", {
+				minChars: 0,
+				max: 12,
+				autoFill: true,
+				//mustMatch: true,
+				matchContains: false,
+				scrollHeight: 220,
+				width:250,
+				dataType:'json',
+				parse:function(data){
+					var parsed = [];
+					for(var i = 0; i < data.length; i++){
+						parsed[i] = {
+							data : data[i] ,
+							value : data[i].id,
+							result: data[i].id// 返回的结果显示内容 
+						};
+					}
+					return parsed;
+				}, 
+				formatItem: function(item) {// 显示下拉列表的内容
+					return "<div style='width:50%;float:left;'> " + item.displayName + "</div><div style='width:50%;float:left;'>" + item.id + "</div>";
+				}
+			});
+			
+			$("#userId option").each(function(){ //遍历全部option
+				users_array.push($(this));
+		    });
+		});
+		
+		//户籍所在地
+		function change_org(objval){
+			$("#userId").empty();
+			$("#userId").css('visibility','hidden');//IE7
+			$.each(users_array,function(n,opt) { 
+				if(opt.val().split("_")[0] == objval){
+					$("#userId").append(opt);
+				}
+			});
+			$("#userId").css('visibility','visible');//IE7
+		}
+	  	
+  </script>  
+</body>
+#parse ("common/iframe_page_footer.htm")

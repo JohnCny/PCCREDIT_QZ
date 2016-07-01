@@ -1,0 +1,201 @@
+#parse ("common/iframe_page_header.htm")
+<script src="${contextPath}/common/js/common/jquery.form.js"></script>
+<link rel="stylesheet" type="text/css" href="${uicasePath}/css/tab.css" />
+<body>
+	<div class="content_main">
+		<div class="contentinner">
+			<form id="id_module_form"
+				action="${contextPath}/manager/jxbc/insert.json"  method="post">
+				<div class="forms" id="formsId">
+					<table class="rule" border="1" bordercolor="#CCCCCC">
+					<caption>客户经理绩效补充</caption>
+						<colgroup>
+             			<col width="10%" />
+              			<col width="40%" />
+             			<col width="10%" />
+              			<col width="40%" />
+						</colgroup>
+						
+						 <tr>
+							<td><label for="name">日期:</label></td>
+						    <td><input type="text" id="year" name="year" onmouseover="_calendar({format:'yyyy-MM-dd'})" readonly="readonly"/>
+						    <td><label for="name">客户经理:</label></td>
+						    <td><select id="customerManagerId" name="customerManagerId">
+				                <option value="">请选择...</option>
+				                #web($forms,$!result.filter.customerManagerId)
+				                  </select></td>
+						</tr>
+						
+						<tr>
+							<td><label for="name">当月新增活跃客户数:</label></td>
+							<td><input class="rinpstynum" type="text" id="activeCustomerNum" name="activeCustomerNum" value="" /></td>
+							<td><label for="name">当月实际活跃客户数:</label></td>
+							<td><input class="rinpstynum" type="text" id="actualActiveCustomerNum" name="actualActiveCustomerNum" value="" /></td>
+						</tr>
+						
+						<tr>
+							<td><label for="name">当月所管理的客户用信实收利息收入:</label></td>
+							<td><input class="rinpsty" type="text" id="monthActualReceiveIncome" name="monthActualReceiveIncome" value="" /></td>
+							<td><label for="name">行内其他零售产品奖励:</label></td>
+							<td><input  class="rinpsty" type="text" id="otherRetailProductAwards" name="otherRetailProductAwards" value="" /></td>
+						</tr> 
+						
+						<tr>
+							<td><label for="name">本月问责风险保证金:</label></td>
+							<td><input class="rinpsty" type="text" id="accountabilityRiskMargin" name="accountabilityRiskMargin" value="" /></td>
+							<td><label for="name">逾期贷款率:</label></td>
+							<td><input class="rinpsty" type="text" id="overdueLoan" name="overdueLoan" value="" /></td>
+						</tr>
+						
+						<tr>
+						    <td><label for="name">月均KPI得分：<span style="color:red">(3,6,9,12季度填)</span></label></td>
+							<td><input class="rinpsty" type="text" id="monthAverageKpiScore" name="monthAverageKpiScore" value="" /></td>
+							<td><label for="name">季度日均用信余额：<span style="color:red">(3,6,9,12季度填)</span></label></td>
+							<td><input class="rinpsty" type="text" id="balanceDailyAverage" name="balanceDailyAverage" value="" /></td>
+						</tr>
+						<tr>
+							<td><label for="name">逾期贷款率：<span style="color:red">(3,6,9,12季度填)</span></label></td>
+							<td><input class="rinpsty" type="text" id="overdueLoanJd" name="overdueLoanJd" value="" /></td>
+						</tr>
+					</table>
+					
+				</div>
+			</form>
+
+			<div class="submit">
+				<input id="id_save_button" type="button"
+					value="保存" class="current"/> <input
+					type="button" onclick="javascript:history.go(-1);"
+					value="#i18n('button.cancel')" />
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	
+	function mySave() {
+		$('#id_module_form').ajaxSubmit({
+			dataType : 'json',
+			type : "post",
+			success : function(data) {
+				debugger;
+				if (data.success) {
+					Dialog.message(data.message,"提示", function() {
+						navigateTo("${contextPath}/manager/jxbc/browse.page");
+					 });
+				} else {
+					Dialog.message(data.errors.errors[0].message);
+					return false;
+				}
+			},
+			error : function(data) {
+				Dialog.closeLoad();
+				Dialog.message("操作失败");
+				return false;
+			}
+		});
+	}
+	
+	
+	
+	var layout=new FormsLayout("formsId");			
+	window.top.currentWindow.setLayout(layout);
+	
+	 #set ($formName = "'#id_module_form'")
+	 #parse ("/manager/assessmentscore/managerjx_validation.js")
+	 $(document).ready(function() {
+		 $(".rinpsty").live("keydown",function(e){
+				
+				$(this).moneyFormat();
+				
+		});
+
+		$(".rinpstynum").live("keydown",function(e){
+			
+			$(this).numFormat();
+			
+		});
+		 
+		 
+		 $("#id_save_button").click(function() {
+		        if ($($formName).valid()) {
+		        	mySave();
+		        }
+		      });
+	}); 
+	 
+	 $.fn.extend({
+			moneyFormat : function () {
+				return this.each(function () {
+					$(this).keyup(function () {
+						var reg = /^\d*\.?\d{0,2}$/,
+						reg2 = /(?:\d*\.\d{0,2}|\d+)/,
+						reg3 = /[^.0-9]+/;
+						var _val = $(this).val(),
+						isPlus = /^-/.test(_val),
+						_val = isPlus ? _val.substr(1) : _val;
+						if (!reg.test(_val)) {
+							_val = _val.replace(reg3, "").match(reg2);
+							_val = _val == null ? "" : _val[0];
+							$(this).val(isPlus ? ("-" + _val) : _val);
+						}
+					}).blur(function () {
+						var reg1 = /^\d+$/,
+						reg2 = /^\.\d{0,2}$/,
+						reg3 = /^\d+\.\d{0,2}$/,
+						reg4 = /^0+(?:[1-9]\d*|0)\.\d{0,2}$/,
+						reg5 = /^0+((?:[1-9]\d*|0)\.\d{0,2})$/;
+						var _val = $(this).val(),
+						isPlus = /^-/.test(_val),
+						_val = isPlus ? _val.substr(1) : _val;
+						if (reg1.test(_val)) {
+							_val = _val + ".00";
+						}
+						if (reg4.test(_val)) {
+							_val = _val.replace(reg5, "$1");
+						}
+						if (reg2.test(_val)) {
+							_val = "0" + _val;
+						}
+						if (reg3.test(_val)) {
+							var len = _val.length - _val.indexOf(".") - 1,
+							str = "";
+							for (var i = 0; i < 2 - len; i++) {
+								str += "0";
+							}
+							_val += str;
+						}
+						$(this).val(isPlus ? ("-" + _val) : _val);
+					});
+				});
+			}
+		});
+		$.fn.extend({
+			numFormat : function () {
+				return this.each(function () {
+					$(this).keyup(function () {
+						var reg = /^\d+$/;
+						var _val = $(this).val();
+						if (reg.test(_val)) {
+							_val = _val
+						}else{
+							
+							_val = ""
+						}
+						$(this).val(_val);
+					}).blur(function () {
+						var reg1 = /^\d+$/;
+						if (reg1.test(_val)) {
+							_val = _val ;
+						}else{
+							
+							_val = ""
+						}
+					
+						$(this).val(_val);
+					});
+				});
+			}
+		});
+	</script>
+</body>
+</html>

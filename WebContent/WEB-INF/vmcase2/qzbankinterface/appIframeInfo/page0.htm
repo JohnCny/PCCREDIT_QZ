@@ -23,8 +23,8 @@
 							#dict("product", $!qzappln_za_ywsqb_r.productType)
 						</select>
 					</td>	
-					<td id="za_1" class="table-label" #if($!qzappln_za_ywsqb_r.productType != '2') style="display:none" #end>选择专案：<font color="#ff0000">*</font></td>
-					<td id="za_2" #if($!qzappln_za_ywsqb_r.productType != '2') style="display:none" #end>
+					<td id="za_1" class="table-label" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5') style="display:none" #end>选择专案：<font color="#ff0000">*</font></td>
+					<td id="za_2" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5') style="display:none" #end>
 						<select id="zaId" name="zaId" onchange="changeZa(this)" disabled>
 							#foreach ($obj in $za_ls)
 							<option value="$!obj.id" #if($!qzappln_za_ywsqb_r.zaId == $!obj.id) selected #end>$!obj.name</option>
@@ -37,7 +37,7 @@
 	</div>
 	
 	<!--*************************************************************专案信息*************************************************************-->
-	<div id="za_3" class="box" #if($!qzappln_za_ywsqb_r.productType != '2') style="display:none" #end>
+	<div id="za_3" class="box" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5') style="display:none" #end>
 		<table class="title">
 			<tr>
 				<td>专案信息</td>
@@ -100,13 +100,13 @@
 			submitFlag = 1;
 			var productType = $("#productType").val();
 			var zaId = ""
-			if(productType == "2" && document.getElementById("zaId").selectedIndex == -1){
+			if((productType == "2" || productType == "5") && document.getElementById("zaId").selectedIndex == -1){
 				topWin.Dialog.message("请先添加专案！");
 				submitFlag = 0;
 				return;
 			}
 			
-			if(productType == "2"){
+			if(productType == "2" || productType == "5"){
 				zaId = jsoObjs[document.getElementById("zaId").selectedIndex].id
 			}
 			
@@ -135,7 +135,7 @@
 	});
 	
 	function changeProduct(value){
-		if(value == "2"){
+		if(value == "2" || value == "5"){
 			$("#za_1").css("display","");
 			$("#za_2").css("display","");
 			$("#za_3").css("display","");

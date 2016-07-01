@@ -34,8 +34,6 @@
             </tr>
             #if($!operate=="填写合同信息")
             <tr>
-            #elseif($!operate=="settleDownLoan")
-            <tr>
             #else
             <tr style="display: none;">
             #end
@@ -45,8 +43,6 @@
               	<td><input type="text" name="acctNo2" #if($!pre_circle != $null) value="$!pre_circle.acctNo2" #end/></td>
             </tr>
              #if($!operate=="填写合同信息")
-            <tr>
-            #elseif($!operate=="settleDownLoan")
             <tr>
             #else
             <tr style="display: none;">
@@ -69,8 +65,6 @@
               <td><input type="text" id="exchangeRate" name="exchangeRate"/></td>
             </tr>
              #if($!operate=="填写合同信息")
-            <tr>
-            #elseif($!operate=="settleDownLoan")
             <tr>
             #else
             <tr style="display: none;">

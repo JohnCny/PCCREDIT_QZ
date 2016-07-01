@@ -1,0 +1,215 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">授信信息维护</div>
+      </div>
+      <form id="id_module_form" action="">
+        <div class="forms" id="formsId">
+          <input type="hidden" name="circleId" value="$!circle.id" />
+          <input type="hidden" id="id" name="id" value="$!ID"/>
+          <table class="rule" border="1" bordercolor="#CCCCCC">
+          <caption>客户信息</caption>
+            <colgroup>
+              <col width="10%" />
+              <col width="40%" />
+              <col width="10%" />
+              <col width="40%" />
+			</colgroup>
+            <tr>
+              <td><label for="chineseName">姓名:</label></td>
+              <td><input type="text" id="clientName" name="clientName" value="$!circle.clientName" disabled="disabled"/></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><label for="chineseName">证件类型(原):</label></td>
+              <td><select id="globalType_1" name="globalType_1" disabled >#dict("CERT_TYPE", $!circle.globalType)</select></td>
+              <td><label for="chineseName">证件类型(新):<font color="#ff0000">*</font></label></td>
+              <td><select id="globalType" name="globalType" disabled >#dict("CERT_TYPE", $!circle.globalType)</select></td>
+            </tr>
+            <tr>
+              <td><label for="chineseName">证件号码(原):</label></td>
+              <td><input type="text" id="globalId_1" name="globalId_1" value="$!circle.globalId" disabled="disabled"/></td>
+              <td><label for="chineseName">证件号码(新):<font color="#ff0000">*</font></label></td>
+              <td><input type="text" id="globalId" name="globalId" value="$!circle.globalId" disabled="disabled"/></td>
+            </tr>
+            <tr>
+              <td><label for="chineseName">户籍所在地(原):</label></td>
+              <td>
+             		1:<select id="regPermResidence_1_1" name="regPermResidence_1_1" style="width:28%;margin:2px;" disabled
+             		>#dict("INDIV_BRT_PLACE_LEVEL_1", $!circle.regPermResidence_1)</select>
+             		2:<select id="regPermResidence_1_2" name="regPermResidence_1_2" style="width:28%;margin:2px;" disabled
+             		>#dict("INDIV_BRT_PLACE_LEVEL_2", $!circle.regPermResidence_2)</select>
+             		3:<select id="regPermResidence_1_3" name="regPermResidence_1_3" style="width:28%;margin:2px;" disabled
+             		>#dict("INDIV_BRT_PLACE_LEVEL_3", $!circle.regPermResidence_3)</select>
+              </td>
+              <td><label for="chineseName">户籍所在地(新):<font color="#ff0000">*</font></label></td>
+              <td>
+             		1:<select id="regPermResidence_1" name="regPermResidence_1" style="width:28%;margin:2px;" 
+             		#if($!circle.processStatus_sx != $null && $!circle.processStatus_sx != 'audit' && $!circle.processStatus_sx != 'returnedToFirst')
+			          	disabled
+			        #end
+             		onchange="change_regPermResidence_1(this.value);">
+             		#if($!quotaProcessSx != $null)
+		              	#dict("INDIV_BRT_PLACE_LEVEL_1", $!quotaProcessSx.regPermResidence1)
+		            #else
+		              	#dict("INDIV_BRT_PLACE_LEVEL_1", $!circle.regPermResidence_1)
+		            #end
+             		</select>
+             		2:<select id="regPermResidence_2" name="regPermResidence_2" style="width:28%;margin:2px;" 
+             		#if($!circle.processStatus_sx != $null && $!circle.processStatus_sx != 'audit' && $!circle.processStatus_sx != 'returnedToFirst')
+			          	disabled
+			        #end
+             		onchange="change_regPermResidence_2(this.value);">
+					#if($!quotaProcessSx != $null)
+		              	#dict("INDIV_BRT_PLACE_LEVEL_2", $!quotaProcessSx.regPermResidence2)
+		            #else
+		              	#dict("INDIV_BRT_PLACE_LEVEL_2", $!circle.regPermResidence_2)
+		            #end
+					</select>
+             		3:<select id="regPermResidence_3" name="regPermResidence_3" style="width:28%;margin:2px;"
+             		#if($!circle.processStatus_sx != $null && $!circle.processStatus_sx != 'audit' && $!circle.processStatus_sx != 'returnedToFirst')
+			          	disabled
+			        #end
+             		>
+					#if($!quotaProcessSx != $null)
+		              	#dict("INDIV_BRT_PLACE_LEVEL_3", $!quotaProcessSx.regPermResidence3)
+		            #else
+		              	#dict("INDIV_BRT_PLACE_LEVEL_3", $!circle.regPermResidence_3)
+		            #end
+					</select>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="chineseName">地址(原):</label></td>
+              <td><input type="text" id="address_1" name="address_1" value="$!circle.address" disabled="disabled"/></td>
+              <td><label for="chineseName">地址(新):<font color="#ff0000">*</font></label></td>
+              <td><input type="text" id="address" name="address" 
+	            #if($!quotaProcessSx != $null)
+	              	value="$!quotaProcessSx.address"
+	            #else
+	              	value="$!circle.address"
+	            #end
+              
+             	#if($!circle.processStatus_sx != $null && $!circle.processStatus_sx != 'audit' && $!circle.processStatus_sx != 'returnedToFirst')
+		          	disabled
+		        #end
+              /></td>
+            </tr>
+            <tr>
+              <td><label for="chineseName">手机号码(原):</label></td>
+              <td><input type="text" id="mobile_1" name="mobile_1" value="$!circle.mobile" disabled="disabled"/></td>
+              <td><label for="chineseName">手机号码(新):<font color="#ff0000">*</font></label></td>
+              <td><input type="text" id="mobile" name="mobile" 
+	              #if($!quotaProcessSx != $null)
+	              	   value="$!quotaProcessSx.mobile"
+	              #else
+	              	   value="$!circle.mobile"
+	              #end
+              	  #if($!circle.processStatus_sx != $null && $!circle.processStatus_sx != 'audit' && $!circle.processStatus_sx != 'returnedToFirst')
+		          	   disabled
+		          #end
+              /></td>
+            </tr>
+            <tr>
+            	<td><label for="chineseName">申请原因:<font color="#ff0000">*</font></label></td>
+            	<td colspan="3"><textarea id="applyReason" name="applyReason" rows="3" 
+            		#if($!circle.processStatus_sx != $null && $!circle.processStatus_sx != 'audit' && $!circle.processStatus_sx != 'returnedToFirst')
+			          	disabled
+			        #end
+            	>#if($!quotaProcessSx != $null)$!{quotaProcessSx.applyReason}#end</textarea></td>
+            </tr>
+          </table>
+        </div>
+      </form>
+      <div class="submit">
+      	  #if($!circle.processStatus_sx == $null || $!circle.processStatus_sx == 'audit' || $!circle.processStatus_sx == 'returnedToFirst')
+          	<a class="btn_gr" href="javascript:void(0);" onclick="applychangeSXInfo()" title="保存并申请">保存并申请</a>
+          #end
+          <a class="btn_gr" href="javascript:void(0);" onclick="javascript:history.go(-1);" title="返回" >返回</a>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+		//户籍所在地
+		var indiv_brt_place_array2 = new Array();//用来保存为显示的select元素
+		var indiv_brt_place_array3 = new Array();//用来保存为显示的select元素
+	
+		var layout = new FormsLayout("formsId");
+		window.top.currentWindow.setLayout(layout);
+		
+		//保存并申请
+		function applychangeSXInfo(){
+			#set ($formName = "'#id_module_form'")
+			#parse ("intopieces/changeSXInfo_validation.js")
+			if ($($formName).valid()) {
+				var formjson = $($formName).serialize();
+	   	          
+	   	       	var url = "${contextPath}/intopieces/sxinfo1/quot_operate.json?circleId=${circle.id}";
+	   	       	$.ajax({
+					url : url,
+					type : "get",
+					data : formjson,
+					success : function(data) {
+						if (data.success) {
+							topWin.Dialog.message("发起申请成功");
+							window.location.href = "${contextPath}/intopieces/sxinfo1/browse.page";
+						}
+						else{
+							topWin.Dialog.message(data.message);
+					    }
+					}
+				});
+			}
+		}
+		
+		$(document).ready(function() {	
+			//户籍所在地
+			$("#regPermResidence_2 option").each(function(){ //遍历全部option
+				indiv_brt_place_array2.push($(this));
+		    });
+			$("#regPermResidence_3 option").each(function(){ //遍历全部option
+				indiv_brt_place_array3.push($(this));
+		    });
+		});
+		
+		//户籍所在地
+		function change_regPermResidence_1(objval){
+			$("#regPermResidence_2").empty();
+			$("#regPermResidence_2").css('visibility','hidden');//IE7
+			if(objval != undefined){
+				$.each(indiv_brt_place_array2,function(n,opt) { 
+					if(opt.val().split("_")[0] == objval.split("_")[1]){
+						$("#regPermResidence_2").append(opt);
+					}
+				});
+				$("#regPermResidence_2").get(0).selectedIndex = 0;
+			}
+			
+			$("#regPermResidence_2").css('visibility','visible');//IE7
+			
+			var tmp = $("#regPermResidence_2 option:first");//IE7
+			change_regPermResidence_2(tmp.val());
+		}
+		function change_regPermResidence_2(objval){
+			$("#regPermResidence_3").empty();
+			$("#regPermResidence_3").css('visibility','hidden');//IE7
+			if(objval != undefined){
+				$.each(indiv_brt_place_array3,function(n,opt) {  
+					if(opt.val().split("_")[0] == objval.split("_")[1]){
+						$("#regPermResidence_3").append(opt);
+					}
+				});
+				$("#regPermResidence_3").get(0).selectedIndex = 0;
+			}
+			
+			$("#regPermResidence_3").css('visibility','visible');//IE7
+			
+		}
+		
+  </script>  
+</body>
+#parse ("common/iframe_page_footer.htm")
