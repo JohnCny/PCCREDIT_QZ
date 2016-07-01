@@ -36,11 +36,9 @@
             </tr>
              #if($!operate=="填写合同信息" || $!operate=="放款" )
             <tr>
-            #elseif($!operate=="settleDownLoan")
+             #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
             <tr>
-             #elseif($!operate=="团队长")
-            <tr>
-             #elseif($!operate=="行长")
+             #elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
             <tr>
             #else
             <tr style="display: none;">
@@ -52,11 +50,9 @@
             </tr>
             #if($!operate=="填写合同信息" || $!operate=="放款" )
             <tr>
-            #elseif($!operate=="settleDownLoan")
+             #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
             <tr>
-             #elseif($!operate=="团队长")
-            <tr>
-             #elseif($!operate=="行长")
+             #elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
             <tr>
             #else
             <tr style="display: none;">
@@ -80,11 +76,9 @@
             </tr>
              #if($!operate=="填写合同信息" || $!operate=="放款" )
             <tr>
-            #elseif($!operate=="settleDownLoan")
+             #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
             <tr>
-             #elseif($!operate=="团队长")
-            <tr>
-             #elseif($!operate=="行长")
+             #elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
             <tr>
             #else
             <tr style="display: none;">
@@ -125,11 +119,9 @@
               <td><input type="text" id="contractAmt" name="contractAmt" 
               	 #if($!operate=="填写合同信息" || $!operate=="放款" )
             	value="$!circle.contractAmt"
-            	#elseif($!operate=="settleDownLoan")
+            	 #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
             	value="$!circle.contractAmt"
-            	 #elseif($!operate=="团队长")
-            	value="$!circle.contractAmt"
-             	#elseif($!operate=="行长")
+             	#elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
             	value="$!circle.contractAmt"
             	#else
             	value="$!circle.contractAmt"
@@ -155,11 +147,9 @@
               <td><input type="text" name="actIntRate" 
               	#if($!operate=="填写合同信息" || $!operate=="放款" )
               		value="$!circle.actIntRate"
-              	#elseif($!operate=="settleDownLoan")
-              		value="$!circle.actIntRate"
-              	#elseif($!operate=="团队长")
+              	#elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
               	    value="$!circle.actIntRate"
-              	#elseif($!operate=="行长")
+              	#elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
               	    value="$!circle.actIntRate"
               	#else        	
               		value="$!circle.actIntRate"
@@ -435,10 +425,10 @@
 		
       <div class="submit controlbtn">
       	 <a id="id_save_button" class="btn_g" >保存</a>
-         #if(($!operate=="填写合同信息" || $!operate=="放款") && $!circle.acctNo1 != $null)
+         #if(($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活10万支行负责人" || $!operate=="贷生活10万支行审查岗") && $!circle.acctNo1 != $null)
          <a class="btn_g" id="id_zx_in_button">通过</a>
          #end
-         #if($!operate=="填写合同信息" || $!operate=="放款")
+         #if($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活10万支行负责人" || $!operate=="贷生活10万支行审查岗")
          <a class="btn_g" id="id_zx_return_button">退件</a>
          <a class="btn_gr" onclick="parent.location.href='${contextPath}${returnUrl}'">返回</a>
          #else
@@ -735,7 +725,6 @@
 	    });
 		//通过
 		$("#id_zx_in_button").click(function() {
-			alert("${returnUrl}")
                 Dialog.confirm("确定提交吗？", "提示",
                 	    function() {
                				url="${contextPath}/intopieces/intopiecesxindai/save_apply.json?id=${appId}";

@@ -31,6 +31,8 @@ public class CustomerApplicationProcessFilter extends BusinessFilter {
 	
 	private String filterTeamLeader;//团队长查看各小组成员的进件 1要过滤 0 不过滤
 	
+	private String filterOrgId;//审核人的org_id 贷生活10万以下要过滤是否同一机构
+	
 	public String getLoginId() {
 		return loginId;
 	}
@@ -151,4 +153,11 @@ public class CustomerApplicationProcessFilter extends BusinessFilter {
 		this.filterTeamLeader = filterTeamLeader;
 	}
 
+	public String getFilterOrgId() {
+		return filterOrgId;
+	}
+
+	public void setFilterOrgId(String filterOrgId) {
+		this.filterOrgId = filterOrgId;
+	}
 }

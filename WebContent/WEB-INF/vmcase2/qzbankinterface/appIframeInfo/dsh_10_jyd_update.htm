@@ -1,0 +1,245 @@
+#parse ("common/iframe_page_header3.htm")
+<style type="text/css">
+	form{padding-top:0px;padding-bottom:15px;margin:0px 15px 0 0;}
+	.input{width:80%;}
+</style>
+<body>
+<form id="id_module_form">
+<div class="forms" id="formsId">
+<!--*************************************************************审贷会决议单*************************************************************-->
+	<div class="box">
+		<div name="content">
+			<table class="myTable">
+				<caption>泉州银行“贷生活”调查、审查、审批决议单</caption>
+				<colgroup>
+					<col width="10%">
+					<col width="10%">					
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+				</colgroup>
+				<!-- <tr>
+					<td class="table-label">审议日期</td>
+					<td colspan="8"><input type="text" name="" onmouseover="_calendar()"/></td>			
+				</tr> -->
+				
+				<tr class="apply">
+					<td class="table-label" rowspan="10" style="border-bottom:1px solid #000;"><b>经办客户经理意见</b></td>
+					<td class="table-label">办理机构</td>
+					<td colspan="2"><input type="text" name="managerBrId" value="$!dshJyd.managerBrId" readonly/></td>
+					<td class="table-label">主办客户经理</td>
+					<td><input type="text" name="managerId" value="$!dshJyd.managerId" readonly/></td>	
+					<td class="table-label">客户名称</td>
+					<td colspan="3"><input type="text" name="clientName" value="$!dshJyd.clientName" readonly/></td>		
+				</tr>				
+				<tr class="apply">
+					<td class="table-label">审议事项<font color="#ff0000">*</font></td>
+					<td colspan="2"><input type="text" name="discussItems" value="$!dshJyd.discussItems" /></td>
+					<td class="table-label">产品名称</td>
+					<td><input type="text" value="贷生活(10万元及以下)" disabled/></td>	
+					<td class="table-label">证件号码</td>
+					<td colspan="3"><input type="text" name="globalId" value="$!dshJyd.globalId" readonly/></td>		
+				</tr>			
+				<tr class="apply">
+					<td class="table-label">建议金额(元)<font color="#ff0000">*</font></td>
+					<td colspan="2"><input type="text" name="sugAmt" value="$!dshJyd.sugAmt" /></td>
+					<td class="table-label">建议期限(月)<font color="#ff0000">*</font></td>
+					<td><select name="sugDeadline">
+	                    	#dict("APPLY_DEADLINE", $!dshJyd.sugDeadline)
+	                  	</select></td>	
+					<td class="table-label" colspan="2">建议利率(年)<font color="#ff0000">*</font></td>
+					<td colspan="2"><input type="text" name="sugRate" value="$!dshJyd.sugRate" />%</td>		
+				</tr>			
+				<tr class="apply">
+					<td class="table-label">授信用途<font color="#ff0000">*</font></td>
+					<td colspan="4">
+						<select name="loanUseType">
+	                    	#dict("LOAN_USE_TYPE", $!dshJyd.loanUseType)
+	                  	</select></td>
+					<td class="table-label" colspan="2">还款方式<font color="#ff0000">*</font></td>
+					<td colspan="2">
+						<select name="sugRepayType">
+	                    	#dict("REPAY_TYPE", $!dshJyd.sugRepayType)
+	                  	</select></td>		
+				</tr>		
+				<tr class="apply">
+					<td class="table-label" rowspan="5">建议担保方式</td>
+					<td class="table-label" rowspan="3">共同借款人</td>					
+					<td class="table-label" colspan="3" style="text-align:center;">姓名</td>					
+					<td class="table-label" colspan="4" style="text-align:center;">证件号码</td>	
+				</tr>						
+				<tr class="apply">			
+					<td colspan="3" style="text-align:center;"><input type="text" name="coborrower1Name" value="$!dshJyd.coborrower1Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="coborrower1Cardid" value="$!dshJyd.coborrower1Cardid"/></td>	
+				</tr>					
+				<tr class="apply">			
+					<td colspan="3" style="text-align:center;"><input type="text" name="coborrower2Name" value="$!dshJyd.coborrower2Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="coborrower2Cardid" value="$!dshJyd.coborrower2Cardid"/></td>	
+				</tr>		
+				<tr class="apply">
+					<td class="table-label" rowspan="2">保证担保</td>					
+					<td colspan="3" style="text-align:center;"><input type="text" name="guarantee1Name" value="$!dshJyd.guarantee1Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="guarantee1Cardid" value="$!dshJyd.guarantee1Cardid"/></td>	
+				</tr>					
+				<tr class="apply">			
+					<td colspan="3" style="text-align:center;"><input type="text" name="guarantee2Name" value="$!dshJyd.guarantee2Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="guarantee2Cardid" value="$!dshJyd.guarantee2Cardid"/></td>	
+				</tr>	
+				<tr class="apply">
+					<td class="table-label" colspan="2" style="border-bottom:1px solid #000;">主协办客户经理签字</td>					
+					<td colspan="3" style="text-align:center;border-bottom:1px solid #000;">主办客户经理签字<input type="text" name="managerName" value="$!dshJyd.managerName" readonly/></td>					
+					<td colspan="4" style="text-align:center;border-bottom:1px solid #000;">协办客户经理签字<input type="text" name="helpManagerName" value="$!dshJyd.helpManagerName"/></td>	
+				</tr>	
+				<tr class="twolevel">
+					<td class="table-label" rowspan="12" style="border-bottom:1px solid #000;"><b>审查岗意见</b></td>
+					<td class="table-label" colspan="2" rowspan="4"> 内审问题核实情况(核实方式：电话核实)</td>					
+					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="1"/>借款人所在公司名称及地址</label></td>	
+				</tr>					
+				<tr class="twolevel">
+					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="2"/>借款人所在公司职务</label></td>	
+				</tr>				
+				<tr class="twolevel">
+					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="4"/>借款人家庭住址及配偶姓名</label></td>	
+				</tr>					
+				<tr class="twolevel">
+					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="8"/>其他(客户经理是否收取额外费用,贷款用途等)</label></td>	
+				</tr>				
+				<tr class="twolevel">					
+					<td class="table-label" rowspan="8"  style="border-bottom:1px solid #000;">授信决策情况</td>					
+					<td class="table-label">金额(元)<font color="#ff0000">*</font></td>					
+					<td colspan="3"><input type="text" name="amt"/></td>					
+					<td class="table-label">利率(年)<font color="#ff0000">*</font></td>	
+					<td colspan="3"><input type="text" name="rate"/>%</td>	
+				</tr>	
+				<tr class="twolevel">				
+					<td class="table-label">授信期限(月)<font color="#ff0000">*</font></td>					
+					<td><select name="deadline">
+	                    	#dict("APPLY_DEADLINE", '')
+	                  	</select></td>	
+					<td class="table-label">还款期限(月)<font color="#ff0000">*</font></td>					
+					<td><select name="repaymentTerm">
+	                    	#dict("APPLY_DEADLINE", '')
+	                  	</select></td>						
+					<td class="table-label">还款方式<font color="#ff0000">*</font></td>	
+					<td colspan="3">
+						<select name="repayType">
+	                    	#dict("REPAY_TYPE", '')
+	                  	</select></td>	
+				</tr>	
+				<tr class="twolevel">				
+					<td class="table-label" rowspan="2">保证担保</td>					
+					<td colspan="7">
+						<label><input type="radio" name="guaranteeItems" value="1" />1、同意客户经理建议 </label>
+					</td>	
+				</tr>		
+				<tr class="twolevel">								
+					<td colspan="7">
+						<label><input type="radio" name="guaranteeItems" value="2" checked/>2、对建议的补充或修改</label>
+					</td>	
+				</tr>	
+				<tr class="twolevel">				
+					<td class="table-label">重点监控内容<font color="#ff0000">*</font></td>					
+					<td colspan="7"><textarea name="focusContent"></textarea></td>	
+				</tr>		
+				<tr class="twolevel">				
+					<td class="table-label">其他要求</td>					
+					<td colspan="7"><textarea name="otherRequirement"></textarea></td>	
+				</tr>		
+				<tr class="twolevel">				
+					<td class="table-label">拒绝申请</td>					
+					<td colspan="7">主要原因：<textarea name="refuseReason"></textarea></td>	
+				</tr>			
+				<tr class="twolevel">				
+					<td class="table-label" style="border-bottom:1px solid #000;">审查岗<font color="#ff0000">*</font></td>					
+					<td colspan="8" style="border-bottom:1px solid #000;">
+						<input type="text" name="checkManagerName" readonly/>
+					</td>	
+				</tr>
+				<tr class="onelevel">				
+					<td class="table-label" colspan="2"><b>支行负责人审批意见</b></td>					
+					<td colspan="7"><textarea name="subBranchManagerSug"></textarea></td>	
+				</tr>	
+				<!-- <tr>				
+					<td class="table-label" colspan="2">中心审查岗意见</td>					
+					<td colspan="7"><textarea name=""></textarea></td>	
+				</tr>	
+				<tr>				
+					<td class="table-label" colspan="2">有权审批人审批意见</td>					
+					<td colspan="7"><textarea name=""></textarea></td>	
+				</tr> -->	
+			</table>			
+		</div>
+	</div>	
+	</div>
+</form>	
+	<div class="controlbtn">
+		<a class="btn_g" id="id_save_button" href="javascript:void(0);" title="保存">保存</a>
+		<a class="btn_gr" href="javascript:void(0);" onclick="javascript:history.go(-1);" title="返回">返回</a>
+	</div>
+	
+	<script type="text/javascript">
+	var layout=new FormsLayout("formsId");	
+	window.top.currentWindow.setLayout(layout);
+	
+	#set ($formName = "'#id_module_form'")
+	#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_update_validation.js")
+	
+	$(document).ready(function() {
+		//禁用页面元素
+		if("$!operate" != "贷生活10万申请"){
+			$(".apply input").attr("disabled",true);
+			$(".apply textarea").attr("disabled",true);
+			$(".apply select").prop("disabled",true);
+		}
+		
+		if("$!operate" != "贷生活10万支行审查岗"){
+			$(".twolevel input").attr("disabled",true);
+			$(".twolevel textarea").attr("disabled",true);
+			$(".twolevel select").prop("disabled",true);
+		}
+		
+		if("$!operate" != "贷生活10万支行负责人"){
+			$(".onelevel input").attr("disabled",true);
+			$(".onelevel textarea").attr("disabled",true);
+			$(".onelevel select").prop("disabled",true);
+		}
+		
+		//保存
+		$("#id_save_button").click(function() {
+			if(submitFlag == 1){
+				alert("等待后台响应,请勿重复提交!")
+				return;
+			}
+			submitFlag = 1;
+			if ($($formName).valid()) {
+				var formjson = $($formName).serialize();
+				var url = "${contextPath}/intopieces/intopiecesapprove/update_dsh_10_jyd.json?id=${dshJyd.id}&customerId=${customerId}&appId=${appId}";
+				$.ajax({
+					
+					url : url,
+					type : "get",
+					data : formjson,
+					success : function(data) {
+						if (data.success) {
+							topWin.Dialog.message("保存成功！");
+							window.location.href = "${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&operate=${operate}";
+						}
+						else{
+							topWin.Dialog.message("保存失败！");
+					    }
+						submitFlag = 0;
+					}
+				});
+			}else{
+				submitFlag = 0;
+			}
+		});
+		
+	});
+	</script>
+</body>
+</html>
+

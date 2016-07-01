@@ -196,16 +196,29 @@ public class CustomerApplicationIntopieceWaitService {
 	}
 	
 	// 查询需要团队初审的进件信息
-		//全部显示-根据审核人审核的机构分部（安居贷）
-		public QueryResult<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByUsered(CustomerApplicationProcessFilter filter) {
-			List<CustomerApplicationIntopieceWaitForm> listCAI = customerApplicationIntopieceWaitDao.intopieceWaitFormByUsered(filter);
-			int size = customerApplicationIntopieceWaitDao.CountIntopieceWaitFormByUsered(filter);
-			QueryResult<CustomerApplicationIntopieceWaitForm> qs = new QueryResult<CustomerApplicationIntopieceWaitForm>(size, listCAI);
-			return qs;
+	//全部显示-根据审核人审核的机构分部（安居贷）
+	public QueryResult<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByUsered(CustomerApplicationProcessFilter filter) {
+		List<CustomerApplicationIntopieceWaitForm> listCAI = customerApplicationIntopieceWaitDao.intopieceWaitFormByUsered(filter);
+		int size = customerApplicationIntopieceWaitDao.CountIntopieceWaitFormByUsered(filter);
+		QueryResult<CustomerApplicationIntopieceWaitForm> qs = new QueryResult<CustomerApplicationIntopieceWaitForm>(size, listCAI);
+		return qs;
+	}
 	
-		}
+	/** 
+	* @Title: intopieceWaitFormByOrgId 
+	* @Description: 根据机构id获取所能看到的件(贷生活10万及以下) 
+	* @param @param filter
+	* @param @return    设定文件 
+	* @return QueryResult<CustomerApplicationIntopieceWaitForm>    返回类型 
+	* @throws 
+	*/ 
+	public QueryResult<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByOrgId(CustomerApplicationProcessFilter filter) {
+		List<CustomerApplicationIntopieceWaitForm> listCAI = customerApplicationIntopieceWaitDao.intopieceWaitFormByOrgId(filter);
+		int size = customerApplicationIntopieceWaitDao.CountIntopieceWaitFormByOrgId(filter);
+		QueryResult<CustomerApplicationIntopieceWaitForm> qs = new QueryResult<CustomerApplicationIntopieceWaitForm>(size, listCAI);
+		return qs;
+	}
 		
-	
 	// 查询需要团队初审拒件的进件
 	public QueryResult<CustomerApplicationIntopieceWaitForm> IntopieceChushenRejectForm() {
 		List<CustomerApplicationIntopieceWaitForm> listCAI = customerApplicationIntopieceWaitDao.IntopieceChushenRejectForm();

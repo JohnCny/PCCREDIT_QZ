@@ -38,20 +38,22 @@
    		<result property="managerBrId" column="manager_br_id" />
    		<result property="managerId" column="manager_id" />
    		<result property="clientName" column="client_name" />
+   		<result property="globalId" column="global_id" />
    		<result property="discussItems" column="discuss_items" />
    		<result property="sugAmt" column="sug_amt" />
    		<result property="sugDeadline" column="sug_deadline" />
    		<result property="sugRate" column="sug_rate" />
    		<result property="loanUseType" column="loan_use_type" />
    		<result property="repayType" column="repay_type" />
-   		<result property="coborrower1Name" column="coborrower_1_name" />
-   		<result property="coborrower1Cardid" column="coborrower_1_cardid" />
-   		<result property="coborrower2Name" column="coborrower_2_name" />
-   		<result property="coborrower2Cardid" column="coborrower_2_cardid" />
-   		<result property="guarantee1Name" column="guarantee_1_name" />
-   		<result property="guarantee1Cardid" column="guarantee_1_cardid" />
-   		<result property="guarantee2Name" column="guarantee_2_name" />
-   		<result property="guarantee2Cardid" column="guarantee_2_cardid" />
+   		<result property="coborrower1Name" column="coborrower1_name" />
+   		<result property="coborrower1Cardid" column="coborrower1_cardid" />
+   		<result property="coborrower2Name" column="coborrower2_name" />
+   		<result property="coborrower2Cardid" column="coborrower2_cardid" />
+   		<result property="guarantee1Name" column="guarantee1_name" />
+   		<result property="guarantee1Cardid" column="guarantee1_cardid" />
+   		<result property="guarantee2Name" column="guarantee2_name" />
+   		<result property="guarantee2Cardid" column="guarantee2_cardid" />
+   		<result property="managerName" column="manager_name" />
    		<result property="helpManagerName" column="help_manager_name" />
    		<result property="verifyItems" column="verify_items" />
    		<result property="amt" column="amt" />
@@ -64,6 +66,7 @@
    		<result property="otherRequirement" column="other_requirement" />
    		<result property="refuseReason" column="refuse_reason" />
    		<result property="checkManagerId" column="check_manager_id" />
+   		<result property="checkManagerName" column="check_manager_name" />
    		<result property="subBranchManagerSug" column="sub_branch_manager_sug" />
    		<result property="subBranchManagerId" column="sub_branch_manager_id" />
 	</resultMap>

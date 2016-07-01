@@ -1759,6 +1759,10 @@ public class IntoPiecesService {
 			return "/intopieces/intopiecesonelevel/onelevel.page";
 		}else if(operate.equals(Constant.status_twolevel)){
 			return "/intopieces/intopiecestwolevel/twolevel.page";
+		}else if(operate.equals(Constant.status_dsh_10_onelevel)){
+			return "/intopieces/intopiecesdshonelevel/browse.page";
+		}else if(operate.equals(Constant.status_dsh_10_twolevel)){
+			return "/intopieces/intopiecesdshtwolevel/browse.page";
 		}else{
 			return "/intopieces/intopiecesxingzheng2/xingzhengend.page";
 		}
@@ -2065,5 +2069,16 @@ public class IntoPiecesService {
 		*/ 
 		public QzApplnDshJyd findDsh10JydByAppId(String appId) {
 			return intoPiecesDao.findDsh10JydByAppId(appId);
+		}
+
+		public void insert_dsh_10_jyd(QzApplnDshJyd qzApplnDshJyd,
+				HttpServletRequest request) {
+			commonDao.insertObject(qzApplnDshJyd);
+		}
+
+		public void update_dsh_10_jyd(QzApplnDshJyd qzApplnDshJyd,
+				HttpServletRequest request) {
+			commonDao.updateObject(qzApplnDshJyd);
+			
 		}
 }

@@ -520,6 +520,20 @@
 		and product.default_type = '3'
    		and p.USER_ID = #{loginId}
    		and u.user_id = su.id
+		and u.user_id in (select manager_parameter.user_id
+		                      from (select mbm.parent_id,
+		                                   mbm.child_id,
+		                                   level lev,
+		                                   decode(connect_by_isleaf, 1, 'Y', 'N') isLeaf
+		                              from manager_belong_map mbm
+		                             start with parent_id in
+		                                        (select t.id
+		                                           from account_manager_parameter t
+		                                          where t.user_id=#{loginId})
+		                            connect by prior child_id = parent_id) tree
+		                     inner join account_manager_parameter manager_parameter
+		                        on tree.child_id = manager_parameter.id
+					union select #{loginId} as user_id from dual)
 		<if test="cardId!=null and cardId!=''">
 			and U.card_id=#{cardId}
 		</if>
@@ -606,4 +620,114 @@
 			</set>
 			WHERE c.SERIAL_NUMBER=#{serialNumber}
 		</update>
+		
+		<select id="intopieceWaitFormByOrgId" resultMap="BaseResultMap">
+		    with user_org as(
+			    select sdu.user_id as user_id,sd.org_id as org_id 
+			    from sys_dept_user sdu,sys_department sd
+			    where sdu.dept_id = sd.id
+			)
+		    
+		    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+			FROM (
+			
+		SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime,
+		A.id as processId,b.id as applicationId,
+		circle.CONTRACT_AMT as contractAmt,
+		su.DISPLAY_NAME as displayName,
+		A.FALLBACK_REASON as fallbackReason
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N,NODE_AUDIT_USER p,
+		QZ_IESB_FOR_CIRCLE circle,
+		product_attribute product,
+		sys_user su,
+		user_org uo
+		WHERE
+		1=1
+		and U.ID = b.CUSTOMER_ID 
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{loginId}
+		and (b.status='audit' or b.status='RETURNAPPROVE')
+		and circle.application_id = a.APPLICATION_ID
+		and b.product_id = product.id
+		and product.default_type = '5'
+		and u.user_id = su.id
+		and u.user_id = uo.user_id
+		and N.NODE_NAME = #{nodeName}
+		<if test="cardId!=null and cardId!=''">
+			and U.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null and chineseName!=''">
+			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		
+		<if test="filterOrgId!=null and filterOrgId!=''">
+			and exists (select 1 from user_org where user_id = #{loginId} and org_id = (select org_id from user_org where user_id = u.user_id))
+		</if>
+		
+		<![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+		</select>
+		
+		
+	 <select id="CountIntopieceWaitFormByOrgId" resultType="int">
+  		with user_org as(
+		    select sdu.user_id as user_id,sd.org_id as org_id 
+		    from sys_dept_user sdu,sys_department sd
+		    where sdu.dept_id = sd.id
+		)
+			
+		SELECT
+		count(*) 
+		 	FROM CUSTOMER_APPLICATION_INFO    b,
+       		BASIC_CUSTOMER_INFORMATION   U,
+       		CUSTOMER_APPLICATION_PROCESS A,
+       		NODE_AUDIT                   N,
+       		NODE_AUDIT_USER              p,
+       		QZ_IESB_FOR_CIRCLE           circle,
+			product_attribute            product,
+       		sys_user                     su,
+       		user_org            		 uo
+ 		WHERE 1 = 1
+   		and U.ID = b.CUSTOMER_ID
+   		and a.APPLICATION_ID = b.ID
+   		AND N.ID = A.NEXT_NODE_ID
+   		and A.NEXT_NODE_ID = p.NODE_ID
+   		and (b.status = 'audit' or b.status = 'RETURNAPPROVE')
+   		and circle.application_id = a.APPLICATION_ID
+   		and b.product_id = product.id
+		and product.default_type = '5'
+   		and p.USER_ID = #{loginId}
+   		and u.user_id = su.id
+		and u.user_id = uo.user_id
+		and N.NODE_NAME = #{nodeName}
+		<if test="cardId!=null and cardId!=''">
+			and U.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null and chineseName!=''">
+			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		
+		<if test="filterOrgId!=null and filterOrgId!=''">
+			and exists (select 1 from user_org where user_id = #{loginId} and org_id = (select org_id from user_org where user_id = u.user_id))
+		</if>
+		
+		</select>
+		
 </mapper>

@@ -1,0 +1,41 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+<link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<script src="${contextPath}/common/js/common/Date.js"></script>
+<script src="${contextPath}/common/js/common/Stack.js"></script>
+<script src="${contextPath}/common/js/common/Tokanizer.js"></script>
+<script src="${contextPath}/common/js/common/Evaluator.js"></script>
+<body class="whitebg">
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">客户信息表</div>
+      </div>
+        <div class="tabplace">
+            <ul class="com-tab" >
+	            <li class="tab activeTab"><a href="${contextPath}/intopieces/intopiecesapprove/report_khxx.page?appId=${appId}">客户信息表</a></li>
+				<li class="tab"><a href="${contextPath}/intopieces/intopiecesapprove/report_zcfz.page?appId=${appId}">资产负债表</a></li>
+				<li class="tab"><a href="${contextPath}/intopieces/intopiecesapprove/report_sy.page?appId=${appId}">长期损益验证</a></li>
+            </ul>
+         </div>
+      <form id="id_module_form">
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">$!{tableContent}</div>
+      </form>
+     <div class="submit">     
+ 		<a id="id_pre_button" class="btn_g" href="javascript:history.back();" title="返回">返回</a>
+	 </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+	var layout = new FormsLayout("formsId");
+	window.top.currentWindow.setLayout(layout);
+	#set ($formName = "'#id_module_form'")
+	
+	$(document).ready(function() {		
+	
+	});
+  </script>
+   <script src="${contextPath}/js/customerInfor/customer_infor.js"></script>
+  
+</body>
+#parse ("common/iframe_page_footer.htm")

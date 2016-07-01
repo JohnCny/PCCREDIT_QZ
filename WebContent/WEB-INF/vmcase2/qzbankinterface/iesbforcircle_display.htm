@@ -685,10 +685,10 @@
 	    #elseif($!operate=="中心终审" && $!ifHideUser !="NO")
 	      	<a id="id_zx_in_button" class="btn_g" >审批通过</a>
 	      	<a id="id_return4_button" class="btn_g" >退件</a>
-	      	#elseif($!operate=="行长")
+	      	#elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
 	      	<a id="id_in5_button" class="btn_g" >审批通过</a>
          <a id="id_return5_button" class="btn_g" >退件</a>
-         #elseif($!operate=="团队长")
+         #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
          <a id="id_in6_button" class="btn_g" >通过</a>
          <a id="id_return6_button" class="btn_g" >退件</a>
 		  #end
