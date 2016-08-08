@@ -43,7 +43,7 @@ public class SqlInputControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request){
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/sqlInputforUpdate", request);
 		return mv;
@@ -57,7 +57,7 @@ public class SqlInputControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap change(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {

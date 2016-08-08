@@ -74,7 +74,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute MaintenanceFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -95,7 +95,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId(); 
@@ -112,7 +112,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/maintenance/maintenance_plan_change", request);
 		String maintenanceId = RequestHelper.getStringValue(request, ID);
@@ -131,7 +131,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/maintenance/maintenance_plan_display", request);
 		String maintenanceId = RequestHelper.getStringValue(request, ID);
@@ -152,7 +152,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute MaintenanceForm form, HttpServletRequest request) {
 		boolean flag = maintenanceService.checkRepeat(form.getCustomerId(),MaintenanceEndResultEnum.maintaining);
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
@@ -194,7 +194,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute MaintenanceForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -233,7 +233,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "createAction.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createAction(HttpServletRequest request) {
 		String maintenanceId = RequestHelper.getStringValue(request, ID);
 		JRadModelAndView mv = new JRadModelAndView("/customer/maintenance/maintenance_plan_action_create", request);
@@ -248,7 +248,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insertAction.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insertAction(@ModelAttribute MaintenanceForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -312,7 +312,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "changeAction.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeAction(HttpServletRequest request) {
 		String id = RequestHelper.getStringValue(request, ID);
 		MaintenanceAction maintenanceAction = maintenanceService.findMaintenanceActionById(id);
@@ -328,7 +328,7 @@ public class MaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateAction.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updateAction(@ModelAttribute MaintenanceForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {

@@ -41,7 +41,7 @@ public class CustomerInforInsertController extends BaseController{
 	*/
 	@ResponseBody
 	@RequestMapping(value = "insert.page")
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInforInsert/customerinfor_create", request);
 		return mv;
@@ -56,7 +56,7 @@ public class CustomerInforInsertController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute CustomerInforForm customerinfoForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {

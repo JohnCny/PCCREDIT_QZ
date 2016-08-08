@@ -39,7 +39,7 @@ public class DictIpadController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "/ipad/dict/browse.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public String Dict(HttpServletRequest request) {
 		String dictName = RequestHelper.getStringValue(request, "dict");
 		List<DataDictionary> dicts = new ArrayList<DataDictionary>();

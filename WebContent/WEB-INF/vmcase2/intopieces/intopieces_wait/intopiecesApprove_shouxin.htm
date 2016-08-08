@@ -127,7 +127,7 @@
           </table>
         </div>
          <div class="dialog">
-			<form id="checkForm1" class="dialog-box" action="${contextPath}/intopieces/intopiecesshouxin/returnAppln.json">
+			<form id="checkForm1" class="dialog-box" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="${appId}" />
 				<div class="top">
 					退件 <span onclick="$('.dialog').hide();"></span>
@@ -277,26 +277,6 @@
             }
 		});
 		
-		//通过
-		$("#id_pass_button").click(function() {
-			if ($(".checkbox :checked").length == 1) {
-				var applicationId= $($(".checkbox :checked")[0]).attr("value").split("@")[0];
-				Dialog.confirm("确定提交吗？", "提示",
-					    function() {
-							$.post("${contextPath}/intopieces/intopiecesshouxin/pass.json?id="+applicationId, {},
-						            function(data, textStatus, jqXhr) {
-						                if (data.success) {
-						                	var url ="${contextPath}/intopieces/intopiecesshouxin/shouxin.page";
-						                    window.location.href=url;
-						                } else {
-						                }
-						            });
-				});
-			}else{
-				 Dialog.message("请选择一条记录!");
-			}
-		});
-		
 		//退件
 		$("#id_re_button").click(function() {
 			Dialog.confirm("确定提交吗？", "提示",
@@ -397,7 +377,7 @@
 		});
 		if(id!=null){
 			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
-			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+			Dialog.tablePage(url, "查看审批历史", "get", null, 700, 800);
 		}else{
 			Dialog.message("请选择要被查看的进件!");
 		}

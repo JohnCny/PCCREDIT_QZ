@@ -62,6 +62,7 @@
    		<result property="repaymentTerm" column="repayment_term" />
    		<result property="sugRepayType" column="sug_repay_type" />
    		<result property="guaranteeItems" column="guarantee_items" />
+   		<result property="otherSug" column="other_sug" />
    		<result property="focusContent" column="focus_content" />
    		<result property="otherRequirement" column="other_requirement" />
    		<result property="refuseReason" column="refuse_reason" />
@@ -69,6 +70,7 @@
    		<result property="checkManagerName" column="check_manager_name" />
    		<result property="subBranchManagerSug" column="sub_branch_manager_sug" />
    		<result property="subBranchManagerId" column="sub_branch_manager_id" />
+   		<result property="centerSug" column="center_sug" />
 	</resultMap>
 	
   <select id="checkValue" resultType="int">
@@ -291,7 +293,46 @@
 		order by T.created_time desc
       </select>
       
- 	 <select id="findBelogCusMgr" resultType="com.cardpay.pccredit.system.model.Dict">
+      <select id="findOrgBelogCusMgr" resultType="com.cardpay.pccredit.system.model.Dict">
+      	select su.id as TypeCode,su.display_name as TypeName from sys_user su,sys_dept_user sdu,sys_department sd
+      		where su.id = sdu.user_id
+      		and sdu.dept_id = sd.id
+      		and sd.org_id = #{orgId}
+      </select>
+      
+      <select id="findAllCenters"  resultType="com.cardpay.pccredit.system.model.Dict">
+      		select mbm.id as TypeCode,mbm.center_name as TypeName
+      		from manager_belong_map mbm
+      		where mbm.parent_id is null
+      </select>
+      
+      <select id="findBelongCenters" resultType="com.cardpay.pccredit.system.model.Dict">
+      		select mbm.id as TypeCode,mbm.center_name as TypeName
+      		from manager_belong_map mbm
+      		where mbm.id in (
+      		select parent_id 
+      		from manager_belong_map mbm,account_manager_parameter acp
+      		where acp.user_id = #{userId}
+      			and mbm.child_id = acp.id)
+      </select>
+      
+      <select id="findBelongTeams" resultType="com.cardpay.pccredit.system.model.Dict">
+      		select su.id as TypeCode,su.display_name as TypeName
+      		from manager_belong_map mbm,account_manager_parameter acp,sys_user su 
+      		where mbm.parent_id = #{centerId}
+      		and mbm.child_id = acp.id
+      		and acp.user_id = su.id
+      </select>
+      
+      <select id="findBelongOrgs" resultType="com.cardpay.pccredit.system.model.Dict">
+      	select t.id as TypeCode,t.name as TypeName from sys_organization t
+      	where 1=1 
+      	<if test="orgId != null and orgId != '' ">
+		     and t.id = #{orgId} 
+		</if>
+      </select>
+      
+ 	 <select id="findTeamBelongCusMgr" resultType="com.cardpay.pccredit.system.model.Dict">
  	     select su.id as TypeCode, su.display_name as TypeName
 		  from ACCOUNT_MANAGER_PARAMETER amp
 		  left join sys_user su on amp.user_id = su.id
@@ -300,7 +341,6 @@
 		          FROM manager_belong_map mbm
 		          LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id
 		         WHERE amp.user_id =#{userId})
-		         or amp.id = #{userId}
  	 </select>
  	 
  	 <select id="getApprovedInfo" resultType="com.cardpay.pccredit.intopieces.model.ApprovedInfo">

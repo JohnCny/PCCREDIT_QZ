@@ -73,7 +73,7 @@ public class AccountabilityController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "cfccbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView cfccbrowse(@ModelAttribute AccountabilityRecordFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -94,7 +94,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cfccdisplay.page")
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView cfccdisplay( HttpServletRequest request) {
 		String accountabilityRecordId = RequestHelper.getStringValue(request, ID);
 		AccountabilityRecord accountabilityRecord =
@@ -119,7 +119,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cfccupdate.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView cfccupdate( HttpServletRequest request) {
 		String accountabilityRecordId = request.getParameter("id");
 		AccountabilityRecord accountabilityRecord =
@@ -143,7 +143,6 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cfccconfirm.page")
-	@JRadOperation(JRadOperation.CONFIRMACCOUNTABILITY)
 	public AbstractModelAndView cfccconfirm( HttpServletRequest request) {
 		String accountabilityRecordId = request.getParameter("id");
 		AccountabilityRecord accountabilityRecord =
@@ -167,7 +166,6 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cfccconfirmfy.page")
-	@JRadOperation(JRadOperation.CONFIRMRECONSIDER)
 	public AbstractModelAndView cfccconfirmfy( HttpServletRequest request) {
 		String accountabilityRecordId = request.getParameter("id");
 		AccountabilityRecord accountabilityRecord =
@@ -193,7 +191,6 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CONFIRMRECONSIDER)
 	public JRadReturnMap update( HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -238,7 +235,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cancel.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap cancel( HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -265,7 +262,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/accountability/cfcc_accountabilityRecord_insert", request);
@@ -282,7 +279,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute AccountabilityForm accountabilityForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), accountabilityForm);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -322,7 +319,6 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "confirm.json")
-	@JRadOperation(JRadOperation.CONFIRMACCOUNTABILITY)
 	public JRadReturnMap confirm(@ModelAttribute AccountabilityForm accountabilityForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), accountabilityForm);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -355,7 +351,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectByLike.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView selectByLike(HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
@@ -377,7 +373,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectDisplayNameById.json")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public JRadReturnMap selectDisplayNameById(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		String customerManagerId = request.getParameter("customerManagerId");
@@ -402,7 +398,7 @@ public class AccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectProductDisplayNameById.json")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public JRadReturnMap selectProductDisplayNameById(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		String customerId = request.getParameter("customerId");

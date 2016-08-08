@@ -60,7 +60,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute NplsInfomationFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
 		QueryResult<NplsInfomationForm> result = nplsInfomationService.findNplsInfomationByFilter(filter);
@@ -78,7 +78,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "nplsaccountbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createTo(@ModelAttribute CustomerAccountInforFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		QueryResult<CustomerAccountInfoForm> result = customerAccountInfoService.findCustomerAccountsByFilter(filter);
@@ -96,7 +96,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "nplsinfocreate.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/nplsinfomation/nplsinfomation_create", request);
 		String customerAccountId = request.getParameter("id");
@@ -113,7 +113,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute NplsInfomationForm nplsInfomationForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), nplsInfomationForm);
 		if (returnMap.isSuccess()) {
@@ -146,7 +146,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/nplsinfomation/nplsinfomation_change", request);
 		String id = RequestHelper.getStringValue(request, ID);
@@ -166,7 +166,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute NplsInfomationForm nplsInfomationForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), nplsInfomationForm);
@@ -196,7 +196,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -266,7 +266,7 @@ public class NplsInfomationController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/nplsinfomation/nplsinfomation_display", request);
 		String id = RequestHelper.getStringValue(request, ID);

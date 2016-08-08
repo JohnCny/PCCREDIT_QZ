@@ -50,7 +50,7 @@ public class ManagerSalaryController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ManagerSalaryFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		JRadModelAndView mv = new JRadModelAndView("/manager/managersalary/managersalary_browse", request);
@@ -92,7 +92,7 @@ public class ManagerSalaryController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "generateData.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap generateData(@ModelAttribute ManagerSalaryForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

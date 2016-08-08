@@ -62,7 +62,7 @@ public class ProductFilterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute FilterDictFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -83,7 +83,7 @@ public class ProductFilterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("product/productfilter/product_filter_create", request);
@@ -99,7 +99,7 @@ public class ProductFilterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute FilterDictForm filterDictForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), filterDictForm);
 		if (returnMap.isSuccess()) {
@@ -188,7 +188,7 @@ public class ProductFilterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 

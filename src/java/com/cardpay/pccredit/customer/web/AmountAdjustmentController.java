@@ -57,7 +57,7 @@ public class AmountAdjustmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute AmountAdjustmentFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -77,7 +77,7 @@ public class AmountAdjustmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "applayApproveAmountAdjustment.json")
-	@JRadOperation(JRadOperation.APPLYAPPROVE)
+	
 	public JRadReturnMap applayApproveAmountAdjustment(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -105,7 +105,7 @@ public class AmountAdjustmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "apply.page")
-	@JRadOperation(JRadOperation.APPROVE)
+	
 	public AbstractModelAndView applyPage(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/amountadjustment/amountadjustment_approve", request);
 		String id = RequestHelper.getStringValue(request, ID);
@@ -126,7 +126,7 @@ public class AmountAdjustmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "apply.json")
-	@JRadOperation(JRadOperation.APPROVE)
+	
 	public JRadReturnMap applyJson(@ModelAttribute AmountAdjustmentForm amountAdjustmentForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();

@@ -1,0 +1,326 @@
+#parse ("common/iframe_page_header3.htm")
+<style type="text/css">
+	form{padding-top:0px;padding-bottom:15px;margin:0px 15px 0 0;}
+	.input{width:80%;}
+</style>
+<script type="text/javascript">
+
+	var chkValue = 0;
+	function getSum(){
+		var sum = 0;
+		$("input[type=checkbox][name=checkboxverify]:checked").each(function(index){ 
+			sum += parseInt(this.value,10)
+		});
+		$("#verifyItems").val(sum);
+	}
+</script>
+<body>
+<form id="id_module_form">
+<div class="forms" id="formsId">
+<!--*************************************************************审贷会决议单*************************************************************-->
+	<div class="box">
+		<div name="content">
+			<table class="myTable">
+				<caption>泉州银行“贷生活”调查、审查、审批决议单</caption>
+				<colgroup>
+					<col width="10%">
+					<col width="10%">					
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+				</colgroup>
+				<!-- <tr>
+					<td class="table-label">审议日期</td>
+					<td colspan="8"><input type="text" name="" onmouseover="_calendar()"/></td>			
+				</tr> -->
+				
+				<tr class="10apply_apply">
+					<td class="table-label" rowspan="10" style="border-bottom:1px solid #000;"><b>经办客户经理意见</b></td>
+					<td class="table-label">办理机构</td>
+					<td colspan="2"><input type="text" name="managerBrId" value="$!dshJyd.managerBrId" readonly/></td>
+					<td class="table-label">主办客户经理</td>
+					<td><input type="text" name="managerId" value="$!dshJyd.managerId" readonly/></td>	
+					<td class="table-label">客户名称</td>
+					<td colspan="3"><input type="text" name="clientName" value="$!dshJyd.clientName" readonly/></td>		
+				</tr>				
+				<tr class="10apply_apply">
+					<td class="table-label">审议事项<font color="#ff0000">*</font></td>
+					<td colspan="2"><input type="text" name="discussItems" value="$!dshJyd.discussItems" /></td>
+					<td class="table-label">产品名称</td>
+					<td><input type="text" value="贷生活" disabled/></td>	
+					<td class="table-label">证件号码</td>
+					<td colspan="3"><input type="text" name="globalId" value="$!dshJyd.globalId" readonly/></td>		
+				</tr>			
+				<tr class="10apply_apply">
+					<td class="table-label">建议金额(元)<font color="#ff0000">*</font></td>
+					<td colspan="2"><input type="text" name="sugAmt" value="$!dshJyd.sugAmt" /></td>
+					<td class="table-label">建议期限(月)<font color="#ff0000">*</font></td>
+					<td><select name="sugDeadline">
+	                    	#dict("APPLY_DEADLINE", $!dshJyd.sugDeadline)
+	                  	</select></td>	
+					<td class="table-label" colspan="2">建议利率(年)<font color="#ff0000">*</font></td>
+					<td colspan="2"><input type="text" name="sugRate" value="$!dshJyd.sugRate" />%</td>		
+				</tr>			
+				<tr class="10apply_apply">
+					<td class="table-label">授信用途<font color="#ff0000">*</font></td>
+					<td colspan="4">
+						<select name="loanUseType">
+	                    	#dict("LOAN_USE_TYPE", $!dshJyd.loanUseType)
+	                  	</select></td>
+					<td class="table-label" colspan="2">还款方式<font color="#ff0000">*</font></td>
+					<td colspan="2">
+						<select name="sugRepayType">
+	                    	#dict("REPAY_TYPE", $!dshJyd.sugRepayType)
+	                  	</select></td>		
+				</tr>		
+				<tr class="10apply_apply">
+					<td class="table-label" rowspan="5">建议担保方式</td>
+					<td class="table-label" rowspan="3">共同借款人</td>					
+					<td class="table-label" colspan="3" style="text-align:center;">姓名</td>					
+					<td class="table-label" colspan="4" style="text-align:center;">证件号码</td>	
+				</tr>						
+				<tr class="10apply_apply">			
+					<td colspan="3" style="text-align:center;"><input type="text" name="coborrower1Name" value="$!dshJyd.coborrower1Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="coborrower1Cardid" value="$!dshJyd.coborrower1Cardid"/></td>	
+				</tr>					
+				<tr class="10apply_apply">			
+					<td colspan="3" style="text-align:center;"><input type="text" name="coborrower2Name" value="$!dshJyd.coborrower2Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="coborrower2Cardid" value="$!dshJyd.coborrower2Cardid"/></td>	
+				</tr>		
+				<tr class="10apply_apply">
+					<td class="table-label" rowspan="2">保证担保</td>					
+					<td colspan="3" style="text-align:center;"><input type="text" name="guarantee1Name" value="$!dshJyd.guarantee1Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="guarantee1Cardid" value="$!dshJyd.guarantee1Cardid"/></td>	
+				</tr>					
+				<tr class="10apply_apply">			
+					<td colspan="3" style="text-align:center;"><input type="text" name="guarantee2Name" value="$!dshJyd.guarantee2Name"/></td>					
+					<td colspan="4" style="text-align:center;"><input type="text" name="guarantee2Cardid" value="$!dshJyd.guarantee2Cardid"/></td>	
+				</tr>	
+				<tr class="10apply_apply">
+					<td class="table-label" colspan="2" style="border-bottom:1px solid #000;">主协办客户经理签字</td>					
+					<td colspan="3" style="text-align:center;border-bottom:1px solid #000;">主办客户经理签字<input type="text" name="managerName" value="$!dshJyd.managerName" readonly/></td>					
+					<td colspan="4" style="text-align:center;border-bottom:1px solid #000;">协办客户经理签字<input type="text" name="helpManagerName" value="$!dshJyd.helpManagerName"/></td>	
+				</tr>	
+				<tr class="10level1_level1">
+					<td class="table-label" rowspan="12" style="border-bottom:1px solid #000;"><b>审查岗意见</b></td>
+					<td class="table-label" colspan="2" rowspan="4"> 内审问题核实情况(核实方式：电话核实)
+						<input type="hidden" id="verifyItems" name="verifyItems" value="$!dshJyd.verifyItems">
+						<script type="text/javascript">
+							chkValue = parseInt($!dshJyd.verifyItems)
+						</script>
+						</td>					
+					<td colspan="7"><label>
+					<script>
+								if(parseInt(chkValue&1) != 0){
+									document.write('<input type="checkbox" name="checkboxverify" value="1" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkboxverify" value="1"/>');
+								}
+					</script>
+					借款人所在公司名称及地址</label></td>	
+				</tr>					
+				<tr class="10level1_level1">
+					<td colspan="7"><label>
+					<script>
+								if(parseInt(chkValue&2) != 0){
+									document.write('<input type="checkbox" name="checkboxverify" value="2" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkboxverify" value="2"/>');
+								}
+					</script>
+					借款人所在公司职务</label></td>	
+				</tr>				
+				<tr class="10level1_level1">
+					<td colspan="7"><label>
+					<script>
+								if(parseInt(chkValue&4) != 0){
+									document.write('<input type="checkbox" name="checkboxverify" value="4" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkboxverify" value="4"/>');
+								}
+					</script>
+					借款人家庭住址及配偶姓名</label></td>	
+				</tr>					
+				<tr class="10level1_level1">
+					<td colspan="7"><label>
+					<script>
+								if(parseInt(chkValue&8) != 0){
+									document.write('<input type="checkbox" name="checkboxverify" value="8" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkboxverify" value="8"/>');
+								}
+					</script>
+					其他(客户经理是否收取额外费用,贷款用途等)</label></td>	
+				</tr>				
+				<tr class="10level1_level1">					
+					<td class="table-label" rowspan="8"  style="border-bottom:1px solid #000;">授信决策情况</td>					
+					<td class="table-label">金额(元)<font color="#ff0000">*</font></td>					
+					<td colspan="3"><input type="text" name="amt" value="$!dshJyd.amt"/></td>					
+					<td class="table-label">利率(年)<font color="#ff0000">*</font></td>	
+					<td colspan="3"><input type="text" name="rate" value="$!dshJyd.rate"/>%</td>	
+				</tr>	
+				<tr class="10level1_level1">				
+					<td class="table-label">授信期限(月)<font color="#ff0000">*</font></td>					
+					<td><input type="text" name="deadline" value="$!dshJyd.deadline"/></td>	
+					<td class="table-label">还款期限(月)<font color="#ff0000">*</font></td>					
+					<td><select name="repaymentTerm">
+	                    	#dict("APPLY_DEADLINE", $!dshJyd.repaymentTerm)
+	                  	</select></td>						
+					<td class="table-label">还款方式<font color="#ff0000">*</font></td>	
+					<td colspan="3">
+						<select name="repayType">
+	                    	#dict("REPAY_TYPE", $!dshJyd.repayType)
+	                  	</select></td>	
+				</tr>	
+				<tr class="10level1_level1">				
+					<td class="table-label" rowspan="2">保证担保</td>					
+					<td colspan="7">
+						<label><input type="radio" name="guaranteeItems" value="1" 
+						#if($!dshJyd.guaranteeItems == $null) checked #end
+						#if($!dshJyd.guaranteeItems == '1') checked #end onclick="showotherSug(1)"/>1、同意客户经理建议 </label>
+					</td>	
+				</tr>		
+				<tr class="10level1_level1">								
+					<td colspan="2">
+						<label><input type="radio" name="guaranteeItems" value="2" #if($!dshJyd.guaranteeItems == '2') checked #end onclick="showotherSug(2)"/>2、对建议的补充或修改</label>
+					</td>	
+					<td colspan="5"><textarea id="otherSug" name="otherSug" 
+					#if($!dshJyd.guaranteeItems == $null) disabled="disabled" #end
+					#if($!dshJyd.guaranteeItems == '1') disabled="disabled" #end>$!dshJyd.otherSug</textarea></td>	
+				</tr>	
+				<tr class="10level1_level1">				
+					<td class="table-label">重点监控内容<font color="#ff0000">*</font></td>					
+					<td colspan="7"><textarea name="focusContent">$!dshJyd.focusContent</textarea></td>	
+				</tr>		
+				<tr class="10level1_level1">				
+					<td class="table-label">其他要求</td>					
+					<td colspan="7"><textarea name="otherRequirement">$!dshJyd.otherRequirement</textarea></td>	
+				</tr>		
+				<tr class="10level1_level1">				
+					<td class="table-label">拒绝申请</td>					
+					<td colspan="7">主要原因：<textarea name="refuseReason">$!dshJyd.refuseReason</textarea></td>	
+				</tr>			
+				<tr class="10level1_level1">				
+					<td class="table-label" style="border-bottom:1px solid #000;">审查岗<font color="#ff0000">*</font></td>					
+					<td colspan="8" style="border-bottom:1px solid #000;">
+						<input type="text" name="checkManagerName" value="$!dshJyd.checkManagerName" readonly/>
+						<input type="hidden" name="checkManagerId" value="$!dshJyd.checkManagerId"/>
+					</td>	
+				</tr>
+				<tr class="10level2_level2">				
+					<td class="table-label" colspan="2"><b>支行负责人审批意见</b><font color="#ff0000">*</font></td>					
+					<td colspan="7"><textarea name="subBranchManagerSug">$!dshJyd.subBranchManagerSug</textarea></td>	
+				</tr>
+				<tr class="10level4_level3">				
+					<td class="table-label" colspan="2"><b>中心审查岗意见</b><font color="#ff0000">*</font></td>					
+					<td colspan="7"><textarea name="centerSug">$!dshJyd.centerSug</textarea></td>	
+				</tr>	
+				<!-- 
+				<tr>				
+					<td class="table-label" colspan="2">有权审批人审批意见</td>					
+					<td colspan="7"><textarea name=""></textarea></td>	
+				</tr> -->	
+			</table>			
+		</div>
+	</div>	
+	</div>
+</form>	
+	<div class="controlbtn">
+		#if("$!operate" == "卡中心贷生活进件查询")
+			<a class="btn_gr"  onclick="parent.location.href = '${contextPath}/intopieces/intopiecesqueryAll/browseAll.page'" title="返回">返回</a>
+		#elseif("$!operate" == "进件贷生活查询")
+			<a class="btn_gr"  onclick="parent.location.href = '${contextPath}/intopieces/intopiecesquery/browse.page'" title="返回">返回</a>
+		#end
+	</div>
+	
+	<script type="text/javascript">
+	var layout=new FormsLayout("formsId");	
+	window.top.currentWindow.setLayout(layout);
+	
+	#set ($formName = "'#id_module_form'")
+	if("$!operate" == "贷生活(支行审批)申请" || "$!operate" == "贷生活(中心审批)申请"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation.js")
+	}
+	if("$!operate" == "贷生活(支行审批)支行审查岗" || "$!operate" == "贷生活(中心审批)支行审查岗"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation_level1.js")
+	}
+	if("$!operate" == "贷生活(支行审批)支行负责人" || "$!operate" == "贷生活(中心审批)支行负责人"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation_level2.js")
+	}
+	if("$!operate" == "贷生活(支行审批)中心行政" || "$!operate" == "贷生活(中心审批)中心审查"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation_level4.js")
+	}
+	
+	$(document).ready(function() {
+		//禁用页面元素
+		if("$!operate" != "贷生活(支行审批)申请" && "$!operate" != "贷生活(中心审批)申请"){
+			$(".10apply_apply input").attr("disabled",true);
+			$(".10apply_apply textarea").attr("disabled",true);
+			$(".10apply_apply select").prop("disabled",true);
+		}
+		
+		if("$!operate" != "贷生活(支行审批)支行审查岗" && "$!operate" != "贷生活(中心审批)支行审查岗"){
+			$(".10level1_level1 input").attr("disabled",true);
+			$(".10level1_level1 textarea").attr("disabled",true);
+			$(".10level1_level1 select").prop("disabled",true);
+		}
+		
+		if("$!operate" != "贷生活(支行审批)支行负责人" && "$!operate" != "贷生活(中心审批)支行负责人"){
+			$(".10level2_level2 input").attr("disabled",true);
+			$(".10level2_level2 textarea").attr("disabled",true);
+			$(".10level2_level2 select").prop("disabled",true);
+		}
+		
+		if("$!operate" != "贷生活(支行审批)中心行政" && "$!operate" != "贷生活(中心审批)中心审查"){
+			$(".10level4_level3 input").attr("disabled",true);
+			$(".10level4_level3 textarea").attr("disabled",true);
+			$(".10level4_level3 select").prop("disabled",true);
+		}
+		
+		//保存
+		$("#id_save_button").click(function() {
+			if(submitFlag == 1){
+				alert("等待后台响应,请勿重复提交!")
+				return;
+			}
+			submitFlag = 1;
+			if ($($formName).valid()) {
+				getSum();
+				var formjson = $($formName).serialize();
+				var url = "${contextPath}/intopieces/intopiecesapprove/update_dsh_10_jyd.json?id=${dshJyd.id}&customerId=${customerId}&appId=${appId}";
+				$.ajax({
+					url : url,
+					type : "get",
+					data : formjson,
+					success : function(data) {
+						if (data.success) {
+							topWin.Dialog.message("保存成功！");
+							window.location.href = "${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&operate=${operate}";
+						}
+						else{
+							topWin.Dialog.message("保存失败！");
+					    }
+						submitFlag = 0;
+					}
+				});
+			}else{
+				submitFlag = 0;
+			}
+		});
+		
+	});
+	
+	function showotherSug(type){
+		if(type==1){
+			$("#otherSug").attr("disabled","disabled")
+		}else{
+			$("#otherSug").removeAttr("disabled");
+		}
+	}
+	</script>
+</body>
+</html>
+

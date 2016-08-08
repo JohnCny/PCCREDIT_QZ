@@ -57,7 +57,7 @@ public class CustomerMainManagerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_khtz.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		CustomerInfor customer = customerInforService.findCustomerInforById(customerId);
@@ -79,7 +79,7 @@ public class CustomerMainManagerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "khtzclone.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView khtzclone(HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		String applicationId = request.getParameter("applicationId");
@@ -100,7 +100,7 @@ public class CustomerMainManagerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute CustomerMainManagerForm customerMainManagerForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), customerMainManagerForm);
 		if (returnMap.isSuccess()) {

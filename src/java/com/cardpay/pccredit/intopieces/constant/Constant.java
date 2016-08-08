@@ -115,19 +115,40 @@ public class Constant {
 	public static String status_onelevel="行长";
 	public static String status_twolevel="团队长";
 
-	public static String status_dsh_10_apply="贷生活10万申请";
-	public static String status_dsh_10_onelevel="贷生活10万支行负责人";
-	public static String status_dsh_10_twolevel="贷生活10万支行审查岗";
+	public static String status_dsh_10_apply="贷生活(支行审批)申请";
+	public static String status_dsh_10_level1="贷生活(支行审批)支行审查岗";
+	public static String status_dsh_10_level2="贷生活(支行审批)支行负责人";
+	public static String status_dsh_10_level3="贷生活(支行审批)客户经理";
+	public static String status_dsh_10_level4="贷生活(支行审批)中心行政";
+	
+	public static String status_dsh_apply="贷生活(中心审批)申请";
+	public static String status_dsh_level1="贷生活(中心审批)支行审查岗";
+	public static String status_dsh_level2="贷生活(中心审批)支行负责人";
+	public static String status_dsh_level3="贷生活(中心审批)中心审查";
+	public static String status_dsh_level4="贷生活(中心审批)中心终审";
+	public static String status_dsh_level5="贷生活(中心审批)客户经理";
+	public static String status_dsh_level6="贷生活(中心审批)中心行政";
+	
+	
 	/*进件状态--end*/
 	
 	//进件查询和卡中心进件查询 区分是安居还是普通进件 --start
 	public static String status_cardquery="卡中心进件查询";
 	public static String status_anjudai="卡中心安居贷进件查询";
+	public static String status_dsh="卡中心贷生活进件查询";
 	
 	public static String status_query="进件查询";
 	public static String status_query_anjudai="进件安居贷查询";
+	public static String status_query_dsh="进件贷生活查询";
 	//进件查询和卡中心进件查询 区分是安居还是普通进件 --end
 	
+	//角色名称定义--不可随意修改,利用名称来判断数据权限
+	public static String COMMON_USER="普通用户";
+	public static String COMMON_USER_BRANCH="普通用户+支行审查审批";
+	public static String TEAM_LEADER="团队长";
+	public static String BRANCH_USER="支行审查审批";
+	public static String CENTER_USER="中心审查审批";
+	public static String QUERY_USER="数据查询";
 	
 	/*审批结果*/
 	public static String APPLN_TYPE_1="审批通过";
@@ -163,6 +184,7 @@ public class Constant {
 		put(1024,"借款人及共同借款人婚姻状况证明");put(2048,"担保人及配偶身份证明复印件");
 		put(4096,"担保人及配偶婚姻状况说明");put(8192,"担保人收入证明");
 		put(16384,"其他");
+		put(32768,"合同相关材料");
 	}};
 	
 	//<option value="2">经营类</option>
@@ -200,7 +222,7 @@ public class Constant {
 		put(1048576,"资产证明");
 		put(2097152,"营业单据");put(4194304,"银行流水");
 		put(8388608,"照片");put(16777216,"借款合同");
-
+		
 		put(1073741824,"其他");
 	}};
 	
@@ -212,4 +234,5 @@ public class Constant {
 	//public static String HETONG_ID = "200000";
 	public static String SX_INFO = "300000";
 	public static String ZA_INFO = "400000";
+	
 }

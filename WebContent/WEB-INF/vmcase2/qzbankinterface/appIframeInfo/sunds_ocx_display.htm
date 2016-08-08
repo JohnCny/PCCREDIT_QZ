@@ -1,10 +1,12 @@
 #parse ("common/iframe_page_header.htm")
 <body>
+<form id="id_module_form">
+<div class="forms" id="formsId">
 <div class="content_main">
    <div class="contentinner">
- 		<div class="place">
+ 		<!-- <div class="place">
         	<div class="title">影像查询</div>
-      	</div>
+      	</div> -->
  	<div class="inquiry">
  		<div id="topDiv" class="inquiry_list inquiry_top">
           <table>
@@ -66,7 +68,13 @@
         </div>
       </div>
       
-      <div class="pagebar">
+      
+      
+    </div>
+  </div>
+	</div>
+</form>	
+<div class="pagebar">
         <div class="controlbtn">
         <a class="btn_g" href="javascript:void(0);" onclick="javascript:history.go(-1);" title="返回">返回</a>
         
@@ -76,9 +84,6 @@
         </div>
         <div class="clear"></div>
       </div>
-      
-    </div>
-  </div>
 </body>
 <script language="javascript" type="text/javascript">
 	var layout = new TableLayout(2);
@@ -113,7 +118,7 @@
 			}
 			
 			var url = "${contextPath}/intopieces/intopiecesapprove/display_detail.page?batchId="+id;
-			window.location.href = url;
+			parent.window.location.href = url;
 		}else{
 			Dialog.message("请选择一条记录!");
 		}
@@ -128,7 +133,7 @@
 				return;
 			}
 			var url = "${contextPath}/intopieces/intopiecesapprove/display_server.page?batchId="+id+"&type=readonly&first_flag=1";
-			window.location.href = url;
+			parent.window.location.href = url;
 		}else{
 			Dialog.message("请选择一条记录!");
 		}
@@ -142,7 +147,7 @@
 				return;
 			}
 			var url = "${contextPath}/intopieces/intopiecesapprove/display_server.page?batchId="+id+"&first_flag=1"+"&type=readonly&viewType=1&limit=5";
-			window.open(url,"newwindow");
+			parent.window.open(url,"newwindow");
 		}else{
 			Dialog.message("请选择一条记录!");
 		}

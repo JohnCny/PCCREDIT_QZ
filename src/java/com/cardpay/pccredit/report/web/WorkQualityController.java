@@ -45,7 +45,7 @@ public class WorkQualityController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute WorkQualityFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		

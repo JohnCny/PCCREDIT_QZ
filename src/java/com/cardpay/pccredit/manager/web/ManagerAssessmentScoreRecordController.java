@@ -58,7 +58,7 @@ public class ManagerAssessmentScoreRecordController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView displayOrganization(@ModelAttribute ManagerAssessmentScoreFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -85,7 +85,7 @@ public class ManagerAssessmentScoreRecordController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/assessmentscore/manager_assessmentscore_display", request);
 		String id = RequestHelper.getStringValue(request, ID);

@@ -93,7 +93,7 @@ public class IESBForCircleController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute EcifFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);

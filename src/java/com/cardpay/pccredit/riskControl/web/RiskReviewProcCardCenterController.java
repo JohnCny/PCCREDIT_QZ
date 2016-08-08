@@ -44,7 +44,7 @@ public class RiskReviewProcCardCenterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cardcenterbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView cardcenterBrowse(@ModelAttribute RiskReviewProcessFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
         // 阶段

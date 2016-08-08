@@ -706,7 +706,7 @@
                      group by cont.cus_id) 
                      con on ecif.client_no =con.cus_id)
 	    </if>
-		<if test='default_type == "1" or default_type == "2" or default_type == "4" '>
+		<if test='default_type == "1" or default_type == "2" or default_type == "4" or default_type == "5" or default_type == "6"'>
 		    and ecif.customer_id not in
        		(select ecif.customer_id
           		from qz_iesb_for_ecif ecif
@@ -775,7 +775,7 @@
                      group by cont.cus_id) 
                      con on ecif.client_no =con.cus_id)
 	    </if>
-		<if test='default_type == "1" or default_type == "2" or default_type == "4" '>
+		<if test='default_type == "1" or default_type == "2" or default_type == "4" or default_type == "5" or default_type == "6"'>
 		    and ecif.customer_id not in
        		(select ecif.customer_id
           		from qz_iesb_for_ecif ecif

@@ -123,7 +123,7 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_upload.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createUpload(@ModelAttribute VideoAccessoriesFilter filter,HttpServletRequest request) {
 		String appId = request.getParameter("appId");
 		String type = request.getParameter("type");
@@ -152,7 +152,7 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveYxzl.json",method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String,Object> saveYxzl(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
@@ -173,65 +173,6 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 		return map;
 	}
 	
-	/**
-	 * 申请件审批通过 
-	 * 从信审岗--行政岗终
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "save_apply.json")
-	public JRadReturnMap saveApply(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("id");
-
-			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
-			request.setAttribute("serialNumber", process.getSerialNumber());
-			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
-			request.setAttribute("objection", "false");
-			//查找审批金额
-			Circle circle = circleService.findCircleByAppId(appId);
-			
-			request.setAttribute("examineAmount", circle.getContractAmt());
-			
-			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-			
-			//2016-01-13流程调整 判断是否旧流程，旧流程的话需要调用放款接口
-			if(customerApplicationIntopieceWaitService.getNextIsEnd(request)){
-				if(StringUtils.isBlank(circle.getClientNo())){
-					returnMap.put(JRadConstants.SUCCESS, false);			
-					returnMap.put("retMsg", "客户号不能为空~！");
-					return returnMap;
-				}
-				
-				//先开户 后通过applicationId查找circle并放款 
-				String rtn = circleService.updateCustomerInforCircle_ESB(circle,user);
-				if("放款成功".equals(rtn)){
-					customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-					returnMap.put(JRadConstants.SUCCESS, true);
-					returnMap.put("retMsg", rtn);
-				}
-				else{
-					returnMap.put(JRadConstants.SUCCESS, false);			
-					returnMap.put("retMsg", rtn);
-				}
-			}
-			else{
-				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-				returnMap.put(JRadConstants.SUCCESS, true);
-				returnMap.put("retMsg", "保存成功");
-			}
-			
-		} catch (Exception e) {
-			returnMap.put(JRadConstants.SUCCESS, false);
-			returnMap.put("retMsg", "保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
 	/**
 	 * 进入台帐录入页面
 	 * 
@@ -298,82 +239,6 @@ public class IntoPiecesXingzhengendControl extends BaseController {
 			mv.addObject("customerId", customerInfor.getId());
 			mv.addObject("appId", appId);
 			mv.addObject("operate", Constant.status_xingzheng2);
-			mv.addObject("ifHideUser", ifHideUser);
-		}
-		return mv;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "returnAppln.json")
-	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			int nodeNo = 7;//中心终审
-			String appId = request.getParameter("appId");
-			String operate = request.getParameter("operate");
-			String nodeName = request.getParameter("nodeName");
-			//退回客户经理和其他岗位不一致
-			if("1".equals(nodeName)){
-				
-				intoPiecesService.checkDoNotToManager(appId,request);
-			}else{
-				intoPiecesService.returnAppln(appId, request,nodeName);
-			}
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	
-	//进件查询入口
-	@ResponseBody
-	@RequestMapping(value = "iframe_cardapprove.page")
-	public AbstractModelAndView iframeApproveCard(HttpServletRequest request) {
-		JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/iframe_approve", request);
-		String customerInforId = RequestHelper.getStringValue(request, ID);
-		String appId = RequestHelper.getStringValue(request, "appId");
-		CustomerApplicationInfo appInfo = customerApplicationInfoService.findById(appId);
-		com.cardpay.pccredit.product.model.ProductAttribute pro = productService.findProductAttributeById(appInfo.getProductId());
-		String ifHideUser = RequestHelper.getStringValue(request, "ifHideUser");
-		if (StringUtils.isNotEmpty(customerInforId)) {
-			CustomerInfor customerInfor = customerInforService.findCustomerInforById(customerInforId);
-			mv.addObject("customerInfor", customerInfor);
-			mv.addObject("customerId", customerInfor.getId());
-			mv.addObject("appId", appId);
-			if(!pro.getDefaultType().equals("3")){
-				mv.addObject("operate", Constant.status_query);
-			}
-			else{
-				mv.addObject("operate", Constant.status_query_anjudai);
-			}
-			mv.addObject("ifHideUser", ifHideUser);
-		}
-		return mv;
-	}
-		
-	//进件查询(卡中心)入口
-	@ResponseBody
-	@RequestMapping(value = "iframe_approve_query.page")
-	public AbstractModelAndView iframeApproveQuery(HttpServletRequest request) {
-		JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/iframe_approve", request);
-		String customerInforId = RequestHelper.getStringValue(request, ID);
-		String appId = RequestHelper.getStringValue(request, "appId");
-		CustomerApplicationInfo appInfo = customerApplicationInfoService.findById(appId);
-		com.cardpay.pccredit.product.model.ProductAttribute pro = productService.findProductAttributeById(appInfo.getProductId());
-		String ifHideUser = RequestHelper.getStringValue(request, "ifHideUser");
-		if (StringUtils.isNotEmpty(customerInforId)) {
-			CustomerInfor customerInfor = customerInforService.findCustomerInforById(customerInforId);
-			mv.addObject("customerInfor", customerInfor);
-			mv.addObject("customerId", customerInfor.getId());
-			mv.addObject("appId", appId);
-			if(!pro.getDefaultType().equals("3")){
-				mv.addObject("operate", Constant.status_cardquery);
-			}
-			else{
-				mv.addObject("operate", Constant.status_anjudai);
-			}
 			mv.addObject("ifHideUser", ifHideUser);
 		}
 		return mv;

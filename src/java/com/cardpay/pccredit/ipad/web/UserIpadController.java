@@ -45,7 +45,7 @@ public class UserIpadController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/ipad/user/login.json")
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public String login(HttpServletRequest request) {
 		String login = RequestHelper.getStringValue(request, "login");
 		String passwd = RequestHelper.getStringValue(request, "password");

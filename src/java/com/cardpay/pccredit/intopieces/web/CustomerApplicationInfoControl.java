@@ -38,7 +38,7 @@ public class CustomerApplicationInfoControl extends BaseController {
     //TODO save？Insert or Update?
 	@ResponseBody
 	@RequestMapping(value = "save.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String, Object> save(
 			@ModelAttribute CustomerApplicationInfo customerApplicationInfo,HttpServletRequest request) {
         //TODO returnmap or map?

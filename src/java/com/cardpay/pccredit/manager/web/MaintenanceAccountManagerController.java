@@ -45,7 +45,7 @@ public class MaintenanceAccountManagerController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		DictionaryManager dictMgr = Beans.get(DictionaryManager.class);
 		//查询层级信息 
@@ -102,7 +102,7 @@ public class MaintenanceAccountManagerController {
 
 	@ResponseBody
 	@RequestMapping(value = "save.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView maintenanceAccountManagerchange(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managermaintenance/manager_maintenance_update", request);
 		try {

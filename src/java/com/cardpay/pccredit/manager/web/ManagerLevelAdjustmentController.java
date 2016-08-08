@@ -48,7 +48,7 @@ public class ManagerLevelAdjustmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ManagerLevelAdjustmentFilter filter,
 		HttpServletRequest request) {
 		filter.setRequest(request);
@@ -66,7 +66,7 @@ public class ManagerLevelAdjustmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display_assessment_browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView displayOrganization(@ModelAttribute ManagerLevelAdjustmentFilter filter,
 		HttpServletRequest request) {
 		filter.setRequest(request);

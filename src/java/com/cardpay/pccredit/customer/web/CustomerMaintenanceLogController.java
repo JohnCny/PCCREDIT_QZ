@@ -51,7 +51,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute CustomerInforFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -75,7 +75,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "customerinfobrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customerinfobrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -101,7 +101,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "customerswpgbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customerswpgbrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -126,7 +126,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "customerkhzybrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customerkhzybrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -150,7 +150,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "customermbxxbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customermbxxbrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -175,7 +175,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "customeryxzlbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customeryxzlbrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -199,7 +199,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "customerdcdgbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customerdcdgbrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -222,7 +222,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "customertzxxbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView customertzxxbrowse(@ModelAttribute CustomerMaintenanceLogFilter filter,HttpServletRequest request) {
 
         filter.setRequest(request);
@@ -247,7 +247,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(HttpServletRequest request) {
 		
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -283,7 +283,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatejbxx.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updatejbxx(HttpServletRequest request) {
 		
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -319,7 +319,7 @@ public class CustomerMaintenanceLogController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatedcdg.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updatedcdg(HttpServletRequest request) {
 		
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);

@@ -283,4 +283,17 @@
 			AND CUSTOMER_ID=#{customerId}
 		</if>
 	</select>
+	
+	<select id="findLastPreCircle" resultMap="ResultMap">
+		select *
+		from 
+			QZ_IESB_FOR_CIRCLE
+			where 1=1
+			and ret_code = '000000'
+	 	<if test="customerId != null and customerId != '' ">
+			AND CUSTOMER_ID=#{customerId}
+		</if>
+		order by END_DATE desc
+	</select>
+	
 </mapper> 

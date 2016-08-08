@@ -77,7 +77,7 @@ public class CustomerAdjustmentQuotaController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute BaseQueryFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		
@@ -224,7 +224,6 @@ public class CustomerAdjustmentQuotaController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "adjustmentAccount.json")
-	@JRadOperation(JRadOperation.AMOUNTADJUSTMENT)
 	public JRadReturnMap adjustmentAccount(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

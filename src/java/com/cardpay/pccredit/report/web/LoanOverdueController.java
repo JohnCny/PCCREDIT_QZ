@@ -33,8 +33,10 @@ import com.cardpay.pccredit.system.model.Dict;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
+import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
+import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.security.LoginManager;
 import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.date.DateHelper;
@@ -78,9 +80,11 @@ public class LoanOverdueController extends BaseController{
 		if(filter.getEndDate()==null){
 			filter.setEndDate(new Date());
 		}
-		List<AccLoanOverdueInfo> overdue = aferAccLoanService.getLoanOverdue(filter);
+		QueryResult<AccLoanOverdueInfo> overdue = aferAccLoanService.getLoanOverdue(filter);
+		JRadPagedQueryResult<AccLoanOverdueInfo> pagedResult = new JRadPagedQueryResult<AccLoanOverdueInfo>(
+				filter, overdue);
 		JRadModelAndView mv = new JRadModelAndView("/report/loanoverdue/accloanoverdue_manager_browse", request);
-		mv.addObject("list", overdue);
+		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
 		return mv;
 		
@@ -112,9 +116,11 @@ public class LoanOverdueController extends BaseController{
 				filter.setUserId("999");
 			}
 		}
-		List<AccLoanOverdueInfo> overdue = aferAccLoanService.getLoanOverdue(filter);
+		QueryResult<AccLoanOverdueInfo> overdue = aferAccLoanService.getLoanOverdue(filter);
+		JRadPagedQueryResult<AccLoanOverdueInfo> pagedResult = new JRadPagedQueryResult<AccLoanOverdueInfo>(
+				filter, overdue);
 		JRadModelAndView mv = new JRadModelAndView("/report/loanoverdue/accloanoverdue_centre_browseAll", request);
-		mv.addObject("list", overdue);
+		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
 		return mv;
 		
@@ -139,7 +145,7 @@ public class LoanOverdueController extends BaseController{
 		String userId = user.getId();
 		filter.setUserId(userId);
 		
-		List<AccLoanOverdueInfo> list = aferAccLoanService.getLoanOverdue(filter);
+		List<AccLoanOverdueInfo> list = aferAccLoanService.getLoanOverdueAll(filter);
 		create(list,response,filter);
 	}
 	/**
@@ -166,7 +172,7 @@ public class LoanOverdueController extends BaseController{
 			}
 		}
 
-		List<AccLoanOverdueInfo> list = aferAccLoanService.getLoanOverdue(filter);
+		List<AccLoanOverdueInfo> list = aferAccLoanService.getLoanOverdueAll(filter);
 		create(list,response,filter);
 	}
 	
@@ -195,31 +201,40 @@ public class LoanOverdueController extends BaseController{
 		cell.setCellValue("利率");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 6);
-		cell.setCellValue("贷款日期");
+		cell.setCellValue("授信日期");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 7);
-		cell.setCellValue("到期日期");
+		cell.setCellValue("授信到期日");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 8);
 		cell.setCellValue("授信金额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 9);
-		cell.setCellValue("贷款金额");
+		cell.setCellValue("贷款余额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 10);
 		cell.setCellValue("欠息总额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 11);
-		cell.setCellValue("起息日期");
+		cell.setCellValue("贷款日期");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 12);
-		cell.setCellValue("贷款状态");
+		cell.setCellValue("贷款到期日");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 13);
-		cell.setCellValue("累计逾期金额");
+		cell.setCellValue("贷款状态");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 14);
+		cell.setCellValue("累计逾期金额");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 15);
 		cell.setCellValue("逾期期数");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 16);
+		cell.setCellValue("逾期余额");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 17);
+		cell.setCellValue("逾期天数");
 		cell.setCellStyle(style);
 		
 		DecimalFormat df = new DecimalFormat("0.000000");
@@ -236,38 +251,41 @@ public class LoanOverdueController extends BaseController{
 			row.createCell((short) 6).setCellValue(loan.getContStartDate());
 			row.createCell((short) 7).setCellValue(loan.getContEndDate());
 			row.createCell((short) 8).setCellValue(df1.format(loan.getContAmt()));
-			row.createCell((short) 9).setCellValue(df1.format(loan.getLoanAmt()));
+			row.createCell((short) 9).setCellValue(df1.format(loan.getLoanBalance()));
 			row.createCell((short) 10).setCellValue(df1.format(loan.getIntAccum()));
 			row.createCell((short) 11).setCellValue(loan.getQixiDate());
+			row.createCell((short) 12).setCellValue(loan.getDistrDate());
 			if("0".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("出帐未确认");
+				row.createCell((short) 13).setCellValue("出帐未确认");
 			}else if("1".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("正常");
+				row.createCell((short) 13).setCellValue("正常");
 			}else if("2".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("正回购卖出");
+				row.createCell((short) 13).setCellValue("正回购卖出");
 			}else if("3".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("逆回购买入");
+				row.createCell((short) 13).setCellValue("逆回购买入");
 			}else if("4".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("逆回购到期");
+				row.createCell((short) 13).setCellValue("逆回购到期");
 			}else if("5".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("正回购到期");
+				row.createCell((short) 13).setCellValue("正回购到期");
 			}else if("6".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("垫款");
+				row.createCell((short) 13).setCellValue("垫款");
 			}else if("7".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("已扣款");
+				row.createCell((short) 13).setCellValue("已扣款");
 			}else if("8".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("退回未用");
+				row.createCell((short) 13).setCellValue("退回未用");
 			}
 			else if("9".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("结清/核销");	
+				row.createCell((short) 13).setCellValue("结清/核销");	
 			}else if("10".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("闭卷");	
+				row.createCell((short) 13).setCellValue("闭卷");	
 			}
 			else if("11".equals(loan.getAccStatus())){
-				row.createCell((short) 12).setCellValue("撤销");
+				row.createCell((short) 13).setCellValue("撤销");
 			}
-			row.createCell((short) 13).setCellValue(loan.getOverdueMoney());
-			row.createCell((short) 14).setCellValue(loan.getOverdue());
+			row.createCell((short) 14).setCellValue(loan.getOverdueMoney());
+			row.createCell((short) 15).setCellValue(loan.getOverdue());
+			row.createCell((short) 16).setCellValue(loan.getOverdueBalance());
+			row.createCell((short) 17).setCellValue(loan.getOverdueDayCnt());
 		}
 		String fileName = "客户逾期清单";
 		try{

@@ -44,7 +44,7 @@ public class RiskReviewProcSupervisorController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "supervisorbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView supervisorBrowse(@ModelAttribute RiskReviewProcessFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
         // 阶段

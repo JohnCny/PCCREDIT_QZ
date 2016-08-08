@@ -17,12 +17,13 @@
 					<td>借贷类型</td>
 					<td>
 						<select name="bussType" id="jdlx" onchange="lxSelect()">
-							<option value="1" #if($!qzApplnAttachmentList.bussType=='1') selected #end>工薪类</option>
-							<option value="2" #if($!qzApplnAttachmentList.bussType=='2') selected #end>经营类</option>
 							<option value="3" #if($!qzApplnAttachmentList.bussType=='3') selected #end>工薪类(新版)</option>
 							<option value="4" #if($!qzApplnAttachmentList.bussType=='4') selected #end>经营类(新版)</option>
+							<option value="1" #if($!qzApplnAttachmentList.bussType=='1') selected #end>工薪类</option>
+							<option value="2" #if($!qzApplnAttachmentList.bussType=='2') selected #end>经营类</option>
 						</select>
 						<input type="hidden" id="chkValue" name="chkValue" value="$!qzApplnAttachmentList.chkValue">
+						<input type="hidden" name="shopName" value="$!qzApplnJyxx.bussName" />
 						<script type="text/javascript">
 							chkValue = parseInt($qzApplnAttachmentList.chkValue)
 						</script>
@@ -44,11 +45,9 @@
 				</tr>
 				<tr>
 					<td class="table-label">借款人姓名：</td>
-					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
-						<input type="hidden" name="clientName" value="$!customerInfo.chineseName"/></td>
+					<td><input type="text" value="$!customerInfo.chineseName" readonly/></td>
 					<td class="table-label">身份证号码：</td>
-					<td><input type="text" value="$!customerInfo.cardId" readonly/>
-						<input type="hidden" name="globalId" value="$!customerInfo.cardId"/></td>			
+					<td><input type="text" value="$!customerInfo.cardId" readonly/></td>	
 				</tr>
 			</table>
 			<table class="myTable" style="text-align:center;">
@@ -350,11 +349,9 @@
 				</tr>
 				<tr>
 					<td class="table-label">借款人姓名：</td>
-					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
-						<input type="hidden" name="clientNamegxl_new" value="$!customerInfo.chineseName"/></td>
+					<td><input type="text" value="$!customerInfo.chineseName" readonly/></td>
 					<td class="table-label">身份证号码：</td>
-					<td><input type="text" value="$!customerInfo.cardId" readonly/>
-						<input type="hidden" name="globalIdgxl_new" value="$!customerInfo.cardId"/></td>			
+					<td><input type="text" value="$!customerInfo.cardId" readonly/></td>			
 				</tr>
 			</table>
 			<table class="myTable" style="text-align:center;">
@@ -617,7 +614,7 @@
 					<td></td>				
 				</tr>
 				<tr>
-					<td class="tableTitle" colspan="6">第三部分  其他</td>				
+					<td class="tableTitle" colspan="6">第三部分  佐证资料</td>				
 				</tr>
 				<tr>
 					<td>1</td>	
@@ -635,9 +632,21 @@
 							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="16384" checked/>
 						#end
 						</td>				
-					<td></td>	
-					<td></td>	
-					<td></td>			
+					<td>2</td>	
+					<td>合同相关材料</td>	
+					<td>
+						#if($!qzApplnAttachmentList.bussType=='3')
+							<script>
+								if(parseInt(chkValue&32768) != 0){
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="32768" checked/>');
+								}else{
+									document.write('<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="32768" checked/>');
+								}
+							</script>
+						#else
+							<input type="checkbox" name="checkbox3" class="mustCheck" onclick="return false"  value="32768" checked/>
+						#end
+						</td>		
 				</tr>
 			</table>
 		</div>
@@ -655,7 +664,7 @@
 				</tr>
 				<tr>
 					<td class="table-label">公司名称：</td>
-					<td><input type="text" id="shopName" name="shopName" value="$!qzApplnAttachmentList.shopName"/></td>
+					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/></td>
 					<td class="table-label">营业执照号：</td>
 					<td><input type="text" id="shopId" name="shopId" value="$!qzApplnAttachmentList.shopId"/></td>			
 					
@@ -1035,7 +1044,7 @@
 				</tr>
 				<tr>
 					<td class="table-label">公司名称：</td>
-					<td><input type="text" id="shopName" name="shopNameNew" value="$!qzApplnAttachmentList.shopName"/></td>
+					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/></td>
 					<td class="table-label">营业执照号：</td>
 					<td><input type="text" id="shopId" name="shopIdNew" value="$!qzApplnAttachmentList.shopId"/></td>			
 					
@@ -1639,7 +1648,7 @@
 			
 			//上传
 			$("#id_upload_button").click(function() {
-				window.location.href = "${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}";
+				parent.window.location.href = "${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}";
 			});
 			
 		});

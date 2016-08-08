@@ -18,22 +18,32 @@
 					</colgroup>
 					<tr>
 						<td class="table-label">发起方：<font color="#ff0000">*</font></td>
-						<td><input type="text" name="originator" value="$!qzApplnZa.originator" readonly/></td>
-						<td class="table-label">发起人：<font color="#ff0000">*</font></td>
-						<td><input type="text" name="initiator" value="$!qzApplnZa.initiator" readonly/></td>			
+						<td><input type="text" name="originator" value="$!qzApplnZa.originator" readonly/></td>		
+						<td class="table-label">发起方负责人：<font color="#ff0000">*</font></td>
+						<td><input type="text" name="originator" value="$!qzApplnZa.originatorManager" readonly/></td>		
 					</tr>
 					<tr>
+						<td class="table-label">发起人：<font color="#ff0000">*</font></td>
+						<td><input type="text" name="initiator" value="$!qzApplnZa.initiator" readonly/></td>	
 						<td class="table-label">发起时间：<font color="#ff0000">*</font></td>
 						<td><input type="text" name="initDate" onmouseover="_calendar()" value="$date.format('yyyy-MM-dd', $!qzApplnZa.initDate)" readonly/></td>	
-						<td class="table-label">专案名称：<font color="#ff0000">*</font></td>
-						<td><input type="text" name="name" value="$!qzApplnZa.name" readonly/></td>		
 					</tr>
-					<td class="table-label">专案地址：<font color="#ff0000">*</font></td>
-						<td><input type="text" name="address" value="$!qzApplnZa.address" readonly/></td>
+					<tr>
+						<td class="table-label">专案名称：<font color="#ff0000">*</font></td>
+						<td><input type="text" name="name" value="$!qzApplnZa.name" readonly/></td>	
 						<td class="table-label">专案编号：<font color="#ff0000">*</font></td>
 						<td><input type="text" name="code" value="$!qzApplnZa.code" readonly/></td>
+					</tr>
 					<tr>
-						<td class="table-label">评审意见：<font color="#ff0000">*</font></td>
+						<td class="table-label">专案地址：<font color="#ff0000">*</font></td>
+						<td colspan="3"><textarea name="address" readonly>$!qzApplnZa.address</textarea></td>			
+					</tr>
+					<tr>
+						<td class="table-label">支行意见：<font color="#ff0000">*</font></td>
+						<td colspan="3"><textarea name="sug" readonly>$!qzApplnZa.branchSug</textarea></td>			
+					</tr>
+					<tr>
+						<td class="table-label">微贷中心意见：<font color="#ff0000">*</font></td>
 						<td colspan="3"><textarea name="sug" readonly>$!qzApplnZa.sug</textarea></td>			
 					</tr>
 				</table>	

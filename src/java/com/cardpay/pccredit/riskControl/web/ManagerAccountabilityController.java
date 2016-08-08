@@ -72,7 +72,7 @@ public class ManagerAccountabilityController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute AccountabilityRecordFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -96,7 +96,6 @@ public class ManagerAccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "managerupdate.page")
-	@JRadOperation(JRadOperation.RECONSIDER)
 	public AbstractModelAndView managerupdate( HttpServletRequest request) {
 		String accountabilityRecordId = request.getParameter("id");
 		AccountabilityRecord accountabilityRecord =
@@ -123,7 +122,6 @@ public class ManagerAccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "managerupdate.json")
-	@JRadOperation(JRadOperation.RECONSIDER)
 	public JRadReturnMap managerreconsideration( HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -161,7 +159,7 @@ public class ManagerAccountabilityController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cfccdisplay.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView cfccdisplay( HttpServletRequest request) {
 		String accountabilityRecordId = RequestHelper.getStringValue(request, ID);
 		AccountabilityRecord accountabilityRecord =

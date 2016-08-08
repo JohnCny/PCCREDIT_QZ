@@ -43,7 +43,7 @@ public class ManagerLevelTargetController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerleveltarget/manager_leveltarget_update", request);
@@ -85,7 +85,7 @@ public class ManagerLevelTargetController {
 
 	@ResponseBody
 	@RequestMapping(value = "save.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView maintenanceAccountManagerchange(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerleveltarget/manager_leveltarget_update", request);
 		try {

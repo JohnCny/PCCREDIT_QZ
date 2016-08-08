@@ -23,8 +23,8 @@
 							#dict("product", "")
 						</select>
 					</td>	
-					<td id="za_1" class="table-label" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5') style="display:none" #end>选择专案：<font color="#ff0000">*</font></td>
-					<td id="za_2" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5') style="display:none" #end>
+					<td id="za_1" class="table-label" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5'&& $!qzappln_za_ywsqb_r.productType != '6') style="display:none" #end>选择专案：<font color="#ff0000">*</font></td>
+					<td id="za_2" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5'&& $!qzappln_za_ywsqb_r.productType != '6') style="display:none" #end>
 						<select id="zaId" name="zaId" onchange="changeZa(this)" >
 							#foreach ($obj in $za_ls)
 							<option value="$!obj.id" #if($!qzappln_za_ywsqb_r.zaId == $!obj.id) selected #end>$!obj.name</option>
@@ -37,7 +37,7 @@
 	</div>
 	
 	<!--*************************************************************专案信息*************************************************************-->
-	<div id="za_3" class="box" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5') style="display:none" #end>
+	<div id="za_3" class="box" #if($!qzappln_za_ywsqb_r.productType != '2' && $!qzappln_za_ywsqb_r.productType != '5'&& $!qzappln_za_ywsqb_r.productType != '6') style="display:none" #end>
 		<table class="title">
 			<tr>
 				<td>专案信息</td>
@@ -99,14 +99,19 @@
 			}
 			submitFlag = 1;
 			var productType = $("#productType").val();
+			if(productType == "2"){
+				topWin.Dialog.message("该产品已停用,请选择其他产品！");
+				submitFlag = 0;
+				return;
+			}
 			var zaId = ""
-			if((productType == "2" || productType == "5") && document.getElementById("zaId").selectedIndex == -1){
+			if((productType == "2" || productType == "5"|| productType == "6") && document.getElementById("zaId").selectedIndex == -1){
 				topWin.Dialog.message("请先添加专案！");
 				submitFlag = 0;
 				return;
 			}
 			
-			if(productType == "2" || productType == "5"){
+			if(productType == "2" || productType == "5"|| productType == "6"){
 				zaId = jsoObjs[document.getElementById("zaId").selectedIndex].id
 			}
 			/**var url = "${contextPath}/intopieces/intopiecesapprove/insert_page0.json?productType="+productType+"&zaId="+zaId;
@@ -143,7 +148,7 @@
 	});
 	
 	function changeProduct(value){
-		if(value == "2" || value == "5"){
+		if(value == "2" || value == "5"|| value == "6"){
 			$("#za_1").css("display","");
 			$("#za_2").css("display","");
 			$("#za_3").css("display","");

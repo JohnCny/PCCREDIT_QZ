@@ -122,4 +122,15 @@ public class IESBForCore {
     	}
     	
     }
+
+	public String getClientNo(CompositeData cd) {
+		boolean res = IESBForCredit.parseEcifResponse(cd);
+    	if(res){
+            CompositeData body = cd.getStruct("BODY");
+            String client_no = body.getField("CLIENT_NO").strValue();//开户日期
+            return client_no;
+    	}else{
+    		return null;
+    	}
+	}
 }

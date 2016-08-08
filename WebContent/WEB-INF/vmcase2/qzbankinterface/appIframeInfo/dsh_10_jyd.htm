@@ -26,7 +26,7 @@
 					<td colspan="8"><input type="text" name="" onmouseover="_calendar()"/></td>			
 				</tr> -->
 				
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label" rowspan="10" style="border-bottom:1px solid #000;"><b>经办客户经理意见</b></td>
 					<td class="table-label">办理机构</td>
 					<td colspan="2"><input type="text" name="managerBrId" value="$!managerBrId" readonly/></td>
@@ -35,15 +35,15 @@
 					<td class="table-label">客户名称</td>
 					<td colspan="3"><input type="text" name="clientName" value="$!customerInfor.chineseName" readonly/></td>		
 				</tr>				
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label">审议事项<font color="#ff0000">*</font></td>
 					<td colspan="2"><input type="text" name="discussItems"/></td>
 					<td class="table-label">产品名称</td>
-					<td><input type="text" value="贷生活(10万元及以下)" disabled/></td>	
+					<td><input type="text" value="贷生活" disabled/></td>	
 					<td class="table-label">证件号码</td>
 					<td colspan="3"><input type="text" name="globalId" value="$!customerInfor.cardId" readonly/></td>		
 				</tr>			
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label">建议金额(元)<font color="#ff0000">*</font></td>
 					<td colspan="2"><input type="text" name="sugAmt"/></td>
 					<td class="table-label">建议期限(月)<font color="#ff0000">*</font></td>
@@ -53,7 +53,7 @@
 					<td class="table-label" colspan="2">建议利率(年)<font color="#ff0000">*</font></td>
 					<td colspan="2"><input type="text" name="sugRate"/>%</td>		
 				</tr>			
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label">授信用途<font color="#ff0000">*</font></td>
 					<td colspan="4">
 						<select name="loanUseType">
@@ -65,60 +65,58 @@
 	                    	#dict("REPAY_TYPE", '')
 	                  	</select></td>		
 				</tr>		
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label" rowspan="5">建议担保方式</td>
 					<td class="table-label" rowspan="3">共同借款人</td>					
 					<td class="table-label" colspan="3" style="text-align:center;">姓名</td>					
 					<td class="table-label" colspan="4" style="text-align:center;">证件号码</td>	
 				</tr>						
-				<tr class="apply">			
+				<tr class="10apply_apply">			
 					<td colspan="3" style="text-align:center;"><input type="text" name="coborrower1Name"/></td>					
 					<td colspan="4" style="text-align:center;"><input type="text" name="coborrower1Cardid"/></td>	
 				</tr>					
-				<tr class="apply">			
+				<tr class="10apply_apply">			
 					<td colspan="3" style="text-align:center;"><input type="text" name="coborrower2Name"/></td>					
 					<td colspan="4" style="text-align:center;"><input type="text" name="coborrower2Cardid"/></td>	
 				</tr>		
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label" rowspan="2">保证担保</td>					
 					<td colspan="3" style="text-align:center;"><input type="text" name="guarantee1Name"/></td>					
 					<td colspan="4" style="text-align:center;"><input type="text" name="guarantee1Cardid"/></td>	
 				</tr>					
-				<tr class="apply">			
+				<tr class="10apply_apply">			
 					<td colspan="3" style="text-align:center;"><input type="text" name="guarantee2Name"/></td>					
 					<td colspan="4" style="text-align:center;"><input type="text" name="guarantee2Cardid"/></td>	
 				</tr>	
-				<tr class="apply">
+				<tr class="10apply_apply">
 					<td class="table-label" colspan="2" style="border-bottom:1px solid #000;">主协办客户经理签字</td>					
 					<td colspan="3" style="text-align:center;border-bottom:1px solid #000;">主办客户经理签字<input type="text" name="managerName" value="$!managerName" readonly/></td>					
 					<td colspan="4" style="text-align:center;border-bottom:1px solid #000;">协办客户经理签字<input type="text" name="helpManagerName"/></td>	
 				</tr>	
-				<tr class="twolevel">
+				<tr class="10level1_level1">
 					<td class="table-label" rowspan="12" style="border-bottom:1px solid #000;"><b>审查岗意见</b></td>
 					<td class="table-label" colspan="2" rowspan="4"> 内审问题核实情况(核实方式：电话核实)</td>					
 					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="1"/>借款人所在公司名称及地址</label></td>	
 				</tr>					
-				<tr class="twolevel">
+				<tr class="10level1_level1">
 					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="2"/>借款人所在公司职务</label></td>	
 				</tr>				
-				<tr class="twolevel">
+				<tr class="10level1_level1">
 					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="4"/>借款人家庭住址及配偶姓名</label></td>	
 				</tr>					
-				<tr class="twolevel">
+				<tr class="10level1_level1">
 					<td colspan="7"><label><input type="checkbox" name="verifyItems" value="8"/>其他(客户经理是否收取额外费用,贷款用途等)</label></td>	
 				</tr>				
-				<tr class="twolevel">					
+				<tr class="10level1_level1">					
 					<td class="table-label" rowspan="8"  style="border-bottom:1px solid #000;">授信决策情况</td>					
 					<td class="table-label">金额(元)<font color="#ff0000">*</font></td>					
 					<td colspan="3"><input type="text" name="amt"/></td>					
 					<td class="table-label">利率(年)<font color="#ff0000">*</font></td>	
 					<td colspan="3"><input type="text" name="rate"/>%</td>	
 				</tr>	
-				<tr class="twolevel">				
+				<tr class="10level1_level1">				
 					<td class="table-label">授信期限(月)<font color="#ff0000">*</font></td>					
-					<td><select name="deadline">
-	                    	#dict("APPLY_DEADLINE", '')
-	                  	</select></td>	
+					<td><input type="text" name="deadline"/></td>	
 					<td class="table-label">还款期限(月)<font color="#ff0000">*</font></td>					
 					<td><select name="repaymentTerm">
 	                    	#dict("APPLY_DEADLINE", '')
@@ -129,43 +127,45 @@
 	                    	#dict("REPAY_TYPE", '')
 	                  	</select></td>	
 				</tr>	
-				<tr class="twolevel">				
+				<tr class="10level1_level1">				
 					<td class="table-label" rowspan="2">保证担保</td>					
 					<td colspan="7">
 						<label><input type="radio" name="guaranteeItems" value="1" />1、同意客户经理建议 </label>
 					</td>	
 				</tr>		
-				<tr class="twolevel">								
-					<td colspan="7">
+				<tr class="10level1_level1">								
+					<td colspan="2">
 						<label><input type="radio" name="guaranteeItems" value="2" checked/>2、对建议的补充或修改</label>
 					</td>	
+					<td colspan="5"><textarea name="otherSug"></textarea></td>	
 				</tr>	
-				<tr class="twolevel">				
+				<tr class="10level1_level1">				
 					<td class="table-label">重点监控内容<font color="#ff0000">*</font></td>					
 					<td colspan="7"><textarea name="focusContent"></textarea></td>	
 				</tr>		
-				<tr class="twolevel">				
+				<tr class="10level1_level1">				
 					<td class="table-label">其他要求</td>					
 					<td colspan="7"><textarea name="otherRequirement"></textarea></td>	
 				</tr>		
-				<tr class="twolevel">				
+				<tr class="10level1_level1">				
 					<td class="table-label">拒绝申请</td>					
 					<td colspan="7">主要原因：<textarea name="refuseReason"></textarea></td>	
 				</tr>			
-				<tr class="twolevel">				
+				<tr class="10level1_level1">				
 					<td class="table-label" style="border-bottom:1px solid #000;">审查岗<font color="#ff0000">*</font></td>					
 					<td colspan="8" style="border-bottom:1px solid #000;">
 						<input type="text" name="checkManagerName" readonly/>
 					</td>	
 				</tr>
-				<tr class="onelevel">				
-					<td class="table-label" colspan="2"><b>支行负责人审批意见</b></td>					
+				<tr class="10level2_level2">				
+					<td class="table-label" colspan="2"><b>支行负责人审批意见</b><font color="#ff0000">*</font></td>					
 					<td colspan="7"><textarea name="subBranchManagerSug"></textarea></td>	
 				</tr>	
-				<!-- <tr>				
-					<td class="table-label" colspan="2">中心审查岗意见</td>					
-					<td colspan="7"><textarea name=""></textarea></td>	
+				<tr class="10level4_level3">				
+					<td class="table-label" colspan="2"><b>中心审查岗意见</b><font color="#ff0000">*</font></td>					
+					<td colspan="7"><textarea name="centerSug"></textarea></td>	
 				</tr>	
+				<!-- 
 				<tr>				
 					<td class="table-label" colspan="2">有权审批人审批意见</td>					
 					<td colspan="7"><textarea name=""></textarea></td>	
@@ -185,26 +185,43 @@
 	window.top.currentWindow.setLayout(layout);
 	
 	#set ($formName = "'#id_module_form'")
-	#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation.js")
+	if("$!operate" == "贷生活(支行审批)申请" || "$!operate" == "贷生活(中心审批)申请"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation.js")
+	}
+	if("$!operate" == "贷生活(支行审批)支行审查岗" || "$!operate" == "贷生活(中心审批)支行审查岗"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation_level1.js")
+	}
+	if("$!operate" == "贷生活(支行审批)支行负责人" || "$!operate" == "贷生活(中心审批)支行负责人"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation_level2.js")
+	}
+	if("$!operate" == "贷生活(支行审批)中心行政" || "$!operate" == "贷生活(中心审批)中心行政"){
+		#parse ("qzbankinterface/appIframeInfo/dsh_10_jyd_validation_level4.js")
+	}
 	
 	$(document).ready(function() {	
 		//禁用页面元素
-		if("$!operate" != "贷生活10万申请"){
-			$(".apply input").attr("disabled",true);
-			$(".apply textarea").attr("disabled",true);
-			$(".apply select").prop("disabled",true);
+		if("$!operate" != "贷生活(支行审批)申请" && "$!operate" != "贷生活(中心审批)申请"){
+			$(".10apply_apply input").attr("disabled",true);
+			$(".10apply_apply textarea").attr("disabled",true);
+			$(".10apply_apply select").prop("disabled",true);
 		}
 		
-		if("$!operate" != "贷生活10万支行审查岗"){
-			$(".twolevel input").attr("disabled",true);
-			$(".twolevel textarea").attr("disabled",true);
-			$(".twolevel select").prop("disabled",true);
+		if("$!operate" != "贷生活(支行审批)支行审查岗" && "$!operate" != "贷生活(中心审批)支行审查岗"){
+			$(".10level1_level1 input").attr("disabled",true);
+			$(".10level1_level1 textarea").attr("disabled",true);
+			$(".10level1_level1 select").prop("disabled",true);
 		}
 		
-		if("$!operate" != "贷生活10万支行负责人"){
-			$(".onelevel input").attr("disabled",true);
-			$(".onelevel textarea").attr("disabled",true);
-			$(".onelevel select").prop("disabled",true);
+		if("$!operate" != "贷生活(支行审批)支行负责人" && "$!operate" != "贷生活(中心审批)支行负责人"){
+			$(".10level2_level2 input").attr("disabled",true);
+			$(".10level2_level2 textarea").attr("disabled",true);
+			$(".10level2_level2 select").prop("disabled",true);
+		}
+		
+		if("$!operate" != "贷生活(支行审批)中心行政" && "$!operate" != "贷生活(中心审批)中心审查"){
+			$(".10level4_level3 input").attr("disabled",true);
+			$(".10level4_level3 textarea").attr("disabled",true);
+			$(".10level4_level3 select").prop("disabled",true);
 		}
 		
 		//保存
@@ -228,7 +245,7 @@
 							window.location.href = "${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&operate=${operate}";
 						}
 						else{
-							topWin.Dialog.message("保存失败！");
+							topWin.Dialog.message(data.message);
 					    }
 						submitFlag = 0;
 					}

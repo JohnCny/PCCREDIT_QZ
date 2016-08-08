@@ -5,6 +5,7 @@
 package com.cardpay.pccredit.main;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,10 @@ import com.cardpay.pccredit.customer.service.MaintenanceService;
 import com.cardpay.pccredit.divisional.service.DivisionalService;
 import com.cardpay.pccredit.afterloan.service.AfterloanCheckService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.intopieces.dao.CustomerApplicationIntopieceWaitDao;
+import com.cardpay.pccredit.intopieces.dao.IntoPiecesDao;
+import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
+import com.cardpay.pccredit.intopieces.model.QzApplnApprovalMeeting;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationInfoService;
 import com.cardpay.pccredit.manager.dao.StatisticsManagerDao;
 import com.cardpay.pccredit.manager.service.AccountManagerParameterService;
@@ -63,7 +68,8 @@ import com.wicresoft.util.web.RequestHelper;
  */
 @Controller
 public class MainController {
-
+	@Autowired
+	private IntoPiecesDao intoPiecesDao;
 	@Autowired
 	private GlobalSetting globalSetting;
 
@@ -130,6 +136,9 @@ public class MainController {
 	@Autowired
 	private StatisticalCommonService statisticalCommonService;
 	
+	@Autowired
+	private CustomerApplicationIntopieceWaitDao customerApplicationIntopieceWaitDao;
+	
 	@ResponseBody
 	@RequestMapping(value = "/main.page", method = { RequestMethod.GET })
 	public AbstractModelAndView mainPage(HttpServletRequest request) {
@@ -169,14 +178,14 @@ public class MainController {
 		//查询所检查提醒任务
 		//获取贷后点击通知时限和截止时限
 		List<Dict> dict = customerInforService.findDict("afterloan");
-		String reminddate="";
-		String enddate="";
+		String remindTime="";
+		String endTime="";
 		for(int i=0;i<dict.size();i++){
 			Dict dictd = dict.get(i);
 			if("reminddate".equals(dictd.getTypeCode())){
-				reminddate=dictd.getTypeName();
+				remindTime=dictd.getTypeName();
 			}else if("enddate".equals(dictd.getTypeCode())){
-				enddate=dictd.getTypeName();
+				endTime=dictd.getTypeName();
 			}
 		}
 		//int remindCount = afterLoanCheckService.findAferLoanCheckRemindCount(enddate,userId);
@@ -185,7 +194,7 @@ public class MainController {
 		if(accountManagerParameter != null ){
 		 level = accountManagerParameter.getLevelInformation();
 		}
-		String pageurl ="";
+		/*String pageurl ="";
 		if(level.equals("MANA005") || level.equals("MANA003") ){
 			
 			//pageurl = "home/managerhome";
@@ -195,7 +204,8 @@ public class MainController {
 			
 			pageurl = "home/home";	
 		
-		}
+		}*/
+		String pageurl = "home/home";
 		JRadModelAndView mv = new JRadModelAndView(pageurl, request);
 		/*统计客户已授信额度
 		Double doubleApply=managerAssessmentScoreService.getManagerApplyQuota(userId);
@@ -263,23 +273,74 @@ public class MainController {
 		}*/
 		
 		//新版首页
+		List<String> userIds = null;
+		CustomerApplicationProcessFilter filter = new CustomerApplicationProcessFilter();
+		if(rolename.equals(Constant.COMMON_USER)){
+			userIds = new ArrayList<String>();
+			userIds.add(userId);
+		}
+		else if(rolename.equals(Constant.COMMON_USER_BRANCH) || rolename.equals(Constant.BRANCH_USER)){
+			filter.setFilterOrgId("1");//支行权限
+			//查询机构下的客户经理
+			List<Dict> org_ls = intoPiecesDao.findBelongOrgs(user.getOrganization().getId());
+			for(Dict obj : org_ls){
+				List<Dict> users = intoPiecesDao.findOrgBelogCusMgr(obj.getTypeCode());
+				if(users != null && users.size()>0 && userIds == null){
+					userIds = new ArrayList<String>();
+				}
+				for(Dict obj2 : users){
+					userIds.add(obj2.getTypeCode());
+				}
+			}
+		}
+		else if(rolename.equals(Constant.TEAM_LEADER)){
+			filter.setFilterTeamLeader("1");//团队长
+			//查找团队下的客户经理
+			List<Dict> users = intoPiecesDao.findTeamBelongCusMgr(user.getId());
+			if(users != null && users.size()>0){
+				userIds = new ArrayList<String>();
+			}
+			for(Dict obj : users){
+				userIds.add(obj.getTypeCode());
+			}
+		}
+
+		filter.setUserIds(userIds);
+		
 		//用信预警提示，按客户经理维度
-		List<HomeTips> tips1 = statisticalCommonService.getUsedCreditByUserId(userId);
+		List<HomeTips> tips1 = statisticalCommonService.getUsedCreditByUserId(filter);
 		mv.addObject("tips1",tips1);
 		//贷后提醒
-		List<HomeTips> tips2 = afterLoanCheckService.findAferLoanCheckRemindCountTeam(enddate,reminddate,userId);
+		List<HomeTips> tips2 = afterLoanCheckService.findAferLoanCheckRemindCountTeam(endTime,remindTime,filter);
 		mv.addObject("tips2",tips2);
 		//21日还息提醒
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.DAY_OF_MONTH, 21);
-		List<HomeTips> tips3 = afterLoanCheckService.getPsNormIntAmtListForHome(userId,calendar.getTime());
+		List<HomeTips> tips3 = afterLoanCheckService.getPsNormIntAmtListForHome(filter,calendar.getTime());
 		mv.addObject("tips3",tips3);
 		//即将到期客户(借据)
-		List<HomeTips> tips4 = statisticalCommonService.getExpiryClientNum(userId);
+		List<HomeTips> tips4 = statisticalCommonService.getExpiryClientNum(filter);
 		mv.addObject("tips4",tips4);
 		//已到期客户()
-		List<HomeTips> tips5 = statisticalCommonService.getAlreadyExpiryClientNum(userId);
+		List<HomeTips> tips5 = statisticalCommonService.getAlreadyExpiryClientNum(filter);
 		mv.addObject("tips5",tips5);
+		
+		//查询该客户是否有排审
+		//如果是审贷会成员
+		List<QzApplnApprovalMeeting> meeting_pre_ls = customerApplicationIntopieceWaitDao.findMeetingByUserIdPre(userId);
+		List<QzApplnApprovalMeeting> meeting_today_ls = customerApplicationIntopieceWaitDao.findMeetingByUserIdToday(userId);
+		List<QzApplnApprovalMeeting> meeting_tomorrow_ls = customerApplicationIntopieceWaitDao.findMeetingByUserIdTomorrow(userId);
+		mv.addObject("meeting_pre_ls",meeting_pre_ls);
+		mv.addObject("meeting_today_ls",meeting_today_ls);
+		mv.addObject("meeting_tomorrow_ls",meeting_tomorrow_ls);
+		
+		//如果是客户经理
+		List<QzApplnApprovalMeeting> meeting_pre_manager_ls = customerApplicationIntopieceWaitDao.findMeetingByManagerIdPre(userId);
+		List<QzApplnApprovalMeeting> meeting_today_manager_ls = customerApplicationIntopieceWaitDao.findMeetingByManagerIdToday(userId);
+		List<QzApplnApprovalMeeting> meeting_tomorrow_manager_ls = customerApplicationIntopieceWaitDao.findMeetingByManagerIdTomorrow(userId);
+		mv.addObject("meeting_pre_manager_ls",meeting_pre_manager_ls);
+		mv.addObject("meeting_today_manager_ls",meeting_today_manager_ls);
+		mv.addObject("meeting_tomorrow_manager_ls",meeting_tomorrow_manager_ls);
 		
 		return mv;
 	}

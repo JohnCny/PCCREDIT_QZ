@@ -11,7 +11,7 @@ public class SystemUser extends BusinessModel{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Integer	userType	;//	用户类型，0:SYSTEM,1:LOCAL,2:LDAP
+	private Integer	 userType	;//	用户类型，0:SYSTEM,1:LOCAL,2:LDAP
 	private String	externalId	;//	外部用户ID，如LDAPUSERID
 	private String	login	;//	登录名
 	private String	email	;//	EMAIL地址
@@ -19,7 +19,7 @@ public class SystemUser extends BusinessModel{
 	private String	lastName	;//	姓
 	private String	firstName	;//	名
 	private String	displayName	;//	名称
-	private Integer	age	;//	年龄
+	private Integer	 age	;//	年龄
 	private String	gender	;//	性别
 	private String	idCard	;//	身份证号
 	private String	mobile	;//	移动电话

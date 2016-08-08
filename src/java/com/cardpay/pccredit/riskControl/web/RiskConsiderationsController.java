@@ -64,7 +64,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute RiskConsiderationsFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
         User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -93,7 +93,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskconsiderations/riskconsiderations_create", request);
 		List<FlatTreeNode> orgList = pccOrganizationService.queryAllOrgTreeList(PrivilegeConstants.INIT_ID);
@@ -109,7 +109,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskconsiderations/riskconsiderations_change", request);
 
@@ -133,7 +133,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskconsiderations/riskconsiderations_display", request);
 
@@ -157,7 +157,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute RiskConsiderationsForm riskConsiderationsForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), riskConsiderationsForm);
 		if (returnMap.isSuccess()) {
@@ -186,7 +186,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute RiskConsiderationsForm riskConsiderationsForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), riskConsiderationsForm);
@@ -213,7 +213,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -238,7 +238,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "report.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView report(@ModelAttribute RiskConsiderationsFilter filter,HttpServletRequest request) {
 		AbstractModelAndView mv = browse(filter, request);
 		mv.setViewName("/riskcontrol/riskconsiderations/riskconsiderations_choose");
@@ -255,7 +255,7 @@ public class RiskConsiderationsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "report.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap report(@ModelAttribute RiskReviewProcForm riskReviewProcForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

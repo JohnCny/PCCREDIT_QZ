@@ -56,7 +56,7 @@ public class DimensionalModelController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute DimensionalFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -77,7 +77,7 @@ public class DimensionalModelController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_swpg.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView create_swpg(HttpServletRequest request) { 
 		String customerId = request.getParameter("id");
 		CustomerInfor customer = customerInforService.findCustomerInforById(customerId);
@@ -97,7 +97,7 @@ public class DimensionalModelController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "swpgclone.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView swpgClone(HttpServletRequest request) {
 		String applicationId = request.getParameter("applicationId");
 		Dimensional dimensional = dimensionalService.findDimensionalByAppId(applicationId);
@@ -118,7 +118,7 @@ public class DimensionalModelController extends BaseController {
 	@SuppressWarnings("unused")
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute DimensionalForm dimensionalForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), dimensionalForm);
 		if (returnMap.isSuccess()) {
@@ -157,7 +157,7 @@ public class DimensionalModelController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap update(@ModelAttribute DimensionalForm dimensionalForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), dimensionalForm);
 		if (returnMap.isSuccess()) {

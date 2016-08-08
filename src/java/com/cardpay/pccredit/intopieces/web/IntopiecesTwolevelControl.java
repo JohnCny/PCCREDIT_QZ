@@ -73,8 +73,9 @@ public class IntopiecesTwolevelControl extends BaseController{
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String loginId = user.getId();
 		filter.setLoginId(loginId);
+		filter.setFilterOrgId("1");//安居带要过滤是否同一机构
 		filter.setNodeName(Constant.status_twolevel);
-		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.intopieceWaitFormByUsered(filter);
+		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.intopieceWaitFormByOrgId(filter);
 		JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm> pagedResult = new JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm>(filter, result);
 
 		JRadModelAndView mv = new JRadModelAndView(
@@ -101,65 +102,5 @@ public class IntopiecesTwolevelControl extends BaseController{
 			mv.addObject("operate", Constant.status_twolevel);
 		}
 		return mv;
-	}
-	/**
-	* 申请件审批通过 
-	* 从二级审核-一级审核
-	* @param filter
-	* @param request
-	* @return
-	*/
-	@ResponseBody
-	@RequestMapping(value = "save_apply.json")
-	public JRadReturnMap saveApply(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("id");
-			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
-			request.setAttribute("serialNumber", process.getSerialNumber());
-			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
-			request.setAttribute("objection", "false");
-			//查找审批金额
-			Circle circle = circleService.findCircleByAppId(appId);
-				
-			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	/**
-	 * 申请件退件
-	 * 
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "returnAppln.json")
-	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			int nodeNo = 3;//内部审核
-			String appId = request.getParameter("appId");
-			String operate = request.getParameter("operate");
-			String nodeName = request.getParameter("nodeName");
-			//退回客户经理和其他岗位不一致
-			if("1".equals(nodeName)){
-				
-				intoPiecesService.checkDoNotToManager(appId,request);
-			}else{
-				intoPiecesService.returnAppln(appId, request,nodeName);
-			}
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
 	}
 }

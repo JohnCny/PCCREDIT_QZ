@@ -204,7 +204,7 @@
 		});
 		if(id!=null){
 			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
-			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+			Dialog.tablePage(url, "查看审批历史", "get", null, 700, 800);
 		}else{
 			Dialog.message("请选择要被查看的进件!");
 		}

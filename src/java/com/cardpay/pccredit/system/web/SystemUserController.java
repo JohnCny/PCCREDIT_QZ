@@ -55,7 +55,7 @@ public class SystemUserController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute SystemUserFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		String selectval = request.getParameter("selectval");
@@ -88,7 +88,7 @@ public class SystemUserController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectOrgId.json")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public JRadReturnMap selectOrgId(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {

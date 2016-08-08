@@ -37,6 +37,9 @@
 	     <div class="ui-left f_l">
 		    <ul class="tabs clearfix">
 			   <li class="first selectTag">
+                    <a href="javascript:void(0)">未审批</a>
+               </li>
+			   <li>
                     <a href="javascript:void(0)">今天</a>
                </li>
 			   <li>
@@ -46,65 +49,71 @@
 			<div class="tabContent" style="display:block;">
 				<div class="ui-item slide-item">
 			      <div class="hd clearfix">
-				     <span>日程安排</span>
+				     <span>审贷会</span>
 				  </div>
 				  <table class="rcap">
-					<tr>
-						<td class="time">13:00~14:00</td>
-						<td>会议</td>
-					</tr>
-					<tr>
-						<td class="time">15:00~16:00</td>
-						<td>审贷会</td>
-					</tr>
-					<tr>
-						<td class="time">15:00~16:00</td>
-						<td>审贷会</td>
-					</tr>
-					<tr>
-						<td class="time">15:00~16:00</td>
-						<td>审贷会</td>
-					</tr>
-					<tr>
-						<td class="time">15:00~16:00</td>
-						<td>审贷会</td>
-					</tr>
+					#foreach ($obj in $meeting_pre_ls)
+						<tr>
+							<td class="time">$!obj.displayTime #dictVal("MEETINGTIME",${obj.mindex})</td>
+							<td>客户：$!obj.customerName 客户经理：$!obj.managerName 审贷员：$!obj.userName 产品：$!obj.productName</td>
+						</tr>
+					#end
+					
+					#foreach ($obj in $meeting_pre_manager_ls)
+						<tr>
+							<td class="time">$!obj.displayTime #dictVal("MEETINGTIME",${obj.mindex})</td>
+							<td>客户：$!obj.customerName 客户经理：$!obj.managerName 审贷员：$!obj.userName 产品：$!obj.productName</td>
+						</tr>
+					#end
+				  </table>				
+			   </div>			   
+			</div>
+			<div class="tabContent" style="display:none;">
+				<div class="ui-item slide-item">
+			      <div class="hd clearfix">
+				     <span>审贷会</span>
+				  </div>
+				  <table class="rcap">
+					#foreach ($obj in $meeting_today_ls)
+						<tr>
+							<td class="time">$!obj.displayTime #dictVal("MEETINGTIME",${obj.mindex})</td>
+							<td>客户：$!obj.customerName 客户经理：$!obj.managerName 审贷员：$!obj.userName 产品：$!obj.productName</td>
+						</tr>
+					#end
+					
+					#foreach ($obj in $meeting_today_manager_ls)
+						<tr>
+							<td class="time">$!obj.displayTime #dictVal("MEETINGTIME",${obj.mindex})</td>
+							<td>客户：$!obj.customerName 客户经理：$!obj.managerName 审贷员：$!obj.userName 产品：$!obj.productName</td>
+						</tr>
+					#end
+				  </table>				
+			   </div>			   
+			</div>
+			<div class="tabContent" style="display:none;">
+				<div class="ui-item slide-item">
+			      <div class="hd clearfix">
+				     <span>审贷会</span>
+				  </div>
+				  <table class="rcap">
+					#foreach ($obj in $meeting_tomorrow_ls)
+						<tr>
+							<td class="time">$!obj.displayTime #dictVal("MEETINGTIME",${obj.mindex})</td>
+							<td>客户：$!obj.customerName 客户经理：$!obj.managerName 审贷员：$!obj.userName 产品：$!obj.productName</td>
+						</tr>
+					#end
+					
+					#foreach ($obj in $meeting_tomorrow_manager_ls)
+						<tr>
+							<td class="time">$!obj.displayTime #dictVal("MEETINGTIME",${obj.mindex})</td>
+							<td>客户：$!obj.customerName 客户经理：$!obj.managerName 审贷员：$!obj.userName 产品：$!obj.productName</td>
+						</tr>
+					#end
 				  </table>				
 			   </div>			   
 			</div>
 		 </div>
-		 <!-- <div class="ui-right f_r">
-		    <div class="ui-user">
-			   <div class="hd"><a>用户信息</a>
-			   </div>
-			   <div class="bd">
-			      <div class="left">
-				     <!-- <img src="${uicasePath}/images/img_01.png" /> -->
-				  <!-- </div>
-				  <div class="right">
-				     <span>用户名：$!accountManagerParameter.displayName</span>
-				      #if($!accountManagerParameter.levelInformation)
-				     <span>层级：#dictVal('CUSTOMERMANAGERLEVEL',$!accountManagerParameter.levelInformation)</span>
-				     #end
-					 <span>职位：$!rolename</span>
-					 <span>所属机构：$!organizationname</span>
-				  </div>
-			   </div>
-			</div>
-			<div class="ui-bar">
-			   <a href="${contextPath}/intopieces/intopiecesquery/browse.page?status=save" class="color1">
-			      <span>未</span>
-				  <em>$!not</em>
-			   </a>
-			   <a href="${contextPath}/intopieces/intopiecesquery/browse.page?status=succeed" class="color2">
-			      <span>已</span>
-				  <em>$!already</em>
-			   </a>
-			   <a href="${contextPath}/intopieces/intopiecesquery/browse.page?status=audit" class="color3">
-			      <span>待</span>
-				  <em>$!wait</em>
-			   </a>
-			</div> -->
+		 
 		 </div>
 	  </div>
    </div>
@@ -124,6 +133,7 @@
 						<table>
 							<tr>
 								<th>客户经理</th>
+								<th>客户</th>
 								<th>授信总额</th>
 								<th>用信总额</th>
 								<th>百分比</th>
@@ -132,6 +142,7 @@
 								#if($obj.percent >= 70)
 									<tr>
 										<td>$obj.userName</td>
+										<td>$obj.clientName</td>
 										<td>$obj.allCreditAmount</td>
 										<td>$obj.usedCreditAmount</td>
 										<td>$obj.percent%</td>

@@ -53,7 +53,7 @@ public class AfterLoanCheckRemindController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "remind.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView remind(@ModelAttribute AfterLoanCheckFilter filter,HttpServletRequest request){
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);

@@ -53,7 +53,7 @@ public class RiskReviewProcController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "confirmed.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap confirmed(@ModelAttribute RiskReviewProcForm riskReviewProcForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -84,7 +84,7 @@ public class RiskReviewProcController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "reject.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap reject(@ModelAttribute RiskReviewProcForm riskReviewProcForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -114,7 +114,7 @@ public class RiskReviewProcController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "publish.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView publish(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskreviewprocess/riskconsiderations_publish", request);
 
@@ -138,7 +138,7 @@ public class RiskReviewProcController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "publish.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap publish(@ModelAttribute RiskConsiderationsForm riskConsiderationsForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		returnMap.setSuccess(true);

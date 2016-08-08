@@ -42,7 +42,7 @@ public class ManagerDownRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		List<DownGradeRule> downGradeRulelist = managerDownRuleService.getDownGradeRule();
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerdownrule/manager_down_update", request);
@@ -78,7 +78,7 @@ public class ManagerDownRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "save.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView maintenanceAccountManagerchange(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerdownrule/manager_down_update", request);
 		try {

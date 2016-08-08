@@ -66,7 +66,7 @@ public class RiskViewSubCollectionController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute RiskCustomerCollectionPlanFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskViewSubCollection/collection_plan_browse", request);
 		filter.setRequest(request);
@@ -103,7 +103,7 @@ public class RiskViewSubCollectionController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskViewSubCollection/collection_plan_change", request);
 
@@ -122,7 +122,7 @@ public class RiskViewSubCollectionController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskViewSubCollection/collection_plan_display", request);
 		String collectionPlanId = RequestHelper.getStringValue(request, ID);
@@ -142,7 +142,7 @@ public class RiskViewSubCollectionController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute RiskCustomerCollectionPlanForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -182,7 +182,7 @@ public class RiskViewSubCollectionController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "changeAction.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeAction(HttpServletRequest request) {
 		String id = RequestHelper.getStringValue(request, ID);
 		RiskCustomerCollectionPlansAction riskCustomerCollectionPlansAction = riskCustomerCollectionService.findRiskCustomerCollectionPlansActionById(id);
@@ -198,7 +198,7 @@ public class RiskViewSubCollectionController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateAction.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updateAction(@ModelAttribute RiskCustomerCollectionPlansActionForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {

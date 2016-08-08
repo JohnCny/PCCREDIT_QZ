@@ -50,6 +50,7 @@ public class QzApplnDshJyd extends BusinessModel {
 	private String repaymentTerm;
 	private String repayType;
 	private String guaranteeItems;
+	private String otherSug;
 	private String focusContent;
 	private String otherRequirement;
 	private String refuseReason;
@@ -57,6 +58,7 @@ public class QzApplnDshJyd extends BusinessModel {
 	private String checkManagerName;
 	private String subBranchManagerSug;
 	private String subBranchManagerId;
+	private String centerSug;
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -272,5 +274,17 @@ public class QzApplnDshJyd extends BusinessModel {
 	}
 	public void setSubBranchManagerId(String subBranchManagerId) {
 		this.subBranchManagerId = subBranchManagerId;
+	}
+	public String getOtherSug() {
+		return otherSug;
+	}
+	public void setOtherSug(String otherSug) {
+		this.otherSug = otherSug;
+	}
+	public String getCenterSug() {
+		return centerSug;
+	}
+	public void setCenterSug(String centerSug) {
+		this.centerSug = centerSug;
 	}
 }

@@ -21,12 +21,16 @@ public class AccLoanOverdueInfo extends BusinessModel{
 	private Double contAmt;//授信金额
 	private Double loanAmt;//贷款金额
 	private Double intAccum;//欠息总额
-	private String qixiDate;//起息日期
+	private String qixiDate;//贷款日期
+	private String distrDate;//贷款到期日
 	private String accStatus;//贷款状态
 	private Double overdueMoney;//累计逾期金额
 	private String overdue;//逾期期数
 	private String clientName;//客户名称
 	private Double loanBalance;//贷款余额
+	
+	private String overdueBalance;//逾期余额
+	private String overdueDayCnt;//逾期天数
 	
 	public String getRowIndex() {
 		return rowIndex;
@@ -130,5 +134,22 @@ public class AccLoanOverdueInfo extends BusinessModel{
 	public void setLoanBalance(Double loanBalance) {
 		this.loanBalance = loanBalance;
 	}
-	
+	public String getOverdueBalance() {
+		return overdueBalance;
+	}
+	public void setOverdueBalance(String overdueBalance) {
+		this.overdueBalance = overdueBalance;
+	}
+	public String getOverdueDayCnt() {
+		return overdueDayCnt;
+	}
+	public void setOverdueDayCnt(String overdueDayCnt) {
+		this.overdueDayCnt = overdueDayCnt;
+	}
+	public String getDistrDate() {
+		return distrDate;
+	}
+	public void setDistrDate(String distrDate) {
+		this.distrDate = distrDate;
+	}
 }

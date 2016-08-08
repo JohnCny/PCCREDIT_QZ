@@ -531,25 +531,19 @@
         left join product_attribute pa on CAI.PRODUCT_ID = pa.id
         where CAI.STATUS = 'approved'
       ),
-	users as 
-      (
-        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
-        mbm.child_id 
-        FROM 
-        manager_belong_map mbm 
-        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-        WHERE 
-        amp.user_id = #{userId})
-        union select #{userId} as user_id from dual
-      ),
       endDateList as (select 
 			count(*) as endDateNum,circle.manager_id
  			from psp_check_task task
  			inner join circle on task.cus_id = circle.client_no
 			where 1 = 1
   			and task.approve_status='0'
-  			and trunc(sysdate-to_date(task.TASK_CREATE_DATE,'yyyy-mm-dd'))<![CDATA[ >  ]]>  #{enddate}
-  			AND circle.manager_id in (select user_id from users)
+  			and trunc(sysdate-to_date(task.TASK_CREATE_DATE,'yyyy-mm-dd'))<![CDATA[ >  ]]>  #{endTime}
+  			<if test="userIds != null">
+   		and circle.manager_id in
+            	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                    #{item}
+            	</foreach> 
+            </if>
   			group by circle.manager_id),
       
 		remindDateList as (select 
@@ -558,15 +552,26 @@
  			inner join circle on task.cus_id = circle.client_no
 			where 1 = 1
   			and task.approve_status='0'
-  			and trunc(sysdate-to_date(task.TASK_CREATE_DATE,'yyyy-mm-dd'))<![CDATA[ >  ]]>  #{reminddate}
-  			AND circle.manager_id in (select user_id from users)
+  			and trunc(sysdate-to_date(task.TASK_CREATE_DATE,'yyyy-mm-dd'))<![CDATA[ >  ]]>  #{remindTime}
+  			<if test="userIds != null">
+   		and circle.manager_id in
+            	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                    #{item}
+            	</foreach> 
+            </if>
   			group by circle.manager_id)
   			
   		select su.display_name as userName,nvl(endDateList.endDateNum,0) as endDateNum,nvl(remindDateList.remindDateNum,0) as remindDateNum
-  		from users 
-  		left join sys_user su on su.id = users.user_id
-  		left join endDateList on users.user_id = endDateList.manager_id
-  		left join remindDateList on users.user_id = remindDateList.manager_id
+  		from sys_user su
+  		left join endDateList on su.id = endDateList.manager_id
+  		left join remindDateList on su.id = remindDateList.manager_id
+  		where 1=1
+  		<if test="userIds != null">
+			and su.id in 
+          	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                  #{item}
+          	</foreach> 
+          </if>
 	</select>
 	<select id="findAfterLoanHistoryTaskByFilter" resultMap="ResultMap">
     	SELECT * FROM
@@ -602,15 +607,12 @@
   			from psp_check_task task 
   			left join qz_iesb_for_ecif ecif on task.cus_id = ecif.client_no
  			where 1 = 1
-   			and (ecif.USER_ID = #{userId} or ecif.CUST_MANAGER_ID in ( 
-				select T2.EXTERNAL_ID from ACCOUNT_MANAGER_PARAMETER t1 left join SYS_USER t2 on t1.USER_ID = T2.id where T1.id in (SELECT 
-				mbm.child_id 
-				FROM 
-				manager_belong_map mbm 
-				LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-				WHERE 
-				amp.user_id = #{userId})
-				or T1.id = #{userId}))
+   				<if test="userIds != null">
+   					and ecif.USER_ID in 
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>
    			and task.approve_status='2'
    			and ecif.CLIENT_NO is not null
    			 <if test="chineseName != null and chineseName != '' ">
@@ -683,15 +685,12 @@
   			from psp_check_task task
   			left join qz_iesb_for_ecif ecif on task.cus_id = ecif.client_no
  			where 1 = 1
-   			and (ecif.USER_ID = #{userId} or ecif.CUST_MANAGER_ID in ( 
-				select T2.EXTERNAL_ID from ACCOUNT_MANAGER_PARAMETER t1 left join SYS_USER t2 on t1.USER_ID = T2.id where T1.id in (SELECT 
-				mbm.child_id 
-				FROM 
-				manager_belong_map mbm 
-				LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-				WHERE 
-				amp.user_id = #{userId})
-				or T1.id = #{userId}))
+   				<if test="userIds != null">
+   					and ecif.USER_ID in 
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>
    			and task.approve_status='2'
    			and ecif.CLIENT_NO is not null
    			<if test="chineseName != null and chineseName != '' ">

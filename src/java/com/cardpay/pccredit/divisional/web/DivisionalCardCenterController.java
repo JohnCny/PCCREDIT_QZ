@@ -64,7 +64,7 @@ public class DivisionalCardCenterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute DivisionalFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		filter.setDivisionalProgress(DivisionalConstant.CFCC);
@@ -84,7 +84,7 @@ public class DivisionalCardCenterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISTRIBUTION)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/divisional/cfccllot/cfccllot_display", request);
 		String divisionalId = RequestHelper.getStringValue(request, ID);
@@ -104,7 +104,7 @@ public class DivisionalCardCenterController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cfccllot.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISTRIBUTION)
+	
 	public Map<String, Object> divisional(@ModelAttribute DivisionalForm form,HttpServletRequest request) {
 		Map<String, Object> returnMap = new HashMap<String,Object>();
 		String orgId = form.getOrgId();

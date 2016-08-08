@@ -226,7 +226,7 @@ public class DivisionalController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "upload.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISTRIBUTION)
+	
 	public Map<String, Object> upload(HttpServletRequest request) {
 		Map<String, Object> returnMap = new HashMap<String,Object>();
 		String id = RequestHelper.getStringValue(request, ID);

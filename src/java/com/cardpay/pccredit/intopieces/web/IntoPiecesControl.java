@@ -99,7 +99,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute IntoPiecesFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -127,7 +127,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "applyIntopiecesQuery.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView applyIntopiecesQuery(@ModelAttribute IntoPiecesFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -147,7 +147,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "queryCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView queryCard(@ModelAttribute MakeCardFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -167,7 +167,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "managerQueryCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView managerQueryCard(@ModelAttribute MakeCardFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -188,7 +188,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insertCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView insertCard(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/card_input", request);
 		return mv;
@@ -203,7 +203,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveCardData.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String, Object> saveCardData(@ModelAttribute MakeCard makeCard,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html;charset=utf-8");
@@ -240,7 +240,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "organizationIssuedCard.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String, Object> organizationIssuedCard(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -270,7 +270,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "viewCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView viewCard(HttpServletRequest request) {
 		MakeCard makeCard = intoPiecesService.findMakeCardById(request.getParameter(ID));
 		JRadModelAndView mv = new JRadModelAndView(
@@ -291,7 +291,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "chooseCustomerName.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView chooseCustomerName(HttpServletRequest request,
 			HttpServletResponse response) {
 		// TODO q?
@@ -320,7 +320,7 @@ public class IntoPiecesControl extends BaseController {
 	// TODO 选择使用JRadOperation.CREATE？
 	@ResponseBody
 	@RequestMapping(value = "chooseCustomer.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView chooseCustomer(
 			@ModelAttribute CustomerInforFilter filter,
 			HttpServletRequest request) {
@@ -346,7 +346,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "chooseCustomerById.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView chooseCustomerById(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView(
 				"/intopieces/customer_choose_by_id", request);
@@ -362,7 +362,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "input.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView input(HttpServletRequest request) {
 		/* 客户信息 */
 		CustomerInfor customerInfor = null;
@@ -508,7 +508,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		/* 客户信息 */
 		CustomerInfor customerInfor = null;
@@ -652,7 +652,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "save.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public void save(
 			@ModelAttribute CustomerApplicationCom customerApplicationCom,
 			@ModelAttribute CustomerApplicationContactVo customerApplicationContactVo,
@@ -682,7 +682,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public void update(
 			@ModelAttribute CustomerApplicationCom customerApplicationCom,
 			@ModelAttribute CustomerApplicationContactVo customerApplicationContactVo,
@@ -1015,7 +1015,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectByLike.json", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView selectByLike(HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
@@ -1039,7 +1039,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String,Object> delete(HttpServletRequest request,
 			HttpServletResponse response) throws Exception{
 		Map<String,Object> map = null;
@@ -1069,7 +1069,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectProductAppendix.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView selectProductAppendix(
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -1110,7 +1110,6 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "importData.page")
-	@JRadOperation(JRadOperation.EXPORTUPLOAD)
 	public Map<String,Object>  importData(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String,Object> map = null;
@@ -1155,7 +1154,7 @@ public class IntoPiecesControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkValue.json")
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String, Object> checkValue(HttpServletRequest request) {
 		boolean flag = false;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1194,7 +1193,7 @@ public class IntoPiecesControl extends BaseController {
 	*/
 	@ResponseBody
 	@RequestMapping(value = "importCustomerInfo.page")
-	@JRadOperation(JRadOperation.IMPORT)
+	
 	public AbstractModelAndView importCustomerInfo(HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/customer_import", request);
 		return mv;
@@ -1209,7 +1208,7 @@ public class IntoPiecesControl extends BaseController {
 	*/
 	@ResponseBody
 	@RequestMapping(value = "importSubmit.json")
-	@JRadOperation(JRadOperation.IMPORT)
+	
 	public Map<String, Object> importSubmit(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException {        
 		response.setContentType("text/html;charset=utf-8");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1251,7 +1250,7 @@ public class IntoPiecesControl extends BaseController {
 	*/
 	@ResponseBody
 	@RequestMapping(value = "checkApplyQuota.json")
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String, Object> checkApplyQuota(HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		float quota = Float.valueOf(request.getParameter("applyQuota"));

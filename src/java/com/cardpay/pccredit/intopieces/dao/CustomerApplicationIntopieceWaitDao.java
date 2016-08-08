@@ -1,6 +1,9 @@
 package com.cardpay.pccredit.intopieces.dao;
 
+import java.util.Date;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
@@ -8,7 +11,10 @@ import com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess;
 import com.cardpay.pccredit.intopieces.model.QuotaProcess;
 import com.cardpay.pccredit.intopieces.model.QuotaProcessSx;
 import com.cardpay.pccredit.intopieces.model.QuotaProcessZa;
+import com.cardpay.pccredit.intopieces.model.QzApplnApprovalMeeting;
 import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
+import com.cardpay.pccredit.system.model.SystemUser;
+import com.cardpay.workflow.models.WfStatusQueueRecord;
 import com.wicresoft.util.annotation.Mapper;
 
 /**
@@ -66,11 +72,6 @@ public interface CustomerApplicationIntopieceWaitDao {
 	// 获取补充上会的进件count
 	public int CountshouxinAddInforForm(CustomerApplicationProcessFilter filter);
 	
-	//安居贷相应状态进件显示-针对审核人不同
-	public List<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByUsered(CustomerApplicationProcessFilter filter);
-	//安居贷相应状态进件显示count-针对审核人不同
-	public int CountIntopieceWaitFormByUsered(CustomerApplicationProcessFilter filter);
-	
 	//贷生活10万及以下相应状态进件显示-同一机构
 	public List<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByOrgId(CustomerApplicationProcessFilter filter);
 	//贷生活10万及以下相应状态进件显示count-同一机构
@@ -82,4 +83,35 @@ public interface CustomerApplicationIntopieceWaitDao {
 	public int updateQuotaProcessSxBySerialNumber(QuotaProcessSx process);
 	//更新专案进度表
 	public int updateQuotaProcessZaBySerialNumber(QuotaProcessZa process);
+	
+	//查询该笔进件是否已经排审
+	public QzApplnApprovalMeeting findMeetingByAppId(@Param("appId") String appId);
+
+	public List<QzApplnApprovalMeeting> findMeetingByUserIdPre(@Param("userId") String userId);
+	public List<QzApplnApprovalMeeting> findMeetingByUserIdToday(@Param("userId") String userId);
+	public List<QzApplnApprovalMeeting> findMeetingByUserIdTomorrow(@Param("userId") String userId);
+
+	public List<SystemUser> findSomeOneAsChecker(@Param("nodeId") String nodeId,@Param("meetingTime") Date meetingTime);
+
+	public List<SystemUser> findSomeOneAsCheckerMiniTimes(@Param("nodeId") String nodeId);
+
+	public List<Integer> findLastMeetingByUserIdAndDate(@Param("userId") String userId,@Param("meetingTime") Date meetingTime);
+	public List<Integer> findLastMeetingByManagerIdAndDate(@Param("manager_id") String manager_id,@Param("meetingTime") Date meetingTime);
+
+	public List<QzApplnApprovalMeeting> findMeetingByManagerIdPre(@Param("managerId") String managerId);
+	public List<QzApplnApprovalMeeting> findMeetingByManagerIdToday(@Param("managerId") String managerId);
+	public List<QzApplnApprovalMeeting> findMeetingByManagerIdTomorrow(@Param("managerId") String managerId);
+
+	public List<QzApplnApprovalMeeting> findPreMeetingByCustomerId(@Param("customerId") String customerId);
+
+	public List<CustomerApplicationIntopieceWaitForm> intopieceWaitFormByOrgIdSpecial(CustomerApplicationProcessFilter filter);
+	public int CountIntopieceWaitFormByOrgIdSpecial(CustomerApplicationProcessFilter filter);
+
+	public List<WfStatusQueueRecord> findPreWFByCustomerId(@Param("customerId") String customerId);
+
+	public List<CustomerApplicationIntopieceWaitForm> IntopieceWaitFormAllInOne(CustomerApplicationProcessFilter filter);
+	public int CountIntopieceWaitFormAllInOne(CustomerApplicationProcessFilter filter);
+
+	public List<SystemUser> findAllChecker(@Param("nodeId") String nodeId);
+	public List<SystemUser> findAllChecker2();
 }

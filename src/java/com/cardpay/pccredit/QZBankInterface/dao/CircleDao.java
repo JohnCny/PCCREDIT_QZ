@@ -28,6 +28,6 @@ public interface CircleDao {
 
 	List<Circle> findCircleApproved(@Param("customerId") String customerId);
 	List<Circle> findPreCircle(@Param("customerId") String customerId);
-	
+	List<Circle> findLastPreCircle(@Param("customerId") String customerId);
 	List<Circle> findByCustomerId(@Param("customerId") String customerId);
 }

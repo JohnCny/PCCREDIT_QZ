@@ -76,8 +76,8 @@
 	<select id="findAccountManagerParameterByUserId" resultMap="AccountManagerParameterFormMap">
 		SELECT T.*, s.DISPLAY_NAME
 		FROM ACCOUNT_MANAGER_PARAMETER T
-		LEFT JOIN SYS_USER s ON T.USER_ID = s.ID
-		WHERE s.USER_TYPE = '1' and t.user_id = #{userId}
+		right JOIN SYS_USER s ON T.USER_ID = s.ID
+		WHERE s.id = #{userId}
 	</select>
 	
 	<select id="findRoleNameByUserId" resultType="String">

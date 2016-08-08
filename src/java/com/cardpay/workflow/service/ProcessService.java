@@ -47,7 +47,7 @@ public class ProcessService {
 	private WfStatusQueueRecordDao wfStatusQueueRecordDao;
 	
 	//获取下一个节点的状态
-	public boolean getNextIsEnd(String wfProcessRecordID,String exUserID,String exResult){
+	public WfStatusInfo getNextIsEnd(String wfProcessRecordID,String exUserID,String exResult){
 		//根据当前审批结果 查找审批结果表 获取下一个审批状态
 		WfProcessRecord wfProcessRecord = commonDao.findObjectById(WfProcessRecord.class, wfProcessRecordID);
 		WfStatusQueueRecord wfStatusQueueRecord = commonDao.findObjectById(WfStatusQueueRecord.class,wfProcessRecord.getWfStatusQueueRecord());
@@ -55,11 +55,7 @@ public class ProcessService {
 		
 		//判断下一个审批批状态是否为结束状态
 		WfStatusInfo wfStatusInfo = commonDao.findObjectById(WfStatusInfo.class, wfStatusResult.getNextStatus());
-		if(wfStatusInfo.getIsClosed().equals("1")){//标示下一状态为结束
-			return true;
-		}else{
-			return false;
-		}
+		return wfStatusInfo;
 	}
 	/**
 	 * 流程开始,根据状态流转表取得该下一状态信息，同时流程记录表中新增一条记录

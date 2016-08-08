@@ -85,7 +85,7 @@ public class CardStatisticalManagerDimensionController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute StatisticalFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -122,7 +122,7 @@ public class CardStatisticalManagerDimensionController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "report.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView report(@ModelAttribute StatisticalFilter filter, HttpServletRequest request) throws IOException {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -195,7 +195,7 @@ public class CardStatisticalManagerDimensionController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "reportTip.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView reportTip(HttpServletRequest request) throws IOException {
 		HttpSession session = request.getSession(); //创建 
 		

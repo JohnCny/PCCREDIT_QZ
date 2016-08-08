@@ -66,7 +66,7 @@ public class RiskCustomerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "report.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap report(@ModelAttribute RiskCustomerForm riskCustomerForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -93,7 +93,7 @@ public class RiskCustomerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "confirmed.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap confirmed(@ModelAttribute RiskCustomerForm riskCustomerForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -120,7 +120,7 @@ public class RiskCustomerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "reject.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap reject(@ModelAttribute RiskCustomerForm riskCustomerForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -146,7 +146,7 @@ public class RiskCustomerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "blacklistcreate.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView blacklistCreate(@ModelAttribute RiskCustomerFilter filter, HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/riskCustomer/riskcustomer_create", request);
 		RiskAttributeFilter rafilter = new RiskAttributeFilter();
@@ -175,7 +175,7 @@ public class RiskCustomerController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute RiskCustomerForm riskCustomerForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), riskCustomerForm);
 		
@@ -222,7 +222,7 @@ public class RiskCustomerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "isInBlacklist.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap isInBlacklist(@ModelAttribute RiskCustomerFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);		
 		JRadReturnMap returnMap = new JRadReturnMap();

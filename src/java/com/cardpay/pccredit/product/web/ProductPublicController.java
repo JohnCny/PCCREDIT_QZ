@@ -58,7 +58,7 @@ public class ProductPublicController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ProductFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -79,7 +79,7 @@ public class ProductPublicController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "filter.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_organization", request);
 		String productId = request.getParameter("id");
@@ -98,7 +98,6 @@ public class ProductPublicController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insertCpjg.json")
-	@JRadOperation(JRadOperation.APPROVEPASS)
 	public JRadReturnMap insertCpjg(@ModelAttribute ProductsAgencyAssociation productsAgencyAssociation, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), productsAgencyAssociation);
 		if (returnMap.isSuccess()) {
@@ -156,7 +155,6 @@ public class ProductPublicController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "productPublished.json")
-	@JRadOperation(JRadOperation.PUBLISHED)
 	public JRadReturnMap productPublished(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		String productId = request.getParameter("id");

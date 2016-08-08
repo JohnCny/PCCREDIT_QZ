@@ -58,7 +58,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ManagerRiskWarningFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -81,7 +81,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String loginId = user.getId();
@@ -100,7 +100,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute ManagerRiskWarningForm managerRiskWarningForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		returnMap.setSuccess(true);
@@ -140,7 +140,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(@ModelAttribute ManagerRiskWarningFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/manager_risk_warning/manager_risk_change", request);
 
@@ -161,7 +161,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute ManagerRiskWarningForm managerRiskWarningForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), managerRiskWarningForm);
@@ -187,7 +187,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatefeedback.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updatefeedback(@ModelAttribute ManagerRiskWarningForm managerRiskWarningForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), managerRiskWarningForm);
@@ -216,7 +216,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(@ModelAttribute ManagerRiskWarningFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/manager_risk_warning/manager_risk_display", request);
 
@@ -237,7 +237,7 @@ public class ManagerRiskWarningController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 

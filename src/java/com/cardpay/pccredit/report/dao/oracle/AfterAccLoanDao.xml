@@ -38,10 +38,13 @@
 	    <result property="loanBalance" column="loanBalance" />
 	    <result property="intAccum" column="intAccum" />
 	    <result property="qixiDate" column="qixiDate" />
+	    <result property="distrDate" column="distrDate" />
 	    <result property="accStatus" column="accStatus" />
 	    <result property="clientName" column="clientName" />
 	    <result property="overdueMoney" column="overdueMoney" />
 	    <result property="overdue" column="overdue" />
+	    <result property="overdueBalance" column="overdueBalance" />
+	    <result property="overdueDayCnt" column="overdueDayCnt" />
 	 </resultMap>
 	 
 	<resultMap id="CollectResultMap" type="com.cardpay.pccredit.report.model.AccLoanCollectInfo">
@@ -65,6 +68,42 @@
 	    <result property="overdueCusM2" column="M2" />
 	    <result property="overdueCusM3" column="M3" />
 	    <result property="overdueCusM4" column="M4" />
+	 </resultMap>
+	 
+	 <resultMap id="CollectResultMapNew" type="com.cardpay.pccredit.report.model.AccLoanCollectInfoNew">
+	    <result property="rowIndex" column="rowindex" />
+	    <result property="value_1_1_start" column="value_1_1_start" />
+	    <result property="value_1_1_end" column="value_1_1_end" />
+		<result property="value_1_2_start" column="value_1_2_start" />
+		<result property="value_1_2_end" column="value_1_2_end" />
+		<result property="value_2_1" column="value_2_1" />
+		<result property="value_2_2" column="value_2_2" />
+		<result property="value_3_1" column="value_3_1" />
+		<result property="value_3_2" column="value_3_2" />
+		<result property="value_4_2" column="value_4_2" />
+		<result property="value_5_1" column="value_5_1" />
+		<result property="value_5_2_start" column="value_5_2_start" />
+		<result property="value_5_2_end" column="value_5_2_end" />
+		<result property="value_5_3_start" column="value_5_3_start" />
+		<result property="value_5_3_end" column="value_5_3_end" />
+		<result property="value_6_3" column="value_6_3" />
+		<result property="value_7_1_start" column="value_7_1_start" />
+		<result property="value_7_1_end" column="value_7_1_end" />
+		<result property="value_7_2_start" column="value_7_2_start" />
+		<result property="value_7_2_end" column="value_7_2_end" />
+		<result property="value_8_1" column="value_8_1" />
+		<result property="value_8_2" column="value_8_2" />
+		<result property="value_8_3" column="value_8_3" />
+		<result property="value_8_4" column="value_8_4" />
+		<result property="value_9_1" column="value_9_1" />
+		<result property="value_9_2" column="value_9_2" />
+		<result property="value_10_1_start" column="value_10_1_start" />
+		<result property="value_10_1_end" column="value_10_1_end" />
+		<result property="value_10_2_start" column="value_10_2_start" />
+		<result property="value_10_2_end" column="value_10_2_end" />
+		<result property="value_11_1" column="value_11_1" />
+		<result property="value_11_2" column="value_11_2" />
+		<result property="value_11_3" column="value_11_3" />
 	 </resultMap>
 	 
 	<resultMap id="PsNormIntAmtResultMap" type="com.cardpay.pccredit.report.model.PsNormIntAmt">
@@ -117,16 +156,16 @@ where CAI.STATUS = 'approved')
        		circle.PRODUCT_ID as productId,
        		circle.product_name as productName,
        		circle.client_name as clientName
-  		from O_CLPM_ACC_LOAN loan
-  		inner join circle on loan.cont_no = circle.RET_CONTNO
-  		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
-  		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.user_id = su.id
-  		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+  		from O_CLPM_ACC_LOAN_HISTORY loan
+  		left join circle on loan.cont_no = circle.RET_CONTNO
+  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
+  		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
+  		left join sys_user su on circle.user_id = su.id
+  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
   		and  (loan.prd_id='100084' or loan.prd_id='100085')
-  		and to_date(loan.distr_date,'yyyy-mm-dd') between #{startDate} and #{endDate}
+  		and to_date(loan.data_dt,'yyyy-mm-dd') = #{endDate}
   		<if test="userId != null and userId != '' ">
 			and circle.user_id = #{userId}
  		</if>
@@ -135,9 +174,6 @@ where CAI.STATUS = 'approved')
  		</if>
  		<if test="clientName != null and clientName != '' ">
 			and circle.client_name = #{clientName}
- 		</if>
- 		<if test="userId != null and userId != '' ">
-			and su.id = #{userId}
  		</if>
  		<if test="productId != null and productId != '' ">
 			and circle.PRODUCT_ID = #{productId}
@@ -174,16 +210,16 @@ where CAI.STATUS = 'approved')
        		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
        		circle.client_name as clientName
-  		from O_CLPM_ACC_LOAN loan
-  		inner join circle on loan.cont_no = circle.RET_CONTNO
-  		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
-  		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.user_id = su.id
-  		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+  		from O_CLPM_ACC_LOAN_history loan
+  		left join circle on loan.cont_no = circle.RET_CONTNO
+  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
+  		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
+  		left join sys_user su on circle.user_id = su.id
+  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
   		and  (loan.prd_id='100084' or loan.prd_id='100085')
-  		and to_date(loan.distr_date,'yyyy-mm-dd') between #{startDate} and #{endDate}
+  		and to_date(loan.data_dt,'yyyy-mm-dd') = #{endDate}
   		<if test="userId != null and userId != '' ">
 			and circle.user_id = #{userId}
  		</if>
@@ -192,9 +228,6 @@ where CAI.STATUS = 'approved')
  		</if>
  		<if test="clientName != null and clientName != '' ">
 			and circle.client_name = #{clientName}
- 		</if>
- 		<if test="userId != null and userId != '' ">
-			and su.id = #{userId}
  		</if>
  		<if test="productId != null and productId != '' ">
 			and circle.PRODUCT_ID = #{productId}
@@ -209,34 +242,40 @@ left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
 where CAI.STATUS = 'approved')
 	    
-	     select a.*,rownum row_index from
-	    (
-	    select distinct su.display_name as managerId,
+	    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM row_index
+			FROM (
+	    select distinct 
+	    	su.display_name as managerId,
        		sd.name as orgName,
        		loan.bill_no as billNo,
        		acct.acct_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
-       		cont.CONT_START_DATE as contStartDate,
-       		cont.CONT_END_DATE as contEndDate,
+       		circle.START_DATE as contStartDate,
+       		circle.END_DATE as contEndDate,
        		cont.CONT_AMT as contAmt,
-       		loan.LOAN_AMT as loanAmt,
+       		loan.LOAN_BALANCE as loanBalance,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
        		loan.DISTR_DATE as qixiDate,
+       		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
        		circle.client_name as clientName,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
-       		loan.overdue as overdue
+       		loan.overdue as overdue,
+       		loan.overdue_balance as overdueBalance,
+       		to_date(loan.DATA_DT,'yyyy-mm-dd')-to_date(nvl(loan.OVERDUE_DATE,loan.DATA_DT),'yyyy-mm-dd') as overdueDayCnt
   		from O_CLPM_ACC_LOAN_HISTORY loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
-  		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.user_id = su.id
-  		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
+  		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
+  		left join sys_user su on circle.user_id = su.id
+  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
   		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
-  		and (loan.prd_id='100084' or loan.prd_id='100085')
+  		and loan.prd_id in('100084','100085')
   		and OVERDUE_BALANCE >0
+  		and loan.CONT_NO in (select lmt_cont_no from O_CCH_LM_LMT_CONT_T)
       <if test="userId != null and userId != '' ">
       and circle.user_id = #{userId}
      </if>
@@ -246,12 +285,114 @@ where CAI.STATUS = 'approved')
      <if test="clientName != null and clientName != '' ">
       and circle.client_name = #{clientName}
      </if>
-     <if test="userId != null and userId != '' ">
-      and su.id = #{userId}
-     </if>
-     ) a
+     <![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE row_index > #{limit}*#{page}
+		]]>
  	</select>
+ 		<select id="getLoanOverdueCount" resultType="int"
+			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
  		
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+where CAI.STATUS = 'approved')
+	    
+	    SELECT count(*)
+			FROM (
+	    select distinct 
+	    	su.display_name as managerId,
+       		sd.name as orgName,
+       		loan.bill_no as billNo,
+       		acct.acct_name as acctName,
+       		loan.REALITY_IR_Y as realityIrY,
+       		circle.START_DATE as contStartDate,
+       		circle.END_DATE as contEndDate,
+       		cont.CONT_AMT as contAmt,
+       		loan.LOAN_BALANCE as loanBalance,
+       		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
+       		loan.DISTR_DATE as qixiDate,
+       		loan.ORI_END_DATE as distrDate,
+       		loan.ACC_STATUS as accStatus,
+       		circle.client_name as clientName,
+       		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
+       		loan.overdue as overdue,
+       		loan.overdue_balance as overdueBalance,
+       		to_date(loan.DATA_DT,'yyyy-mm-dd')-to_date(nvl(loan.OVERDUE_DATE,loan.DATA_DT),'yyyy-mm-dd') as overdueDayCnt
+  		from O_CLPM_ACC_LOAN_HISTORY loan
+  		left join circle on loan.cont_no = circle.RET_CONTNO
+  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
+  		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
+  		left join sys_user su on circle.user_id = su.id
+  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+ 	  where 1 = 1
+  		and acct.acct_attr = '03'
+  		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
+  		and loan.prd_id in('100084','100085')
+  		and OVERDUE_BALANCE >0
+  		and loan.CONT_NO in (select lmt_cont_no from O_CCH_LM_LMT_CONT_T)
+      <if test="userId != null and userId != '' ">
+      and circle.user_id = #{userId}
+     </if>
+     <if test="orgId != null and orgId != '' ">
+      and circle.regist_org_no = #{orgId}
+     </if>
+     <if test="clientName != null and clientName != '' ">
+      and circle.client_name = #{clientName}
+     </if>
+     ) ROW_
+ 	</select>
+ 	<select id="getLoanOverdueAll" resultMap="OverResultMap"
+			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
+ 		
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+where CAI.STATUS = 'approved')
+	    
+	    select distinct 
+	    	su.display_name as managerId,
+       		sd.name as orgName,
+       		loan.bill_no as billNo,
+       		acct.acct_name as acctName,
+       		loan.REALITY_IR_Y as realityIrY,
+       		circle.START_DATE as contStartDate,
+       		circle.END_DATE as contEndDate,
+       		cont.CONT_AMT as contAmt,
+       		loan.LOAN_BALANCE as loanBalance,
+       		(loan.Rec_Int_Accum - loan.recv_int_accum) as intAccum,
+       		loan.DISTR_DATE as qixiDate,
+       		loan.ORI_END_DATE as distrDate,
+       		loan.ACC_STATUS as accStatus,
+       		circle.client_name as clientName,
+       		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
+       		loan.overdue as overdue,
+       		loan.overdue_balance as overdueBalance,
+       		to_date(loan.DATA_DT,'yyyy-mm-dd')-to_date(nvl(loan.OVERDUE_DATE,loan.DATA_DT),'yyyy-mm-dd') as overdueDayCnt
+  		from O_CLPM_ACC_LOAN_HISTORY loan
+  		left join circle on loan.cont_no = circle.RET_CONTNO
+  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
+  		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
+  		left join sys_user su on circle.user_id = su.id
+  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+ 	  where 1 = 1
+  		and acct.acct_attr = '03'
+  		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
+  		and loan.prd_id in('100084','100085')
+  		and OVERDUE_BALANCE >0
+  		and loan.CONT_NO in (select lmt_cont_no from O_CCH_LM_LMT_CONT_T)
+      <if test="userId != null and userId != '' ">
+      and circle.user_id = #{userId}
+     </if>
+     <if test="orgId != null and orgId != '' ">
+      and circle.regist_org_no = #{orgId}
+     </if>
+     <if test="clientName != null and clientName != '' ">
+      and circle.client_name = #{clientName}
+     </if>
+ 	</select>
+ 	
 	<select id="getAccLoanCollect" resultMap="CollectResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.AccLoanCollectFilter">
 
@@ -396,7 +537,7 @@ select t1.*,
                left join circle on loan.cont_no = circle.ret_contno
          where loan.DISTR_DATE <![CDATA[ <=  ]]> #{endDate}
            and loan.DISTR_DATE <![CDATA[ >=  ]]> #{startDate}
-           
+           and (loan.SETTL_DATE is null or loan.SETTL_DATE <![CDATA[ >  ]]> #{endDate})
            and (loan.prd_id='100084' or loan.prd_id='100085')
             <if test="productId != null and productId != '' ">
                 and circle.product_id = #{productId}
@@ -417,12 +558,12 @@ select t1.*,
 							union select #{loginId} as user_id from dual)
 					</if>
 				</if> ) t5,
- (select sum(cont.cont_amt) as contAmt
-                          from o_clpm_ctr_loan_cont cont
-                          left join circle on cont.cont_no = circle.ret_contno
-                         where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
-                           and cont.cont_end_date <![CDATA[ >  ]]> #{endDate}
-                           and (cont.prd_id='100084' or cont.prd_id='100085')
+ (select sum(cont.LMT_AMT) as contAmt
+                          from O_CCH_LM_LMT_CONT_T cont
+                          left join circle on cont.LMT_CONT_NO = circle.ret_contno
+                         where 1=1
+                           and cont.LMT_END_DT <![CDATA[ >  ]]> #{endDate}
+                           and (cont.APPLY_TYPE = '01')
                             <if test="productId != null and productId != '' ">
 		                      and circle.product_id = #{productId}
 		                       </if>
@@ -467,13 +608,13 @@ select t1.*,
 							union select #{loginId} as user_id from dual)
 					</if>
 				</if> ) t7,
- (select sum(cont.CONT_AMT) as newCreditMoney
-          from o_clpm_ctr_loan_cont cont
-          left join circle on cont.cont_no = circle.ret_contno
-         where cont.cont_start_date <![CDATA[ <=  ]]> #{endDate}
-           and cont.cont_start_date <![CDATA[ >=  ]]> #{startDate}
-           and cont.CONT_END_DATE <![CDATA[ >=  ]]> #{endDate}
-           and (cont.prd_id='100084' or cont.prd_id='100085')
+ (select sum(cont.LMT_AMT) as newCreditMoney
+          from O_CCH_LM_LMT_CONT_T cont
+          left join circle on cont.LMT_CONT_NO = circle.ret_contno
+         where cont.LMT_START_DT <![CDATA[ <=  ]]> #{endDate}
+           and cont.LMT_START_DT <![CDATA[ >=  ]]> #{startDate}
+           and cont.LMT_END_DT <![CDATA[ >  ]]> #{endDate}
+           and (cont.APPLY_TYPE='01')
             <if test="productId != null and productId != '' ">
                 and circle.product_id = #{productId}
             </if>
@@ -527,7 +668,7 @@ select t1.*,
          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
            and loan.OVERDUE_DATE <![CDATA[ >=  ]]> #{startDate}
            and (loan.prd_id='100084' or loan.prd_id='100085')
-           and loan.ACC_STATUS = '1'
+           and (loan.SETTL_DATE is null or loan.SETTL_DATE <![CDATA[ >  ]]> #{endDate})
             <if test="productId != null and productId != '' ">
                 and circle.product_id = #{productId}
             </if>
@@ -551,7 +692,7 @@ select t1.*,
           from o_clpm_acc_loan loan
           left join circle on loan.cont_no = circle.ret_contno
          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
-         and loan.ACC_STATUS = '1'
+          and (loan.SETTL_DATE is null or loan.SETTL_DATE <![CDATA[ >  ]]> #{endDate})
          and (loan.prd_id='100084' or loan.prd_id='100085')
             <if test="productId != null and productId != '' ">
                 and circle.product_id = #{productId}
@@ -574,7 +715,7 @@ select t1.*,
 				</if> ) t11,
  (select count(loans.cus_id) as newoverdue
           from (select loan.cus_id
-                  from o_clpm_acc_loan loan
+                  from o_clpm_acc_loan_history loan
                   left join circle on loan.cont_no = circle.ret_contno
                  where loan.OVERDUE_DATE <![CDATA[ >=  ]]> #{startDate}
                    and loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
@@ -582,7 +723,6 @@ select t1.*,
                     <if test="productId != null and productId != '' ">
                     and circle.product_id = #{productId}
                    </if>
-                   and loan.overdue_balance > 0
                    <if test="userId != null and userId != '' ">
                   and circle.user_id =#{userId}
                  </if>
@@ -602,14 +742,13 @@ select t1.*,
                  group by loan.cus_id) loans) t12,
  (select count(loans.cus_id) as alloverdue
           from (select loan.cus_id
-                  from o_clpm_acc_loan loan
+                  from o_clpm_acc_loan_history loan
                   left join circle on loan.cont_no = circle.ret_contno
                  where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
                    and (loan.prd_id='100084' or loan.prd_id='100085')
                     <if test="productId != null and productId != '' ">
                     and circle.product_id = #{productId}
                    </if>
-                   and loan.overdue_balance > 0
                    <if test="userId != null and userId != '' ">
                   and circle.user_id =#{userId}
                  </if>
@@ -654,7 +793,7 @@ select t1.*,
  (select count(*) as M0
           from (select a.cus_id
                   from (select loan.*
-                          from o_clpm_acc_loan loan
+                          from o_clpm_acc_loan_history loan
                           left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
                           and (loan.prd_id='100084' or loan.prd_id='100085')
@@ -682,7 +821,7 @@ select t1.*,
  (select count(*) as M1
           from (select a.cus_id
                   from (select loan.*
-                          from o_clpm_acc_loan loan
+                          from o_clpm_acc_loan_history loan
                           left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
                          and (loan.prd_id='100084' or loan.prd_id='100085')
@@ -710,7 +849,7 @@ select t1.*,
  (select count(*) as M2
           from (select a.cus_id
                   from (select loan.*
-                          from o_clpm_acc_loan loan
+                          from o_clpm_acc_loan_history loan
                           left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
                          and (loan.prd_id='100084' or loan.prd_id='100085')
@@ -738,7 +877,7 @@ select t1.*,
  (select count(*) as M3
           from (select a.cus_id
                   from (select loan.*
-                          from o_clpm_acc_loan loan
+                          from o_clpm_acc_loan_history loan
                           left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
                          and (loan.prd_id='100084' or loan.prd_id='100085')
@@ -766,7 +905,7 @@ select t1.*,
  (select count(*) as M4
           from (select a.cus_id
                   from (select loan.*
-                          from o_clpm_acc_loan loan
+                          from o_clpm_acc_loan_history loan
                           left join circle on loan.cont_no = circle.ret_contno
                          where loan.OVERDUE_DATE <![CDATA[ <=  ]]> #{endDate}
                          and (loan.prd_id='100084' or loan.prd_id='100085')
@@ -838,16 +977,16 @@ where CAI.STATUS = 'approved')
        		circle.PRODUCT_ID as product_id,
        		circle.product_name as productName,
        		circle.client_name as clientName
-  		from O_CLPM_ACC_LOAN loan
-  		inner join circle on loan.cont_no = circle.RET_CONTNO
-  		inner join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
-  		inner join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		inner join sys_user su on circle.user_id = su.id
-  		inner join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+  		from O_CLPM_ACC_LOAN_history loan
+  		left join circle on loan.cont_no = circle.RET_CONTNO
+  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
+  		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
+  		left join sys_user su on circle.user_id = su.id
+  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
   		and acct.acct_attr = '03'
   		and (loan.prd_id='100084' or loan.prd_id='100085')
-  		and to_date(loan.distr_date,'yyyy-mm-dd') between #{startDate} and #{endDate}
+  		and to_date(loan.data_dt,'yyyy-mm-dd') = #{endDate}
   		<if test="userId != null and userId != '' ">
 			and circle.user_id = #{userId}
  		</if>
@@ -870,7 +1009,16 @@ where CAI.STATUS = 'approved')
  		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
 				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved')
+				where CAI.STATUS = 'approved'
+				<if test="productId != null and productId != '' ">
+                and CAI.product_id = #{productId}
+                </if>
+                <if test="userIds != null">
+                	and circle.user_id in 
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>)
 
 			 SELECT * FROM
 				(SELECT ROW_.*,ROWNUM row_index
@@ -889,7 +1037,6 @@ where CAI.STATUS = 'approved')
  		    	and loan.ACC_STATUS = '1'
  		    	and shd.SETL_IND = 'N'
  		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
- 		    	and circle.manager_id = #{userId}
  		    group by loan.CUS_ID,circle.client_name
  		    <![CDATA[		
 				) ROW_
@@ -902,7 +1049,16 @@ where CAI.STATUS = 'approved')
  		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
 				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved')
+				where CAI.STATUS = 'approved'
+				<if test="productId != null and productId != '' ">
+                and CAI.product_id = #{productId}
+                </if>
+                <if test="userIds != null">
+                	and circle.user_id in 
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>)
 				
 			select count(*) from (
 	 		    select 
@@ -918,7 +1074,6 @@ where CAI.STATUS = 'approved')
 	 		    	and loan.ACC_STATUS = '1'
 	 		    	and shd.SETL_IND = 'N'
 	 		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
-	 		    	and circle.manager_id = #{userId}
 	 		    group by loan.CUS_ID,circle.client_name
 			)
  		</select>
@@ -927,7 +1082,16 @@ where CAI.STATUS = 'approved')
  		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
 				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved')
+				where CAI.STATUS = 'approved'
+				<if test="productId != null and productId != '' ">
+                and CAI.product_id = #{productId}
+                </if>
+                <if test="userIds != null">
+                	and circle.user_id in 
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>)
 
 	    SELECT ROW_.*,ROWNUM row_index
 			FROM (
@@ -945,7 +1109,6 @@ where CAI.STATUS = 'approved')
  		    	and loan.ACC_STATUS = '1'
  		    	and shd.SETL_IND = 'N'
  		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
- 		    	and circle.manager_id = #{userId}
  		    group by loan.CUS_ID,circle.client_name
 
 				) ROW_
@@ -955,18 +1118,7 @@ where CAI.STATUS = 'approved')
 	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
 			left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 			left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-			where CAI.STATUS = 'approved'),
-		users as 
-	      (
-	        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
-	        mbm.child_id 
-	        FROM 
-	        manager_belong_map mbm 
-	        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-	        WHERE 
-	        amp.user_id = #{userId})
-	        union select #{userId} as user_id from dual
-	      )
+			where CAI.STATUS = 'approved')
 
 	    SELECT ROW_.*,ROWNUM row_index
 			FROM (
@@ -985,10 +1137,320 @@ where CAI.STATUS = 'approved')
  		    	and loan.ACC_STATUS = '1'
  		    	and shd.SETL_IND = 'N'
  		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
- 		    	and circle.manager_id in(select user_id from users)
+ 		    	<if test="userIds != null">
+ 		    		and circle.manager_id in
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>
  		    group by loan.CUS_ID,circle.client_name
 
 				) ROW_
  		</select>
  		
+ 		<select id="getAccLoanCollectNew" resultMap="CollectResultMapNew"
+			parameterType="com.cardpay.pccredit.report.filter.AccLoanCollectFilter">
+			with 
+			circle as 
+				(select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+				where CAI.STATUS = 'approved'
+				<if test="productId != null and productId != '' ">
+                and CAI.product_id = #{productId}
+                </if>
+                <if test="userIds != null">
+                	and circle.user_id in 
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>
+                 
+				)
+
+		select 
+		       t_1_1_start.*,
+		       t_1_1_end.*,
+		       t_1_2_start.*,
+		       t_1_2_end.*,
+		       t_2_1.*,
+		       t_2_2.*,
+		       t_3_1.*,
+		       t_3_2.*,
+		       t_4_2.*,
+		       t_5_1.*,
+		       t_5_2_start.*,
+		       t_5_2_end.*,
+		       t_5_3_start.*,
+		       t_5_3_end.*,
+		       t_6_3.*,
+		       t_7_1_start.*,
+		       t_7_1_end.*,
+		       t_7_2_start.*,
+		       t_7_2_end.*,
+		       t_8_1.*,
+		       t_8_2.*,
+		       t_8_3.*,
+		       t_8_4.*,
+		       t_9_1.*,
+		       t_9_2.*,
+		       t_10_1_start.*,
+		       t_10_1_end.*,
+		       t_10_2_start.*,
+		       t_10_2_end.*,
+		       t_11_1.*,
+		       t_11_2.*,
+		       t_11_3.*,
+		       rownum rowindex
+		  FROM 
+		 (select count(CUST_ID) as value_1_1_start
+		 from(select CUST_ID
+		    from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+		     and cont.LMT_START_DT <![CDATA[ <=  ]]> #{startDate}
+		   group by cont.CUST_ID)) t_1_1_start,
+		   
+		 (select count(CUST_ID) as value_1_1_end
+		 from(select CUST_ID
+		    from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+		     and cont.LMT_START_DT <![CDATA[ <=  ]]> #{endDate}
+		   group by cont.CUST_ID)) t_1_1_end,
+		
+		 (select sum(cont.LMT_AMT) as value_1_2_start
+		    from (select ROW_NUMBER() OVER(PARTITION BY cust_id ORDER BY LMT_END_DT DESC) rn,cont.LMT_AMT
+		            from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+		     and cont.LMT_START_DT <![CDATA[ <=  ]]> #{startDate}) cont where rn = 1) t_1_2_start,
+		
+		 (select sum(cont.LMT_AMT) as value_1_2_end
+		    from (select ROW_NUMBER() OVER(PARTITION BY cust_id ORDER BY LMT_END_DT DESC) rn,cont.LMT_AMT
+		            from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+		     and cont.LMT_START_DT <![CDATA[ <=  ]]> #{endDate}) cont where rn = 1) t_1_2_end,
+		   
+		 (select count(CUST_ID) as value_2_1
+		  from(select CUST_ID from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+		     and cont.LMT_STS = '10'
+		   group by cont.CUST_ID)) t_2_1,
+		   
+		 (select sum(cont.LMT_AMT) as value_2_2 from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle) 
+		   and cont.LMT_STS = '10') t_2_2,
+		     
+		  (select count(CUST_ID) as value_3_1 from (select CUST_ID 
+        from O_CCH_LM_LMT_CONT_T cont
+       where cont.apply_type = '01'
+         and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+         and cont.LMT_STS != '10'
+         and cont.LMT_CONT_NO in
+             (select CONT_NO from O_CLPM_ACC_LOAN loan
+       where loan.PRD_ID in ('100084', '100085')
+         and loan.CONT_NO in (select RET_CONTNO from circle)
+         and loan.ACC_STATUS = '1')
+       group by cont.CUST_ID)) t_3_1,
+		
+		 (select sum(cont.LMT_AMT) as value_3_2
+		    from O_CCH_LM_LMT_CONT_T cont
+		   where cont.apply_type = '01'
+		     and cont.LMT_CONT_NO in (select RET_CONTNO from circle)
+		     and cont.LMT_STS != '10'
+		     and cont.LMT_CONT_NO in
+		         (select CONT_NO from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.ACC_STATUS = '1')) t_3_2,
+		
+		 (select sum(loan.LOAN_BALANCE) as value_4_2
+		    from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.ACC_STATUS = '1') t_4_2,
+		
+		 (select count(CUS_ID) as value_5_1 from 
+       (select CUS_ID from O_CLPM_ACC_LOAN loan
+       where loan.PRD_ID in ('100084', '100085')
+       and loan.CONT_NO in (select RET_CONTNO from circle)
+       and loan.distr_date <![CDATA[ <=  ]]> #{endDate}
+       and loan.distr_date <![CDATA[ >=  ]]> #{startDate}
+       and loan.CONT_NO in (
+       select LMT_CONT_NO from (select ROW_NUMBER() OVER(PARTITION BY cust_id ORDER BY LMT_START_DT asc) rn,LMT_CONT_NO from O_CCH_LM_LMT_CONT_T )
+       where rn = 1
+       )
+       group by loan.CUS_ID
+       )) t_5_1,
+		
+		 (select count(CUS_ID) as value_5_2_start
+		  from(select  CUS_ID from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{startDate}
+		     and loan_history.ACC_STATUS = '1'
+		   group by loan_history.CUS_ID)) t_5_2_start,
+		
+		 (select count(CUS_ID) as value_5_2_end
+		   from(select CUS_ID from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{endDate}
+		     and loan_history.ACC_STATUS = '1'
+		   group by loan_history.CUS_ID)) t_5_2_end,
+		
+		 (select sum(loan_history.LOAN_BALANCE) as value_5_3_start
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{startDate}
+		     and loan_history.ACC_STATUS = '1') t_5_3_start,
+		     
+		 (select sum(loan_history.LOAN_BALANCE) as value_5_3_end
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{endDate}
+		     and loan_history.ACC_STATUS = '1') t_5_3_end,
+		
+		 (select sum(loan_history.LOAN_BALANCE) /
+		         (to_date(#{endDate}, 'yyyy/mm/dd') - to_date(#{startDate}, 'yyyy/mm/dd')+1) as value_6_3
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt <![CDATA[ <=  ]]> #{endDate}
+		     and loan_history.data_dt <![CDATA[ >=  ]]> #{startDate}
+		     and loan_history.ACC_STATUS = '1') t_6_3,
+		
+		 (select count(CUS_ID) as value_7_1_start
+		  from(select   CUS_ID from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{startDate}
+		     and loan_history.OVERDUE_BALANCE > 0
+		   group by loan_history.CUS_ID)) t_7_1_start,
+		   
+		 (select count(CUS_ID) as value_7_1_end
+		   from(select CUS_ID from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{endDate}
+		     and loan_history.OVERDUE_BALANCE > 0
+		   group by loan_history.CUS_ID)) t_7_1_end,
+		
+		 (select sum(loan_history.OVERDUE_BALANCE) as value_7_2_start
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{startDate}
+		     and loan_history.OVERDUE_BALANCE > 0) t_7_2_start,
+		
+		 (select sum(loan_history.OVERDUE_BALANCE) as value_7_2_end
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{endDate}
+		     and loan_history.OVERDUE_BALANCE > 0) t_7_2_end,
+		
+		 (select count(CUS_ID) as value_8_1
+		   from(select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.overdue = 1
+		     and loan.CUS_ID not in (select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle) 
+		     and loan.overdue > 1)
+		   group by loan.CUS_ID)) t_8_1,
+		
+		 (select count(CUS_ID) as value_8_2
+		   from(select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.overdue = 2
+		     and loan.CUS_ID not in (select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		      and loan.overdue > 2)
+		   group by loan.CUS_ID)) t_8_2,
+		
+		 (select count(CUS_ID) as value_8_3
+		   from(select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.overdue = 3
+		     and loan.CUS_ID not in (select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle) 
+		     and loan.overdue > 3)
+		   group by loan.CUS_ID)) t_8_3,
+		
+		 (select count(CUS_ID) as value_8_4
+		   from(select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.overdue <![CDATA[ >=  ]]> 4
+		   group by loan.CUS_ID)) t_8_4,
+		
+		 (select count(CUS_ID) as value_9_1
+		   from(select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.OVERDUE_BALANCE > 0
+		   group by loan.CUS_ID)) t_9_1,
+		
+		 (select sum(loan.OVERDUE_BALANCE) as value_9_2
+		    from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.OVERDUE_BALANCE > 0) t_9_2,
+		
+		 (select sum(RECV_INT_ACCUM) as value_10_1_start
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{startDate}) t_10_1_start,
+		     
+		 (select sum(RECV_INT_ACCUM) as value_10_1_end
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{endDate}) t_10_1_end,
+		     
+		 (select sum(REC_INT_ACCUM) as value_10_2_start
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{startDate}) t_10_2_start,
+		
+		 (select sum(REC_INT_ACCUM) as value_10_2_end
+		     from O_CLPM_ACC_LOAN_HISTORY loan_history
+		   where loan_history.PRD_ID in ('100084', '100085')
+		     and loan_history.CONT_NO in (select RET_CONTNO from circle)
+		     and loan_history.data_dt = #{endDate}) t_10_2_end,
+		
+		 (select sum(loan.LOAN_BALANCE) as value_11_1
+		    from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.OVERDUE_BALANCE > 0) t_11_1,
+		
+		 (select sum(loan.OVERDUE_BALANCE) as value_11_2
+		    from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.OVERDUE_BALANCE > 0) t_11_2,
+		
+		 (select count(CUS_ID) as value_11_3
+		   from(select CUS_ID from O_CLPM_ACC_LOAN loan
+		   where loan.PRD_ID in ('100084', '100085')
+		     and loan.CONT_NO in (select RET_CONTNO from circle)
+		     and loan.distr_date <![CDATA[ <=  ]]> #{endDate}
+		     and loan.distr_date <![CDATA[ >=  ]]> #{startDate}
+		   group by loan.CUS_ID)) t_11_3
+		</select>
 	 </mapper>

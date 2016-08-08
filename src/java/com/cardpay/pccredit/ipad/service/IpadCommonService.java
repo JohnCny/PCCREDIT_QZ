@@ -987,6 +987,10 @@ public class IpadCommonService {
 		 		throw new IpadException("无此产品");
 		 	}
 		 		
+		 	if(product.getDefaultType().equals("2")){
+		 		throw new IpadException("该产品已停用,请选择其他产品！");
+		 	}
+		 	
 		 	//save，audit，RETURNAPPROVE的进件有且只能有一条
 		 	if(customerInforservice.checkCanApplyOrNot(custId,userId) >=1){
 		 		throw new IpadException("此客户已存在进件，不能重复申请");

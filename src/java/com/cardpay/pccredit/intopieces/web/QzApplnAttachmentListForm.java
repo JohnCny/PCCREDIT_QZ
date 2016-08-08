@@ -18,7 +18,6 @@ public class QzApplnAttachmentListForm extends BaseForm{
 	private String globalId;
 	private String shopName;
 	private String shopId;
-	private String shopNameNew;
 	private String shopIdNew;
 	private String user_1;
 	private String user_2;
@@ -60,6 +59,12 @@ public class QzApplnAttachmentListForm extends BaseForm{
 	public void setShopId(String shopId) {
 		this.shopId = shopId;
 	}
+	public String getShopIdNew() {
+		return shopIdNew;
+	}
+	public void setShopIdNew(String shopIdNew) {
+		this.shopIdNew = shopIdNew;
+	}
 	public String getBussType() {
 		return bussType;
 	}
@@ -95,17 +100,5 @@ public class QzApplnAttachmentListForm extends BaseForm{
 	}
 	public void setUser_4(String user_4) {
 		this.user_4 = user_4;
-	}
-	public String getShopNameNew() {
-		return shopNameNew;
-	}
-	public void setShopNameNew(String shopNameNew) {
-		this.shopNameNew = shopNameNew;
-	}
-	public String getShopIdNew() {
-		return shopIdNew;
-	}
-	public void setShopIdNew(String shopIdNew) {
-		this.shopIdNew = shopIdNew;
 	}
 }

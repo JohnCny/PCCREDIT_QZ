@@ -26,6 +26,7 @@ public class IntoPiecesFilter extends BusinessFilter{
     private String clientNo;
     private String first_flag;
     private String filterTeamLeader;//团队长查看各小组成员的进件 1要过滤 0 不过滤
+    private String filterOrgId;//审核人的org_id 贷生活10万以下要过滤是否同一机构
     
     private String cus_mgr_id;
     private Date startDate;
@@ -125,6 +126,12 @@ public class IntoPiecesFilter extends BusinessFilter{
 	}
 	public void setFilterTeamLeader(String filterTeamLeader) {
 		this.filterTeamLeader = filterTeamLeader;
+	}
+	public String getFilterOrgId() {
+		return filterOrgId;
+	}
+	public void setFilterOrgId(String filterOrgId) {
+		this.filterOrgId = filterOrgId;
 	}
 	public String getCus_mgr_id() {
 		return cus_mgr_id;

@@ -47,7 +47,7 @@ public class HighRiskCustomer extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute RiskCustomerFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		QueryResult<RiskCustomer>  result = riskCustomerService.findRiskListByFilter(filter);
@@ -66,7 +66,7 @@ public class HighRiskCustomer extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		String customerId = request.getParameter("customerId");
 		List<RiskCustomer>  result = riskCustomerService.findRiskCustomerBycustomerId(customerId);

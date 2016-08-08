@@ -46,7 +46,7 @@ public class AmountAdjustmentViewController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute AmountAdjustmentFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		QueryResult<AmountAdjustmentForm> result = amountAdjustmentService.findAmountAdjustmentFilter(filter);

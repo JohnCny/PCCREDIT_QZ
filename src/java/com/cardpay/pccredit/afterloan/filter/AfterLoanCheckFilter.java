@@ -1,6 +1,8 @@
 package com.cardpay.pccredit.afterloan.filter;
 
 
+import java.util.List;
+
 import com.wicresoft.jrad.base.web.filter.BaseQueryFilter;
 
 public class AfterLoanCheckFilter extends BaseQueryFilter{
@@ -16,6 +18,13 @@ public class AfterLoanCheckFilter extends BaseQueryFilter{
 	private String enddate;//截止时间
 	
 	private String status;
+	
+
+	private String centerId;
+	private String teamId;
+	private String centerMgrId;
+	
+	private List<String> userIds;//
 	
 	public String getChineseName() {
 		return chineseName;
@@ -76,5 +85,29 @@ public class AfterLoanCheckFilter extends BaseQueryFilter{
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getCenterId() {
+		return centerId;
+	}
+	public void setCenterId(String centerId) {
+		this.centerId = centerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
+	public String getCenterMgrId() {
+		return centerMgrId;
+	}
+	public void setCenterMgrId(String centerMgrId) {
+		this.centerMgrId = centerMgrId;
+	}
+	public List<String> getUserIds() {
+		return userIds;
+	}
+	public void setUserIds(List<String> userIds) {
+		this.userIds = userIds;
 	}
 }

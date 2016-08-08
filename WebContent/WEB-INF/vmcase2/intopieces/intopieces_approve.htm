@@ -29,12 +29,13 @@
           <table>
             <colgroup>
               <col width="5%" />
-              <col width="15%" />
-              <col width="15%"/>
-              <col width="15%"/>
-              <col width="10%"/>
-              <col width="10%"/>
-              <col width="10%" />
+              <col width="100" />
+              <col width="150"/>
+              <col width="150"/>
+              <col width="150"/>
+              <col width="100"/>
+              <col width="200" />
+              <col width="50" />
             </colgroup>
             <tr class="title">
               <th nowrap="nowrap"></th>
@@ -52,12 +53,13 @@
           <table>
             <colgroup>
               <col width="5%" />
-              <col width="15%" />
-              <col width="15%"/>
-              <col width="15%"/>
-              <col width="10%"/>
-              <col width="10%"/>
-              <col width="10%" />
+              <col width="100" />
+              <col width="150"/>
+              <col width="150"/>
+              <col width="150"/>
+              <col width="100"/>
+              <col width="200" />
+              <col width="50" />
             </colgroup>
             #foreach ($intoPieces in $result.items)
             <tr>
@@ -103,7 +105,7 @@
         	<a id="id_create_button_2" class="btn_g" href="javascript:void(0);" title="创建申请信息">创建申请信息</a>
         	<a id="id_delete_button" class="btn_g" href="javascript:void(0);" title="删除申请信息">删除申请信息</a>
 			<a id="id_apply_button" class="btn_g" href="javascript:void(0);" title="申请">申请贷款</a>
-			<a id="id_add_button" class="btn_g" title="初审拒件记录">补充上会记录</a>
+			<!-- <a id="id_add_button" class="btn_g" title="初审拒件记录">补充上会记录</a> -->
 			<a id="id_continue_button" class="btn_g" title="续授信">续授信</a>
 			<a id="id_upload_button" class="btn_g" title="导入调查模板">导入调查模板</a>
         </div>
@@ -138,7 +140,7 @@
 				if(rowId!=null){
 					Dialog.confirm("确定提交申请吗？", "提示",
 		                function() {
-							var url = "${modulePath}/save_apply.json?id="+rowId+"&appId="+appId;
+							var url = "${modulePath}/start_apply.json?id="+rowId+"&appId="+appId;
 			   	        	$.ajax({
 			   	      
 								url : url,
@@ -274,7 +276,7 @@
 		});
 		if(id!=null){
 			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
-			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+			Dialog.tablePage(url, "查看审批历史", "get", null, 700, 800);
 		}else{
 			Dialog.message("请选择要被查看的进件!");
 		}

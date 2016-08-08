@@ -63,7 +63,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute Sample2Filter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -84,7 +84,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("/sample2/sample2_create", request);
@@ -100,7 +100,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/sample2/sample2_change", request);
 
@@ -121,7 +121,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/sample2/sample2_display", request);
 
@@ -143,7 +143,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute Sample2Form sample2Form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), sample2Form);
 		String sampleDate = request.getParameter("sampleDate");
@@ -171,7 +171,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute Sample2Form sample2Form, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), sample2Form);
@@ -198,7 +198,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -222,7 +222,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "batchDelete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap batchDelete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -247,7 +247,7 @@ public class Sample2Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "export.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.EXPORT)
+	
 	public AbstractModelAndView export(@ModelAttribute Sample2Filter filter, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		filter.setPage(0);

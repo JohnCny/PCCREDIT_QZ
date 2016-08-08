@@ -80,32 +80,6 @@
 	          });
    	          
 		});
-		//通过
-		$("#id_in_button").click(function() {
-                Dialog.confirm("确定提交吗？", "提示",
-                	    function() {
-                			var url = "";
-                			if("${type}"=="readonly"){
-                				url = "${contextPath}/intopieces/intopiecesxingzheng2/save_apply.json";
-                			}else{
-                				url="${contextPath}/intopieces/intopiecesxindai/save_apply.json";
-                			}
-			                $.ajax({
-								url : url+"?id=${appId}",
-								type : "get",
-								success : function(data) {
-									if (data.success) {
-										topWin.Dialog.message("审批成功!");	
-						            	var url = "${contextPath}${returnUrl}";
-						                parent.location.href = url;
-									}
-									else{
-										topWin.Dialog.message("审批失败！");
-								    }
-								}
-						}); 
-                		});
-		});
 	})
 		function checkJKTJ(obj){
 			$('.jktj').val('');

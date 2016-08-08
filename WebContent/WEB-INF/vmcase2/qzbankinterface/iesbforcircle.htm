@@ -85,8 +85,14 @@
 			<tr>
 			  <td><label>业务类型:</label></td>
               <td><select id="bussType" name="bussType">#dict("BUSS_TYPE", "")</select></td>
-              <td><label>合同金额(元):</label><font color="#ff0000">*</font></td>
-              <td><input type="text" id="contractAmt" name="contractAmt" value="$!jyd.jyje" /></td>
+              
+              	#if($!operate=="贷生活(支行审批)申请" || $!operate=="贷生活(中心审批)申请")
+              	
+	            #else
+	            <td><label>合同金额(元):</label><font color="#ff0000">*</font></td>
+              	<td><input type="text" id="contractAmt" name="contractAmt" value="$!jyd.jyje" /></td>
+	            #end
+              
             </tr>
 			<tr>
               <td><label>登记人:</label><font color="#ff0000">*</font></td>
@@ -103,15 +109,23 @@
 			<tr>
               <td><label>顺延标志:</label></td>
               <td><select name="deferFlag">#dict("IS_DELAY", "")</select></td>
+              #if($!operate=="贷生活(支行审批)申请" || $!operate=="贷生活(中心审批)申请")
+              	
+	            #else
 			  <td><label>年执行利率(%):</label><font color="#ff0000">*</font></td>
               <td><input type="text" name="actIntRate" value="$!jyd.jyll" /></td>
+              #end
             </tr>
+            #if($!operate=="贷生活(支行审批)申请" || $!operate=="贷生活(中心审批)申请")
+              	
+	            #else
 			<tr>
               <td><label>年逾期利率(%):</label><font color="#ff0000">*</font></td>
               <td><input type="text" name="overdueIntRate"/></td>
 			  <td><label>年违约利率(%):</label><font color="#ff0000">*</font></td>
               <td><input type="text" name="penaltyIntRate"/></td>
             </tr>
+            #end
 			<tr>
               <td><label>还款方式:</label></td>
               <td><select name="repayType">#dict("REPAY_TYPE", "")</select></td>
@@ -408,7 +422,6 @@
 		
 		//保存按钮
 		$("#id_save_button").click(function() {
-			
 			if($("#selectClientNo").val() == 0){
 				alert("请先选择对应客户!")
 			}else{
@@ -591,29 +604,6 @@
 			window.parent.location.href = "${contextPath}/intopieces/intopiecesapprove/approve.page";
 		});
 		
-		//提交进件
-		$("#id_apply_button").click(function() {
-			var customerId = "${customerId}";
-			Dialog.confirm("确定提交申请吗？", "提示",
-                function() {
-					var url = "${contextPath}/intopieces/intopiecesapprove/save_apply.json?id="+customerId;
-	   	        	$.ajax({
-						url : url,
-						type : "get",
-						success : function(data) {
-							if (data.success) {
-								topWin.Dialog.message("保存成功！");
-								var url = "${contextPath}/intopieces/intopiecesapprove/approve.page";
-				                window.location.href = url;
-							}
-							else{
-								topWin.Dialog.message(data.message);
-						    }
-						}
-					});
-                });
-	    });
-		
 		$('.dialog1').hide();
 		$("#id_zx_return_button").click(function() {
 			$('.dialog1').show();
@@ -626,7 +616,7 @@
 					#set ($formName = "'#checkForm1'")
 					var formjson = $($formName).serialize();
 					 $.ajax({
-							url : "${contextPath}/intopieces/intopiecesxindai/returnAppln.json",
+							url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 							type : "get",
 							data : formjson,
 							success : function(data) {
@@ -647,7 +637,7 @@
 		$("#id_zx_in_button").click(function() {
                 Dialog.confirm("确定提交吗？", "提示",
                 	    function() {
-               				url="${contextPath}/intopieces/intopiecesxingzheng2/save_apply.json?id=${appId}";
+               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}";
 			                $.ajax({
 								url : url,
 								type : "get",

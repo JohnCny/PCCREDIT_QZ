@@ -3,12 +3,15 @@
 	<menu id="000000" name="" title="所有资源" url="" img="" operations="" >
 		<menu id="010000" name="home" title="系统首页" url="/home.page" img="images/icon_4.png" operations=""/>
 		<menu id="030000" name="intopieces" title="进件管理" url="" img="images/icon_sys.gif" operations="">
-			<menu id="030010" name="intopiecesquery" title="进件查询" url="/intopieces/intopiecesquery/browse.page" img="" operations="create|addbatch|change|display|import|approveloguser|approvelog|browse|scan"/>
+			<menu id="030010" name="intopiecesquery" title="进件查询" url="/intopieces/intopiecesquery/browse.page" img="" operations="create|browse"/>
 			<menu id="030011" name="intopiecesqueryAll" title="进件查询(管理岗)" url="/intopieces/intopiecesqueryAll/browseAll.page" img="" operations="browse|scan"/>
 			<!-- <menu id="030070" name="circle" title="申请循环贷款" url="/intopieces/circle/browse.page" img="" operations="create|display|browse"/> -->
 			<!-- <menu id="030080" name="credit" title="申请传统贷款" url="/intopieces/credit/create.page" img="" operations="create|browse"/> 传统贷不在本系统操作 -->
 			<!-- <menu id="030003" name="intopiecessearch" title="查询进件" url="/intopieces/intopiecessearch/search.page" img="" operations="browse"></menu> -->
 			<menu id="030001" name="intopiecesapprove" title="申请进件" url="/intopieces/intopiecesapprove/approve.page" img="" operations="browse|create"></menu>
+			
+			<menu id="030101" name="intopiecesapproveallinone" title="进件审批" url="/intopieces/intopiecesapproveallinone/browse.page" img="" operations="browse|create"></menu>
+			<!-- 
 			<menu id="030002" name="intopiecesreceive" title="初审进件" url="/intopieces/intopiecesrecieve/chushen.page" img="" operations="browse|create"></menu>
 			<menu id="030004" name="intopiecesxingzheng1" title="内部审查" url="/intopieces/intopiecesxingzheng1/xingzhengbegin.page" img="" operations="browse|create"></menu>
 			<menu id="030005" name="intopiecesshouxin" title="授信审批" url="/intopieces/intopiecesshouxin/shouxin.page" img="" operations="browse|create"></menu>
@@ -16,17 +19,37 @@
 			<menu id="030008" name="intopiecesxingzheng2" title="中心终审" url="/intopieces/intopiecesxingzheng2/xingzhengend.page" img="" operations="browse|create"></menu>
 			<menu id="030007" name="intopiecesxindai" title="填写合同信息" url="/intopieces/intopiecesxindai/xindai.page" img="" operations="browse|create"></menu>
 			<menu id="030020" name="intopiecesfangkuan" title="放款" url="/intopieces/intopiecesfangkuan/fangkuan.page" img="" operations="browse|create"></menu>
+			
 			<menu id="030012" name="intopiecestwolevel" title="团队长审批(安居贷)" url="/intopieces/intopiecestwolevel/twolevel.page" img="" operations="browse|create"></menu>
 			<menu id="030009" name="intopiecessonelevel" title="行长审批(安居贷)" url="/intopieces/intopiecesonelevel/onelevel.page" img="" operations="browse|create"></menu>
-			<menu id="030021" name="intopiecesdshtwolevel" title="支行审查岗(贷生活10万)" url="/intopieces/intopiecesdshtwolevel/browse.page" img="" operations="browse|create"></menu>
-			<menu id="030022" name="intopiecesdshonelevel" title="支行负责人(贷生活10万)" url="/intopieces/intopiecesdshonelevel/browse.page" img="" operations="browse|create"></menu>
+			
+			<menu id="030021" name="intopiecesdsh10level1" title="支行审查(贷生活支行审批)" url="/intopieces/intopiecesdsh10level1/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030022" name="intopiecesdsh10level2" title="支行行长(贷生活支行审批)" url="/intopieces/intopiecesdsh10level2/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030023" name="intopiecesdsh10level3" title="客户经理(贷生活支行审批)" url="/intopieces/intopiecesdsh10level3/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030024" name="intopiecesdsh10level4" title="中心行政(贷生活支行审批)" url="/intopieces/intopiecesdsh10level4/browse.page" img="" operations="browse|create"></menu>
+			
+			<menu id="030025" name="intopiecesdshlevel1" title="支行审查(贷生活中心审批)" url="/intopieces/intopiecesdshlevel1/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030026" name="intopiecesdshlevel2" title="支行行长(贷生活中心审批)" url="/intopieces/intopiecesdshlevel2/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030027" name="intopiecesdshlevel3" title="中心审查(贷生活中心审批)" url="/intopieces/intopiecesdshlevel3/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030028" name="intopiecesdshlevel4" title="中心终审(贷生活中心审批)" url="/intopieces/intopiecesdshlevel4/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030029" name="intopiecesdshlevel5" title="客户经理(贷生活中心审批)" url="/intopieces/intopiecesdshlevel5/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030030" name="intopiecesdshlevel6" title="中心行政(贷生活中心审批)" url="/intopieces/intopiecesdshlevel6/browse.page" img="" operations="browse|create"></menu>
+			 -->
 			<menu id="030013" name="quotafreezeorthaw1" title="额度冻结/解冻(客户经理)" url="/intopieces/quotafreezeorthaw1/browse.page" img="" operations="browse|create"></menu>
+			
+			<menu id="030113" name="quotafreezeorthaw2" title="额度冻结/解冻(审批)" url="/intopieces/quotafreezeorthaw2/browse.page" img="" operations="browse|create"></menu>
+			<!-- 
 			<menu id="030014" name="quotafreezeorthaw2" title="额度冻结/解冻审批(团队长)" url="/intopieces/quotafreezeorthaw2/browse.page" img="" operations="browse|create"></menu>
 			<menu id="030015" name="quotafreezeorthaw3" title="额度冻结/解冻审批(评审)" url="/intopieces/quotafreezeorthaw3/browse.page" img="" operations="browse|create"></menu>
-			<menu id="030016" name="quotafreezeorthaw4" title="额度冻结/解冻审批(终审)" url="/intopieces/quotafreezeorthaw4/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030016" name="quotafreezeorthaw4" title="额度冻结/解冻审批(终审)" url="/intopieces/quotafreezeorthaw4/browse.page" img="" operations="browse|create"></menu> -->
+			
 			<menu id="030017" name="sxinfo1" title="信息维护申请(客户经理)" url="/intopieces/sxinfo1/browse.page" img="" operations="browse|create"></menu>
+			
+			<menu id="030118" name="sxinfo2" title="信息维护(审批)" url="/intopieces/sxinfo2/browse.page" img="" operations="browse|create"></menu>
+			<!-- 
 			<menu id="030018" name="sxinfo2" title="信息维护审批(团队长)" url="/intopieces/sxinfo2/browse.page" img="" operations="browse|create"></menu>
-			<menu id="030019" name="sxinfo3" title="信息维护审批(行政)" url="/intopieces/sxinfo3/browse.page" img="" operations="browse|create"></menu>
+			<menu id="030019" name="sxinfo3" title="信息维护审批(行政)" url="/intopieces/sxinfo3/browse.page" img="" operations="browse|create"></menu> -->
+			
 			<!-- <menu id="030020" name="applyintopieces" title="申请审批进件" url="/intopieces/applyintopieces/browse.page" img="" operations="create|change|delete|display|browse"></menu> 
 			<menu id="030020" name="applyintopiecewait" title="申请件待审核" url="/intopieces/applyintopiecewait/browse.page" img="" operations="approve|applyapprove|browse"></menu>
 			<menu id="030030" name="applyintopiecesquery" title="申请件上传银联" url="/intopieces/applyintopiecesquery/applyIntopiecesQuery.page" img="" operations="exportupload|display|browse"></menu> 
@@ -53,15 +76,16 @@
 			<menu id="110020" name="afterloanapprove" title="贷后检查审核" url="/afterloan/afterloanapprove/approve.page" img="" operations="browse"/>
 			<menu id="110030" name="afterloanremind" title="贷后检查提醒" url="/afterloan/afterloanremind/remind.page" img="" operations="browse"/>
 			<menu id="110040" name="afterloanhistory" title="贷后检查历史" url="/afterloan/afterloanhistory/browse.page" img="" operations="browse"/>
+			<menu id="110050" name="afterloanhistoryAll" title="贷后检查历史(管理岗)" url="/afterloan/afterloanhistory/browseAll.page" img="" operations="browse"/>
 		</menu>
 		<menu id="120000" name="zainformation" title="专案管理" url="" img="images/icon_sys.gif" operations="">
 			<menu id="120010" name="zaquery" title="专案查询" url="/zainformation/zaquery/browse.page" img="" operations="browse"/>
-			<menu id="120020" name="za1" title="支行审批" url="/zainformation/za1/browse.page" img="" operations="browse"/>
+			<!-- <menu id="120020" name="za1" title="支行审批" url="/zainformation/za1/browse.page" img="" operations="browse"/>
 			<menu id="120030" name="za2" title="零售业务部审批" url="/zainformation/za2/browse.page" img="" operations="browse"/>
-			<menu id="120040" name="za3" title="微贷中心审批" url="/zainformation/za3/browse.page" img="" operations="browse"/>
+			<menu id="120040" name="za3" title="微贷中心审批" url="/zainformation/za3/browse.page" img="" operations="browse"/> -->
 		</menu>
 		<menu id="050000" name="divisional" title="客户移交" operations=""> 
-			<menu id="050010" name="customerallot" title="团队长分配" url="/divisional/customerallot/browse.page" img="" operations="distribution|browse"/>
+			<menu id="050010" name="customerallot" title="中心分配" url="/divisional/customerallot/browse.page" img="" operations="distribution|browse"/>
 			<!-- <menu id="050011" name="cfccllot" title="卡中心分配（卡中心）" url="/divisional/cfccllot/browse.page" img="" operations="distribution|browse"/> -->
 			<menu id="050012" name="customeraltransfer" title="移交客户" url="/divisional/customeraltransfer/browse.page" img="" operations="browse"/>
 			<menu id="050013" name="customeralreceive" title="接受客户" url="/divisional/customeralreceive/browse.page" img="" operations="display|browse"/>
@@ -72,7 +96,7 @@
 			<menu id="060030" name="productfilter" title="产品筛选准入规则配置" url="/product/productfilter/browse.page" img="" operations="create|delete|browse"/>-->
 			<menu id="060050" name="quotafreezeorthawcfg" title="额度冻结/解冻流程" url="/system/nodeaudit/browse_quotafreezeorthawcfg.page" img="" operations="create|delete|browse"/>
 			<menu id="060060" name="sxinfocfg" title="授信信息维护流程" url="/system/nodeaudit/browse_sxinfocfg.page" img="" operations="create|delete|browse"/>
-			<menu id="060070" name="zainfomationcfg" title="专案申请流程" url="/system/nodeaudit/browse_zainfomationcfg.page" img="" operations="create|delete|browse"/>
+			<!-- <menu id="060070" name="zainfomationcfg" title="专案申请流程" url="/system/nodeaudit/browse_zainfomationcfg.page" img="" operations="create|delete|browse"/> -->
 		</menu>
 		<menu id="070000" name="manager" title="客户经理管理" url="" img="images/icon_sys.gif" operations="">
 		    <menu id="070001" name="managercreate" title="客户经理参数配置" url="/manager/managercreate/browse.page" img="" operations="create|change|delete|display|browse"/>
@@ -134,6 +158,10 @@
 			<menu id="100030" name="afterLoancollect" title="贷款汇总查询" url="/report/afterLoancollect/browse.page" img="" operations="browse"/>
 			<menu id="100040" name="afterLoancollectAll" title="贷款汇总查询(管理岗)" url="/report/afterLoancollect/browseAll.page" img="" operations="browse"/>
 			<menu id="100050" name="psNormIntAmt" title="利息计算" url="/report/psNormIntAmt/browse.page" img="" operations="browse"/>
+			<menu id="100080" name="psNormIntAmtAll" title="利息计算(管理岗)" url="/report/psNormIntAmt/browseAll.page" img="" operations="browse"/>
+			
+			<menu id="100060" name="afterLoancollectNew" title="汇总查询-测试" url="/report/afterLoancollect/browseNew.page" img="" operations="browse"/>
+			<menu id="100070" name="afterLoancollectNewAll" title="汇总查询(管理岗)-测试" url="/report/afterLoancollect/browseNewAll.page" img="" operations="browse"/>
 			<!-- <menu id="100041" name="intelligentcustomerreport" title="客户信息智能报表" url="/report/intelligentcustomerreport/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100042" name="intelligentaccountreport" title="客户账户智能报表" url="/report/intelligentaccountreport/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100043" name="postloanmanagementdata" title="贷后管理数据" url="/report/postloanmanagementdata/browse.page" img="" operations="create|change|delete|display|browse"/>

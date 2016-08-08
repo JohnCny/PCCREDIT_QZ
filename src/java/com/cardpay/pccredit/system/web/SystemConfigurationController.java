@@ -43,7 +43,7 @@ public class SystemConfigurationController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute SystemConfigurationFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -64,7 +64,7 @@ public class SystemConfigurationController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/system/systemconfiguration/configuration_change", request);
 
@@ -84,7 +84,7 @@ public class SystemConfigurationController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute SystemConfigurationForm systemConfigurationForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), systemConfigurationForm);

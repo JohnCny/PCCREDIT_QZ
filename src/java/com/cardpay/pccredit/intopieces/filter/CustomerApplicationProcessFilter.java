@@ -1,6 +1,7 @@
 package com.cardpay.pccredit.intopieces.filter;
 
 import java.util.Date;
+import java.util.List;
 
 import com.wicresoft.jrad.base.database.dao.business.BusinessFilter;
 
@@ -32,6 +33,12 @@ public class CustomerApplicationProcessFilter extends BusinessFilter {
 	private String filterTeamLeader;//团队长查看各小组成员的进件 1要过滤 0 不过滤
 	
 	private String filterOrgId;//审核人的org_id 贷生活10万以下要过滤是否同一机构
+	
+	private String filterApprovalMeeting;//判断是否需要过滤审贷会成员
+	private List<String> userIds;
+	private Date endDate;
+	private String remindTime;
+	private String endTime;
 	
 	public String getLoginId() {
 		return loginId;
@@ -160,4 +167,45 @@ public class CustomerApplicationProcessFilter extends BusinessFilter {
 	public void setFilterOrgId(String filterOrgId) {
 		this.filterOrgId = filterOrgId;
 	}
+
+	public String getFilterApprovalMeeting() {
+		return filterApprovalMeeting;
+	}
+
+	public void setFilterApprovalMeeting(String filterApprovalMeeting) {
+		this.filterApprovalMeeting = filterApprovalMeeting;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getRemindTime() {
+		return remindTime;
+	}
+
+	public void setRemindTime(String remindTime) {
+		this.remindTime = remindTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public List<String> getUserIds() {
+		return userIds;
+	}
+
+	public void setUserIds(List<String> userIds) {
+		this.userIds = userIds;
+	}
+	
 }

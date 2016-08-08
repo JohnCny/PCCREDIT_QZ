@@ -61,7 +61,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView query(HttpServletRequest request) {
 		Map<String,String> managerBelongMapJson = managerBelongMapService.getManagerBelongTree();
 		JRadModelAndView mv = new JRadModelAndView("/manager/belong_map/manager_belong_tree", request);
@@ -84,7 +84,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	/*@ResponseBody
 	@RequestMapping(value = "loadPartManagerBelongTree.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView loadPartOrganizationTree(HttpServletRequest request, 
 			HttpServletResponse response) throws IOException {
 		String parentId = request.getParameter("parentId");
@@ -100,7 +100,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "displayManagerBelong.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView displayOrganization(@ModelAttribute ManagerBelongMapFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -127,7 +127,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(@ModelAttribute ManagerBelongMapFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/belong_map/manager_belong_create", request);
 		mv.addObject("organization", filter);
@@ -136,7 +136,7 @@ public class ManagerBelongMapController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "center_create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView center_create(@ModelAttribute ManagerBelongMapFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/belong_map/manager_belong_center_create", request);
 		mv.addObject("organization", filter);
@@ -152,7 +152,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute ManagerBelongMapForm managerBelongMapForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), managerBelongMapForm);
 		if (returnMap.isSuccess()) {
@@ -185,7 +185,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -216,7 +216,6 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.json")
-	@JRadOperation(JRadOperation.SUBTURNOTHER)
 	public JRadReturnMap change(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -250,7 +249,7 @@ public class ManagerBelongMapController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert_center.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert_center(@ModelAttribute ManagerBelongMapForm managerBelongMapForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), managerBelongMapForm);
 		try {
@@ -274,7 +273,7 @@ public class ManagerBelongMapController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "delete_center.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap delete_center(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

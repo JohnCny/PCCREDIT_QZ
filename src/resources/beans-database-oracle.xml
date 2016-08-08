@@ -27,7 +27,7 @@
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
 		<!-- <property name="jdbcUrl" value="jdbc:oracle:thin:@11.23.11.35:1521:orcl" />  斜杠方式连接service_name 冒号方式连接sid -->
 		<!-- 本地环境  -->
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.0.252/orcl" /> 
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost/orcl" /> 
 		<!-- 测试环境  
 		<property name="jdbcUrl" value="jdbc:oracle:thin:@168.168.241.89:1521/credit" /> -->
 		<!-- 生产环境 

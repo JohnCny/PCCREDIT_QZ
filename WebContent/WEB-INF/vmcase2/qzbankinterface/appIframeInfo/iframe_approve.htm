@@ -7,6 +7,9 @@
 	.tabContent{display:none;padding:1px 10px;padding-bottom:0;margin-top:-1px\9;padding-right:0;}
 	.selectTab{display:block}
 </style>
+<style type="text/css">
+    html{overflow:hidden;}//隐藏整个页面的滚动条；
+</style>
 <body>
 	<div class="fixed">
 		<h1>客户信息</h1>
@@ -129,16 +132,66 @@
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/accLoan_info.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">台账明细</li>
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>	
 	
-	#elseif($!operate=="贷生活10万支行负责人")	
+	#elseif($!operate=="贷生活(支行审批)支行审查岗")	
 		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="贷生活(支行审批)支行负责人")
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>	
-	
-	#elseif($!operate=="贷生活10万支行审查岗")	
-		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
-		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/create_or_change.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
 		
+	#elseif($!operate=="贷生活(支行审批)客户经理")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/create_or_change.page?id=${customerId}&appId=${appId}&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="贷生活(支行审批)中心行政")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="贷生活(中心审批)支行审查岗")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="贷生活(中心审批)支行负责人")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>	
+		
+	#elseif($!operate=="贷生活(中心审批)中心审查")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="贷生活(中心审批)中心终审")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>	
+		
+	#elseif($!operate=="贷生活(中心审批)客户经理")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/create_or_change.page?id=${customerId}&appId=${appId}&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="贷生活(中心审批)中心行政")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx_display.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+			
 	#elseif($!operate=="进件查询")	
 		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}&ifHideUser=${ifHideUser}')" style="margin-left:0;">贷款申请表</li>
 		<!-- <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/customer/basiccustomerinforUpdate/create_zcfz.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">资产负债</li>
@@ -179,13 +232,23 @@
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/accLoan_info.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}&ifHideUser=${ifHideUser}')" style="margin-left:0;">台账明细</li>	
 		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&operate=${operate}&ifHideUser=${ifHideUser}')" style="margin-left:0;">贷款信息</li>
 	
-				
+	#elseif($!operate=="进件贷生活查询")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd_display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&operate=${operate}')" style="margin-left:0;">贷款信息</li>
+		
+	#elseif($!operate=="卡中心贷生活进件查询")	
+		<li class="active" onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">贷款申请表</li>
+		<!-- 影像改造  下次放开--> <li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/sunds_ocx.page?appId=${appId}')" style="margin-left:0;">待上传资料清单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/intopiecesapprove/dsh_10_jyd_display.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}')" style="margin-left:0;">决议单</li>
+		<li onclick="selectTab('tabContent0',this);$('#contentFrame').attr('src','${contextPath}/intopieces/circle/display.page?id=${customerId}&appId=${appId}&operate=${operate}')" style="margin-left:0;">贷款信息</li>		
 	#end
 	</ul>
 	<div class="TabContent" id="Content1">
 		<!--*************************************行内评分项*****************************************-->
 		<div class="tabContent selectTab" id="tabContent0">			
-			<iframe frameborder="0" id="contentFrame" width="100%;" height="420px" src="${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}" marginheight="0" marginwidth="0" 
+			<iframe style="overflow: no;marginheight:0; marginwidth:0;width:100%;height:420px" frameborder="0" id="contentFrame"  src="${contextPath}/intopieces/intopiecesapprove/page1.page?id=${customerId}&appId=${appId}&type=readonly&operate=${operate}" 
 				onload="this.height=this.contentWindow.document.body.scrollHeight>450?this.contentWindow.document.body.scrollHeight:450"></iframe>
 		</div>
 	</div>
@@ -197,6 +260,18 @@
 			//$("#"+id).show();
 		}
 	</script>	
+	<script type="text/javascript">adjustIfrHt();</script>//加到页面最后
 </body>
+<script type="text/javascript">
+  function adjustIfHt(){
+    var ht = $(window).height();//获取浏览器窗口的整体高度；
+    var topHeader = $(".warp_header").height();//获取头部高度，定义一个变量名为topHeader
+    $(".sidebar").height(ht);
+    $("#rightFrame").height(ht);
+    $(".sidebar").height(ht-topHeader);//计算左边高度：窗口高度-头部高度
+    $("#rightFrame").height(ht-topHeader);//计算右边高度：窗口高度-头部高度
+  }
+</script>
+ 
 </html>
 
