@@ -10,7 +10,7 @@ body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
 #text_list{position:absolute;bottom:60px;left:50px;position:absolute;z-index:5;height:20px;overflow:hidden;}
 #text_list h2{display:none;}
 #text_list .show{display:block;}
-#text_list a{color:#FFFFFF;font-family:"Microsoft YaHei";font-size:18px;font-weight:normal;text-decoration:none;}
+#text_list a{color:#000000;font-family:"Microsoft YaHei";font-size:18px;font-weight:normal;text-decoration:none;}
 #ico_list{position:absolute;bottom:10px;left:12px;width:525px;overflow:hidden;height:46px;z-index:3;}
 #ico_list ul{width:1050px;position:absolute;left:0;top:0;}
 #ico_list li{width:75px;float:left;}

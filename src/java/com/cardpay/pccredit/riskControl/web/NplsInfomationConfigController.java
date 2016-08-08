@@ -38,7 +38,7 @@ public class NplsInfomationConfigController  extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		NplsInfomationConfiguration nplsInfomationConfiguration = nplsInfomationConfigService.getNplsInfomationConfig();
 		JRadModelAndView mv = new JRadModelAndView("/riskcontrol/nplsinfomation/nplsinfomation_config", request);
@@ -54,7 +54,7 @@ public class NplsInfomationConfigController  extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "save.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute NplsInfomationConfiguration nplsInfomationConfiguration, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), nplsInfomationConfiguration);

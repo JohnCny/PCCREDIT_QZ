@@ -134,7 +134,7 @@ public class IntoPiecesBrowse extends BaseController {
 			filter.setProductId(null);
 		}
 		//查看自己是否团队长
-		List<Dict> blg_cus_ls = intoPiecesService.findBelogCusMgr(userId);
+		List<Dict> blg_cus_ls = intoPiecesService.findTeamBelongCusMgr(userId);
 		if(blg_cus_ls != null && blg_cus_ls.size()>0){
 			filter.setFilterTeamLeader("1");
 		}
@@ -359,7 +359,7 @@ public class IntoPiecesBrowse extends BaseController {
 	//导入调查报告
 			@ResponseBody
 			@RequestMapping(value = "reportImport.page", method = { RequestMethod.GET })
-			@JRadOperation(JRadOperation.BROWSE)
+			
 			public AbstractModelAndView reportImport(@ModelAttribute AddIntoPiecesFilter filter,HttpServletRequest request) {
 				filter.setRequest(request);
 				QueryResult<LocalExcelForm> result = intoPiecesService.findLocalExcel(filter);

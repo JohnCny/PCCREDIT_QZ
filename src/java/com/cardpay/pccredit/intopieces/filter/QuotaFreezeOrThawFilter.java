@@ -14,7 +14,11 @@ public class QuotaFreezeOrThawFilter extends BusinessFilter{
 	
 	private String userId;
 
-	private String filterTeamLeader;
+	private String filterTeamLeader;//团队长查看各小组成员的进件 1要过滤 0 不过滤
+	
+	private String filterOrgId;//审核人的org_id 贷生活10万以下要过滤是否同一机构
+	
+	private String filterApprovalMeeting;//判断是否需要过滤审贷会成员
 	
 	private String status;
 	
@@ -72,5 +76,21 @@ public class QuotaFreezeOrThawFilter extends BusinessFilter{
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getFilterOrgId() {
+		return filterOrgId;
+	}
+
+	public void setFilterOrgId(String filterOrgId) {
+		this.filterOrgId = filterOrgId;
+	}
+
+	public String getFilterApprovalMeeting() {
+		return filterApprovalMeeting;
+	}
+
+	public void setFilterApprovalMeeting(String filterApprovalMeeting) {
+		this.filterApprovalMeeting = filterApprovalMeeting;
 	}
 }

@@ -78,7 +78,7 @@ public class CustomerFilterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ProductFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -101,7 +101,7 @@ public class CustomerFilterController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "filter.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute CustomerInforFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		String productId = request.getParameter("id");
@@ -129,7 +129,7 @@ public class CustomerFilterController extends BaseController {
 	@SuppressWarnings("unused")
 	@ResponseBody
 	@RequestMapping(value = "createMarketingPlan.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute CustomerMarketingForm customerMarketingForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), customerMarketingForm);
 		if (returnMap.isSuccess()) {

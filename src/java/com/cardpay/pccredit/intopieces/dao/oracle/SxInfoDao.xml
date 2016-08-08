@@ -87,6 +87,12 @@
 	
 	<select id="getQzIesbForCircleWFByFilter" parameterType="com.cardpay.pccredit.intopieces.filter.QuotaFreezeOrThawFilter"
 	    resultMap="ResultMap">
+	    with user_org as(
+		select sdu.user_id as user_id,sd.org_id as org_id
+		from sys_dept_user sdu,sys_department sd
+		where sdu.dept_id = sd.id
+		)
+		
 		SELECT * FROM (
 	    SELECT ROW_.*,ROWNUM ROWNUM_
 			FROM (
@@ -117,6 +123,13 @@
 		    and c.loan_status = #{loanStatus}
 		</if>
 			
+			
+		<if test="filterOrgId!=null and filterOrgId!=''">
+			and exists (select 1 from user_org where user_id =
+			#{userId} and org_id = (select org_id from user_org where user_id =
+			u.user_id))
+		</if>
+		
 		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
 			<if test='filterTeamLeader=="1"'>
 				and u.user_id in ( 
@@ -140,6 +153,13 @@
 	
 	<select id="getQzIesbForCircleCountWFByFilter" parameterType="com.cardpay.pccredit.intopieces.filter.QuotaFreezeOrThawFilter"
 	    resultType="int">
+	    
+	    with user_org as(
+		select sdu.user_id as user_id,sd.org_id as org_id
+		from sys_dept_user sdu,sys_department sd
+		where sdu.dept_id = sd.id
+		)
+		
 		SELECT count(*)
 			FROM (
 		select c.ID as CIRCLE_ID,c.CLIENT_NO,c.CONTRACT_AMT,c.START_DATE,c.END_DATE,c.CLIENT_NAME,c.GLOBAL_TYPE,c.GLOBAL_ID,
@@ -169,6 +189,11 @@
 		    and c.loan_status = #{loanStatus}
 		</if>
 			
+		<if test="filterOrgId!=null and filterOrgId!=''">
+			and exists (select 1 from user_org where user_id =
+			#{userId} and org_id = (select org_id from user_org where user_id =
+			u.user_id))
+		</if>
 		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
 			<if test='filterTeamLeader=="1"'>
 				and u.user_id in ( 

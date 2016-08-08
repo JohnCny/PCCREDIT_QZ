@@ -128,7 +128,7 @@
           </table>
         </div>
          <div class="dialog">
-			<form id="checkForm1" class="dialog-box" action="${contextPath}/intopieces/intopieceszhongxin/returnAppln.json">
+			<form id="checkForm1" class="dialog-box" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="${appId}" />
 				<div class="top">
 					退件 <span onclick="$('.dialog').hide();"></span>
@@ -271,7 +271,7 @@
 				var applicationId= $($(".checkbox :checked")[0]).attr("value").split("@")[0];
 				Dialog.confirm("确定提交吗？", "提示",
 					    function() {
-							$.post("${contextPath}/intopieces/intopieceszhongxin/pass.json?id="+applicationId, {},
+							$.post("${contextPath}/intopieces/intopiecesapprove/save_apply.json?id="+applicationId, {},
 						            function(data, textStatus, jqXhr) {
 						                if (data.success) {
 						                	var url ="${contextPath}/intopieces/intopieceszhongxin/zhongxin.page";
@@ -372,7 +372,7 @@
 		});
 		if(id!=null){
 			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
-			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+			Dialog.tablePage(url, "查看审批历史", "get", null,700, 800);
 		}else{
 			Dialog.message("请选择要被查看的进件!");
 		}

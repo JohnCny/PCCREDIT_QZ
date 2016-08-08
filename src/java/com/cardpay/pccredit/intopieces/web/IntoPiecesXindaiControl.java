@@ -112,7 +112,7 @@ public class IntoPiecesXindaiControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_upload.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createUpload(@ModelAttribute VideoAccessoriesFilter filter,HttpServletRequest request) {
 		String appId = request.getParameter(ID);
 		List<QzDcnrUploadForm>  result =intoPiecesService.getUploadList(appId);
@@ -131,7 +131,7 @@ public class IntoPiecesXindaiControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveYxzl.json",method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String,Object> saveYxzl(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
@@ -152,70 +152,6 @@ public class IntoPiecesXindaiControl extends BaseController {
 		return map;
 	}
 	
-	/**
-	 * 申请件审批通过 
-	 * 从信审岗--行政岗终
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "save_apply.json")
-	public JRadReturnMap saveApply(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-			String appId = request.getParameter("id");
-			//是否上传合同单
-			/*Boolean ifAddHt = intoPiecesService.getDcnrList(appId);
-			if(!ifAddHt){
-				returnMap.put(JRadConstants.MESSAGE, "请先上传\"合同扫描件\"");
-				returnMap.put(JRadConstants.SUCCESS, false);
-				return returnMap;
-			}*/
-			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
-			request.setAttribute("serialNumber", process.getSerialNumber());
-			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
-			request.setAttribute("objection", "false");
-			//查找审批金额
-			Circle circle = circleService.findCircleByAppId(appId);
-			
-			if(StringUtils.isBlank(circle.getaClientNo())){
-				returnMap.setSuccess(false);
-				returnMap.put("message", "客户号不能为空");
-				return returnMap;
-			}
-			request.setAttribute("examineAmount", circle.getContractAmt());
-			
-			//2016-01-13流程调整 判断是否旧流程，旧流程的话需要调用放款接口
-			if(customerApplicationIntopieceWaitService.getNextIsEnd(request)){
-				//先开户 后通过applicationId查找circle并放款 
-				String rtn = circleService.updateCustomerInforCircle_ESB(circle,user);
-				if("放款成功".equals(rtn)){
-					customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-					returnMap.put(JRadConstants.SUCCESS, true);
-					returnMap.addGlobalMessage(rtn);
-					returnMap.put("message", rtn);
-				}
-				else{
-					returnMap.put(JRadConstants.SUCCESS, false);
-					returnMap.addGlobalMessage(rtn);
-					returnMap.put("message", rtn);
-				}
-			}
-			else{
-				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-				returnMap.addGlobalMessage(CHANGE_SUCCESS);
-			}
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			returnMap.put("message", "保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	
 	//iframe_approve(申请后)
 	@ResponseBody
 	@RequestMapping(value = "iframe_approve.page")
@@ -231,37 +167,6 @@ public class IntoPiecesXindaiControl extends BaseController {
 			mv.addObject("operate", Constant.status_xinshen);
 		}
 		return mv;
-	}
-	
-	/**
-	 * 申请件退件
-	 * 从填写合同--中心复核
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "returnAppln.json")
-	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String nodeNo = "";
-			String appId = request.getParameter("appId");
-			String operate = request.getParameter("operate");//当前审批节点
-			String nodeName = request.getParameter("nodeName");//退回目标节点id
-			//退回客户经理和其他岗位不一致
-			if("1".equals(nodeName)){
-				
-				intoPiecesService.checkDoNotToManager(appId,request);
-			}else{
-				intoPiecesService.returnAppln(appId, request,nodeName);
-			}
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
 	}
 	
 }

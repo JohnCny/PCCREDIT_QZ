@@ -3,6 +3,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
 	<style type="text/css">
+	input[disabled],input:disabled{
+border:1px solid #DDD;
+background-color:#F5F5F5;
+color:#f00;
+}
+
 		.dialog{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;background:rgba(229,229,229,0.5);display:none;}
 		.dialog .dialog-box{width:400px;background:#ffffff;border:1px solid #e5e5e5;border-radius:10px;margin:0 auto;margin-top:100px;padding:3px;}
 		.dialog .dialog-box .top{height:35px;background:url(${contextPath}/images/box_head_bg.png) repeat-x;line-height:35px;font-size:14px;padding-left:15px;font-weight:bold;}
@@ -134,29 +140,13 @@
               	<td><input type="hidden" id="clientNo" name="clientNo"/></td>
               	<td></td>
             </tr>
-            #if($!operate =='中心终审')
             <tr>
-            #elseif($!operate =='进件查询')
-            <tr>
-            #elseif($!operate =='卡中心进件查询')
-            <tr>
-            #else
-            <tr style="display: none;">
-            #end
             	<td><label>收息收款账号:</label><font color="#ff0000">*</font></td>
               	<td><input type="text" name="acctNo1" value="$!circle.acctNo1"  readonly style="color:#000000" /></td>
               	<td><label>放款账号:</label><font color="#ff0000">*</font></td>
               	<td><input type="text" name="acctNo2" value="$!circle.acctNo2" readonly style="color:#000000" /></td>
             </tr>
-            #if($!operate=='中心终审')
             <tr>
-            #elseif($!operate =='进件查询')
-            <tr>
-            #elseif($!operate =='卡中心进件查询')
-            <tr>
-            #else
-            <tr style="display: none;">
-			#end
               <td><label>合同号:</label><font color="#ff0000">*</font></td>
               <td><input type="text" name="contractNo" value="$!circle.contractNo" readonly style="color:#000000" /></td>
               <td><label>卡号:</label><font color="#ff0000">*</font></td>
@@ -562,7 +552,7 @@
 			</form>
 		</div>
 			 <div class="dialog3">
-			<form id="checkForm3" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesshouxin/returnAppln.json">
+			<form id="checkForm3" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="$!appId" />
 				<input type="hidden" name="operate" id="operate" value="$!operate"/>
 				<div class="top">
@@ -604,7 +594,7 @@
 	</div>
 	
 		<div class="dialog4">
-			<form id="checkForm4" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesxingzheng2/returnAppln.json">
+			<form id="checkForm4" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="$!appId" />
 				<input type="hidden" name="operate" id="operate" value="$!operate"/>
 				<div class="top">
@@ -626,7 +616,7 @@
 		</div>
 		
 		<div class="dialog5">
-			<form id="checkForm5" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesonelevel/returnAppln.json">
+			<form id="checkForm5" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="$!appId" />
 				<input type="hidden" name="operate" id="operate" value="$!operate"/>
 				<div class="top">
@@ -648,7 +638,7 @@
 		</div>
 		
 		<div class="dialog6">
-			<form id="checkForm6" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesonelevel/returnAppln.json">
+			<form id="checkForm6" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="$!appId" />
 				<input type="hidden" name="operate" id="operate" value="$!operate"/>
 				<div class="top">
@@ -675,22 +665,26 @@
 		  #elseif($!operate=="内部审查")
 	      	<a id="id_in1_button" class="btn_g" >通过</a>
 	      	<a id="id_return1_button" class="btn_g" >退件</a>
-       	#elseif($!operate=="授信审批"||$!operate=="中心复核")
+       	  #elseif($!operate=="授信审批"||$!operate=="中心复核")
 	      	<a id="id_in2_button" class="btn_g" >通过</a>
 	      	<a id="id_return_button" class="btn_g" >退件</a>
 	      	<a id="id_s_reject_button" class="btn_g" >拒件</a>
 	        #if($!operate=="授信审批")
 	      	<a id="id_return_to_cu_button" class="btn_g" >补充上会</a>
 	        #end
-	    #elseif($!operate=="中心终审" && $!ifHideUser !="NO")
-	      	<a id="id_zx_in_button" class="btn_g" >审批通过</a>
+	      #elseif($!operate=="中心终审" && $!ifHideUser !="NO")
+	      	<a id="id_zx_in_button" class="btn_g" >通过</a>
 	      	<a id="id_return4_button" class="btn_g" >退件</a>
-	      	#elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
+	      #elseif($!operate=="行长" 
+	      		|| $!operate=="贷生活(支行审批)中心行政" || $!operate=="贷生活(中心审批)中心行政")
 	      	<a id="id_in5_button" class="btn_g" >审批通过</a>
-         <a id="id_return5_button" class="btn_g" >退件</a>
-         #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
-         <a id="id_in6_button" class="btn_g" >通过</a>
-         <a id="id_return6_button" class="btn_g" >退件</a>
+            <a id="id_return5_button" class="btn_g" >退件</a>
+          #elseif($!operate=="团队长" 
+          		|| $!operate=="贷生活(支行审批)支行审查岗" || $!operate=="贷生活(支行审批)支行负责人" 
+          		|| $!operate=="贷生活(中心审批)支行审查岗" || $!operate=="贷生活(中心审批)支行负责人" 
+          		|| $!operate=="贷生活(中心审批)中心审查"|| $!operate=="贷生活(中心审批)中心终审")
+         	<a id="id_in6_button" class="btn_g" >通过</a>
+         	<a id="id_return6_button" class="btn_g" >退件</a>
 		  #end
 	      	<a class="btn_gr" onclick="parent.location.href = '${contextPath}${returnUrl}'" >返回</a>
       </div>
@@ -818,7 +812,7 @@
            	    function() {
         	   		#set ($formName = "'#checkForm1_1'")
    					var formjson = $($formName).serialize();
-	              	var url = "${contextPath}/intopieces/intopiecesxingzheng1/save_apply.json?id=${appId}";
+	              	var url = "${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}";
 	 	        	$.ajax({
 	 	        		data : formjson,
 						url : url,
@@ -848,7 +842,7 @@
 			    			var formjson = $($formName).serialize();
 		    				 $.ajax({
 		    					   
-									url : "${contextPath}/intopieces/intopiecesxingzheng1/returnAppln.json",
+									url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 									type : "get",
 									data : formjson,
 									success : function(data) {
@@ -882,7 +876,7 @@
 	           	    function() {
 	        	   		#set ($formName = "'#checkForm2_1'")
 	   					var formjson = $($formName).serialize();
-	        	   		var url = "${contextPath}/intopieces/intopiecesshouxin/pass.json?id=${appId}";
+	        	   		var url = "${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}";
 		 	        	$.ajax({
 		 	        		data : formjson,
 							url : url,
@@ -911,7 +905,7 @@
 					var formjson = $($formName).serialize();
 						 $.ajax({
 							 	
-								url : "${contextPath}/intopieces/intopiecesshouxin/returnAppln.json",
+								url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 								type : "get",
 								data : formjson,
 								success : function(data) {
@@ -995,7 +989,7 @@
                 			#set ($formName = "'#checkForm4_1'")
         					var formjson = $($formName).serialize();
                 			
-               				url="${contextPath}/intopieces/intopiecesxingzheng2/save_apply.json?id=${appId}";
+               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}";
 			                $.ajax({ 
 								url : url,
 								type : "get",
@@ -1003,12 +997,12 @@
 								success : function(data) {
 									Dialog.closeLoad();
 									if (data.success) {
-										topWin.Dialog.message(data.retMsg);	
+										topWin.Dialog.message("保存成功");	
 						            	var url = "${contextPath}${returnUrl}";
 						                parent.location.href = url;
 									}
 									else{
-										topWin.Dialog.message(data.retMsg);
+										topWin.Dialog.message("保存失败");
 								    }
 								}
 						}); 
@@ -1030,7 +1024,7 @@
 					var formjson = $($formName).serialize();
 					 $.ajax({
 						 	
-							url : "${contextPath}/intopieces/intopiecesxingzheng2/returnAppln.json",
+							url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 							type : "get",
 							data : formjson,
 							success : function(data) {
@@ -1058,7 +1052,7 @@
 					#set ($formName = "'#checkForm5'")
 					var formjson = $($formName).serialize();
 					 $.ajax({
-							url : "${contextPath}/intopieces/intopiecesonelevel/returnAppln.json",
+							url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 							type : "get",
 							data : formjson,
 							success : function(data) {
@@ -1087,7 +1081,7 @@
 					#set ($formName = "'#checkForm6'")
 					var formjson = $($formName).serialize();
 					 $.ajax({
-							url : "${contextPath}/intopieces/intopiecestwolevel/returnAppln.json",
+							url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 							type : "get",
 							data : formjson,
 							success : function(data) {
@@ -1114,18 +1108,18 @@
 			submitFlag = 1;
                 Dialog.confirm("确定提交吗？", "提示",
                 	    function() {
-               				url="${contextPath}/intopieces/intopiecesonelevel/save_apply.json?id=${appId}";
+               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}";
 			                $.ajax({
 								url : url,
 								type : "get",
 								success : function(data) {
 									if (data.success) {
-										topWin.Dialog.message(data.retMsg);	
+										topWin.Dialog.message(data.message);	
 						            	var url = "${contextPath}${returnUrl}";
 						                parent.location.href = url;
 									}
 									else{
-										topWin.Dialog.message(data.retMsg);
+										topWin.Dialog.message(data.message);
 								    }
 									submitFlag = 0;
 								}
@@ -1147,7 +1141,7 @@
 			submitFlag = 1;
                 Dialog.confirm("确定提交吗？", "提示",
                 	    function() {
-               				url="${contextPath}/intopieces/intopiecestwolevel/save_apply.json?id=${appId}";
+               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}";
 			                $.ajax({
 								url : url,
 								type : "get",
@@ -1203,6 +1197,11 @@
 		if("$!circle.loanBelong1_5" == ""){
 			$("#loanBelong1_5").empty();
 		}
+		
+		//display页面禁用所有表单元素
+		$("form[id='id_module_form'] input").attr("disabled",true);
+		$("form[id='id_module_form'] textarea").attr("disabled",true);
+		$("form[id='id_module_form'] select").prop("disabled",true);
   });
   	
     </script>

@@ -13,14 +13,15 @@ import com.wicresoft.jrad.base.database.model.BusinessModel;
 public class QzApplnZa extends BusinessModel {
 
 	private static final long serialVersionUID = 1L;
-	private String id;
 	private String originator;
+	private String originatorManager;
 	private String initiator;
 	private Date initDate;
 	private String name;
 	private String address;
 	private String code;
 	private String sug;
+	private String branchSug;
 	
 	private String serialnumber;//授信维护 流程序列号 
 	private String processStatus;//授信维护 审批状态
@@ -28,12 +29,6 @@ public class QzApplnZa extends BusinessModel {
 	private String nodeName;
 	private String quotaProcessId;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getOriginator() {
 		return originator;
 	}
@@ -100,4 +95,17 @@ public class QzApplnZa extends BusinessModel {
 	public void setQuotaProcessId(String quotaProcessId) {
 		this.quotaProcessId = quotaProcessId;
 	}
+	public String getOriginatorManager() {
+		return originatorManager;
+	}
+	public void setOriginatorManager(String originatorManager) {
+		this.originatorManager = originatorManager;
+	}
+	public String getBranchSug() {
+		return branchSug;
+	}
+	public void setBranchSug(String branchSug) {
+		this.branchSug = branchSug;
+	}
+	
 }

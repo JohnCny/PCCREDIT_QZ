@@ -65,7 +65,7 @@ public class CustomerQuestionController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_wjdc.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute CustomerQuestionInfoFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		String customerId = request.getParameter("id");
@@ -107,7 +107,7 @@ public class CustomerQuestionController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "wjdcclone.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView wjdcclone(@ModelAttribute CustomerQuestionInfoFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		String customerId = request.getParameter("id");
@@ -148,7 +148,7 @@ public class CustomerQuestionController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

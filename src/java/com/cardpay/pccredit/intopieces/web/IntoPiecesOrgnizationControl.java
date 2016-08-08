@@ -95,7 +95,7 @@ public class IntoPiecesOrgnizationControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "queryCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView queryCard(@ModelAttribute MakeCardFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -115,7 +115,7 @@ public class IntoPiecesOrgnizationControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "managerQueryCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView managerQueryCard(@ModelAttribute MakeCardFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -136,7 +136,7 @@ public class IntoPiecesOrgnizationControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insertCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView insertCard(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/card_input", request);
 		return mv;
@@ -151,7 +151,7 @@ public class IntoPiecesOrgnizationControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveCardData.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String, Object> saveCardData(@ModelAttribute MakeCard makeCard,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html;charset=utf-8");
@@ -188,7 +188,6 @@ public class IntoPiecesOrgnizationControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "organizationIssuedCard.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.ISSUEDCUSTOMER)
 	public Map<String, Object> organizationIssuedCard(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -218,7 +217,7 @@ public class IntoPiecesOrgnizationControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "viewCard.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView viewCard(HttpServletRequest request) {
 		MakeCard makeCard = intoPiecesService.findMakeCardById(request.getParameter(ID));
 		JRadModelAndView mv = new JRadModelAndView(

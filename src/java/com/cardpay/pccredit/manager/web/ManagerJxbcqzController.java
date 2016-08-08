@@ -56,7 +56,7 @@ public class ManagerJxbcqzController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView displayOrganization(@ModelAttribute MaintenanceFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -110,7 +110,7 @@ public class ManagerJxbcqzController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert( @ModelAttribute KhjljxbcForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {
@@ -159,7 +159,7 @@ public class ManagerJxbcqzController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "update.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute KhjljxbcForm form, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();

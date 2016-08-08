@@ -41,6 +41,7 @@ import com.cardpay.pccredit.product.service.ProductService;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
+import com.wicresoft.jrad.base.database.dao.query.OrderBy;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
@@ -111,10 +112,11 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ProductFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
-
+		OrderBy[] orderBys = new OrderBy[]{new OrderBy("default_type",true)};
+		filter.setOrderBys(orderBys);
 		QueryResult<ProductAttribute> result = productService.findProductsByFilter(filter);
 		JRadPagedQueryResult<ProductAttribute> pagedResult = new JRadPagedQueryResult<ProductAttribute>(filter, result);
 
@@ -132,7 +134,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_create", request);
 
@@ -162,7 +164,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_cpfjqd.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createFJQD(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_cpfjqd", request);
 		String productId = request.getParameter("productId");
@@ -180,7 +182,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_cpsxgz.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create_cpsxgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_cpsxgz", request);
 		String productId = request.getParameter("productId");
@@ -198,7 +200,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_cpyxgz.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createCPYXJH(HttpServletRequest request) {
 		String productId = request.getParameter("productId");
 		DictionaryManager dictMgr = Beans.get(DictionaryManager.class);
@@ -219,7 +221,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create_cpcsjh.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createCPCSJH(HttpServletRequest request) {
 		String productId = request.getParameter("productId");
 		JRadModelAndView mv = new JRadModelAndView("/product/product_reminder", request);
@@ -236,7 +238,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@RequestParam(value = "file", required = false) MultipartFile file, @ModelAttribute ProductAttributeForm productAttributeForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), productAttributeForm);
 		if (returnMap.isSuccess()) {
@@ -274,7 +276,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_display", request);
 		List<AppendixDict> list = productService.findAllAppendix();
@@ -307,7 +309,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display_cpfjqd.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display_cpgjqd(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_display_cpfjqd", request);
 		List<AppendixDict> list = productService.findAllAppendix();
@@ -333,7 +335,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display_cpgz.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display_cpgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_display_cpgz", request);
 		String productId = RequestHelper.getStringValue(request, ID);
@@ -361,7 +363,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display_csgz.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display_csgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_display_csgz", request);
 		String productId = RequestHelper.getStringValue(request, ID);
@@ -611,7 +613,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display_cpsxgz.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display_cpsxgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_display_cpsxgz", request);
 		List<FilterDict> list = productFilterService.findAllFilterDict();
@@ -637,7 +639,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_update", request);
 		String productId = RequestHelper.getStringValue(request, ID);
@@ -659,7 +661,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change_cpfjqd.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change_cpfjqd(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_update_cpfjqd", request);
 		List<AppendixDict> list = productService.findAllAppendix();
@@ -685,7 +687,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change_cpgz.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change_cpgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_update_cpgz", request);
 		String productId = RequestHelper.getStringValue(request, ID);
@@ -714,7 +716,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change_csgz.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change_csgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_update_csgz", request);
 		String productId = RequestHelper.getStringValue(request, ID);
@@ -964,7 +966,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change_cpsxgz.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change_cpsxgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/product/product_update_cpsxgz", request);
 		List<FilterDict> list = productFilterService.findAllFilterDict();
@@ -991,7 +993,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@RequestParam(value = "file", required = false) MultipartFile file, @ModelAttribute ProductAttributeForm productAttributeForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), productAttributeForm);
@@ -1028,7 +1030,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update_cpfjqd.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update_capjqd(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {
@@ -1069,7 +1071,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update_cpgz.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update_cpgz(HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -1162,7 +1164,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update_csgz.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update_csgz(@ModelAttribute ProductCollectionRulesForm productCollectionRulesForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -1911,7 +1913,7 @@ public class ProductController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update_cpsxgz.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update_cpsxgz(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {

@@ -77,7 +77,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute ResourceTableFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -100,7 +100,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/modules/privilege/datapri/resource_table_rule_change", request);
 		String resTblId = request.getParameter("id");
@@ -161,7 +161,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectuser.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView selectUser(HttpServletRequest request) {
 		String selectUserIds = request.getParameter("selectUserIds");
 		String selectUserNames = request.getParameter("selectUserNames");
@@ -192,7 +192,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "querydeptandusers.json")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public HashMap<String, Object> queryDeptAndUsers(HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -240,7 +240,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "queryusers.json")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public HashMap<String, Object> queryUsers(HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -270,7 +270,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/modules/privilege/datapri/resource_table_rule_display", request);
 		String resTblId = request.getParameter("id");
@@ -299,7 +299,7 @@ public class ResourceTableController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.BROWSE)
+	
     //TODO 以下这段代码可考虑重构，比如测试SQL语句，今后想扩展比较好做
 	public HashMap<String, Object> update(HttpServletRequest request) {
 		User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);

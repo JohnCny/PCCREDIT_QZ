@@ -18,6 +18,7 @@ import com.cardpay.pccredit.afterloan.filter.AfterLoanCheckFilter;
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.afterloan.model.O_CLPM_ACC_LOAN;
 import com.cardpay.pccredit.afterloan.model.PspCheckTask;
+import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.report.dao.AfterAccLoanDao;
 import com.cardpay.pccredit.report.model.HomeTips;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
@@ -98,8 +99,7 @@ public class AfterloanCheckService {
 	}
 	
 	//贷后检查历史
-	public QueryResult<AfterLoaninfo> findAfterLoanHistoryTaskByFilter(
-			AfterLoanCheckFilter filter) {
+	public QueryResult<AfterLoaninfo> findAfterLoanHistoryTaskByFilter(AfterLoanCheckFilter filter) {
 		List<AfterLoaninfo> pList = afterLoanDao.findAfterLoanHistoryTaskByFilter(filter);
 		int size = afterLoanDao.findAfterLoanHistoryTaskCountByFilter(filter);
 		QueryResult<AfterLoaninfo> qs = new QueryResult<AfterLoaninfo>(size, pList);
@@ -205,8 +205,10 @@ public class AfterloanCheckService {
 		return afterLoanDao.findAferLoanCheckRemindCount(limitdate,userId);
 	}
 	
-	public List<HomeTips> findAferLoanCheckRemindCountTeam(String enddate,String reminddate,String userId){
-		return afterLoanDao.findAferLoanCheckRemindCountTeam(enddate,reminddate,userId);
+	public List<HomeTips> findAferLoanCheckRemindCountTeam(String endTime,String remindTime,CustomerApplicationProcessFilter filter){
+		filter.setEndTime(endTime);
+		filter.setRemindTime(remindTime);
+		return afterLoanDao.findAferLoanCheckRemindCountTeam(filter);
 	}
 	
 	public void updateTask(String taskid){
@@ -214,8 +216,9 @@ public class AfterloanCheckService {
 		commonDao.queryBySql(PspCheckTask.class, sql, null);
 	}
 
-	public List<HomeTips> getPsNormIntAmtListForHome(String userId,Date endDate) {
-		return afterAccLoanDao.getPsNormIntAmtListForHome(userId,endDate);
+	public List<HomeTips> getPsNormIntAmtListForHome(CustomerApplicationProcessFilter filter,Date endDate) {
+		filter.setEndDate(endDate);
+		return afterAccLoanDao.getPsNormIntAmtListForHome(filter);
 	}
 
 	

@@ -41,7 +41,7 @@ public class ManagerMonthAssessmentController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		List<MangerMonthAssessment> mangerMonthAssessmentlist = managerMonthAssessmentService.getMangerMonthAssessment();
 		JRadModelAndView mv = new JRadModelAndView("/manager/mangermonthassessment/manager_assessment_update", request);
@@ -62,7 +62,7 @@ public class ManagerMonthAssessmentController {
 
 	@ResponseBody
 	@RequestMapping(value = "save.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView maintenanceAccountManagerchange(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/mangermonthassessment/manager_assessment_update", request);
 		try {

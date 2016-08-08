@@ -73,7 +73,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatejigz.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browsejjgz(HttpServletRequest request) {
 		List<ManagerPromotionRule> managerPromotionRulelist = managerPromotionRuleService.getManagerPromotionRule();
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerpromotionrule/manager_promotion_update", request);
@@ -115,7 +115,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "savejjgz.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changejigz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerpromotionrule/manager_promotion_update", request);
 		try {
@@ -140,7 +140,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateydkh.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView browseydkh(HttpServletRequest request) {
 		List<MangerMonthAssessment> mangerMonthAssessmentlist = managerMonthAssessmentService.getMangerMonthAssessment();
 		JRadModelAndView mv = new JRadModelAndView("/manager/mangermonthassessment/manager_assessment_update", request);
@@ -161,7 +161,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "saveydkh.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeydkh(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/mangermonthassessment/manager_assessment_update", request);
 		try {
@@ -185,7 +185,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateyjmb.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView browseyjmb(HttpServletRequest request) {
 		
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerleveltarget/manager_leveltarget_update", request);
@@ -227,7 +227,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "saveyjmb.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeyjmb(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerleveltarget/manager_leveltarget_update", request);
 		try {
@@ -272,7 +272,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatecswh.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView browsecswh(HttpServletRequest request) {
 		DictionaryManager dictMgr = Beans.get(DictionaryManager.class);
 		//查询层级信息 
@@ -329,7 +329,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "savecswh.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changecswh(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managermaintenance/manager_maintenance_update", request);
 		try {
@@ -389,7 +389,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatedown.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView browsedown(HttpServletRequest request) {
 		List<DownGradeRule> downGradeRulelist = managerDownRuleService.getDownGradeRule();
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerdownrule/manager_down_update", request);
@@ -425,7 +425,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "savedown.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changedown(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerdownrule/manager_down_update", request);
 		try {
@@ -448,7 +448,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "displayjjgz.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView displayjjgz(HttpServletRequest request) {
 		List<ManagerPromotionDownRule> managerPromotionRulelist = managerPromotionRuleService.getManagerPromotionDownRule();
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerpromoteordowngraderule/manager_promotion_down_update", request);
@@ -479,7 +479,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "insertOrUpdatejjgz.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changejjgz(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/managerpromoteordowngraderule/manager_promotion_down_update", request);
 		try {
@@ -502,7 +502,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatePerformance.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView updatePerformance(HttpServletRequest request) {
 		List<TyPerformanceParameters> parmeters = managerPerformanceParametersService.getManagerPerformanceParamers();
 		JRadModelAndView mv = new JRadModelAndView("/manager/performanceParameters/manager_performance_update", request);
@@ -523,7 +523,7 @@ public class ManagerPromotionRuleController {
 
 	@ResponseBody
 	@RequestMapping(value = "savePerformance.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView savePerformance(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/performanceParameters/manager_performance_update", request);
 		try {
@@ -546,7 +546,7 @@ public class ManagerPromotionRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updatePerformanceCenter.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView updatePerformanceCenter(HttpServletRequest request) {
 		List<TyPerformanceCenter> parmeters = managerPerformanceParametersService.getManagerPerformanceCenter();
 		JRadModelAndView mv = new JRadModelAndView("/manager/performanceParameters/center_performance_update", request);
@@ -561,7 +561,7 @@ public class ManagerPromotionRuleController {
 	
 	@ResponseBody
 	@RequestMapping(value = "savePerformanceCenter.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView savePerformanceCenter(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/performanceParameters/center_performance_update", request);
 		try {

@@ -58,7 +58,7 @@ public class CustomerCareersController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "create_zyxx.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
         String customerId = RequestHelper.getStringValue(request, ID);
         String customerName = customerInforService.findCustomerInforById(customerId).getChineseName();
@@ -83,7 +83,7 @@ public class CustomerCareersController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "zyxxclone.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView browseClone(HttpServletRequest request) {
         String applicationId = request.getParameter("applicationId");
         CustomerCareersWeb careers = customerCareersService.findCustomerCareersByAppId(applicationId);
@@ -102,7 +102,7 @@ public class CustomerCareersController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute CustomerCareersForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {

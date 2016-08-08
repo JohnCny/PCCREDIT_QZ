@@ -50,7 +50,7 @@ public class RiskReviewProcManagerController extends RiskReviewProcController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "managerbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView managerBrowse(@ModelAttribute RiskReviewProcessFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
         User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -75,7 +75,7 @@ public class RiskReviewProcManagerController extends RiskReviewProcController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "report.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap report(@ModelAttribute RiskReviewProcForm riskReviewProcForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

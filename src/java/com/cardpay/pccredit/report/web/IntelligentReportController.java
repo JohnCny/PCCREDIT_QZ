@@ -44,7 +44,7 @@ public class IntelligentReportController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/report/intelligentcustomerreport/browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/report/intelligentreport/intelligentcustomerreport_browse", request);
 		List<IntelligentCustomerReport> result = intelligentReportService.findIntelligentCustomerReport();
@@ -60,7 +60,7 @@ public class IntelligentReportController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/report/intelligentaccountreport/browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView AccountBrowse(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/report/intelligentreport/intelligentaccountreport_browse", request);
 		List<IntelligentAccountReport> result = intelligentReportService.findIntelligentAccountReport();
@@ -76,7 +76,7 @@ public class IntelligentReportController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/report/postloanmanagementdata/browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView PostLoanManagementData(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/report/intelligentreport/postloanmanagementdata_browse", request);
 		PostLoanManagementData result = intelligentReportService.findPostLoanManagementData();

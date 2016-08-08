@@ -79,10 +79,11 @@
       <div class="pagebar">
         <div class="controlbtn">
           <a id="id_create_button" class="btn_g" href="javascript:void(0);" >新增</a>
-          <!-- <a id="id_change_button" class="btn_g" href="javascript:void(0);" >修改</a> -->
+          <a id="id_change_button" class="btn_g" href="javascript:void(0);" >修改</a>
           <a id="id_display_button" class="btn_g" href="javascript:void(0);" >查看</a>
+           
           <a id="id_delete_button" class="btn_g" href="javascript:void(0);" >删除</a>
-          <a id="id_apply_button" class="btn_g" href="javascript:void(0);" >申请准入</a>
+          <!--<a id="id_apply_button" class="btn_g" href="javascript:void(0);" >申请准入</a> -->
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -98,20 +99,35 @@
 		var opsObj = new Object();
 		opsObj.formObj = $("#submitForm");
 		opsObj.createUrl = "${modulePath}/create.page";
-		opsObj.changeUrl = "${modulePath}/change.page";
-		opsObj.displayUrl = "${modulePath}/display.page";
-		opsObj.browseUrl = "${modulePath}/browse.page";
 		
 		prepareOperations(opsObj);
+		
+		$("#id_change_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+                var rowid = $($(".checkbox :checked")[0]).attr("value").split("_")[0];
+                window.location.href = "${contextPath}/zainformation/zaquery/change.page?id="+rowid;
+			} else {
+                Dialog.message("请选择一行111");
+            }
+        });
+		
+		$("#id_display_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+                var rowid = $($(".checkbox :checked")[0]).attr("value").split("_")[0];
+                window.location.href = "${contextPath}/zainformation/zaquery/display.page?id="+rowid;
+			} else {
+                Dialog.message("请选择一行111");
+            }
+        });
 		
 		$("#id_delete_button").click(function() {
             if ($(".checkbox :checked").length == 1) {
                 var rowid = $($(".checkbox :checked")[0]).attr("value");
                 
-                if(rowid.split("_")[1] == "approved" || rowid.split("_")[1] == "refuse"){
-                	topWin.Dialog.message("审批结束，无法删除！");
-                	return;
-                }
+                //if(rowid.split("_")[1] == "approved" || rowid.split("_")[1] == "refuse"){
+                //	topWin.Dialog.message("审批结束，无法删除！");
+                //	return;
+                //}
                 
                 Dialog.confirm("确定删除所选行吗？", "提示",
                 function() {

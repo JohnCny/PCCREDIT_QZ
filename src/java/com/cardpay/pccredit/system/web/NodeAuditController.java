@@ -89,7 +89,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_config_create", request);
@@ -108,7 +108,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_config_update", request);
 
@@ -131,7 +131,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "nodecontrol.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView nodeControl(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_control_config", request);
 		String productId = request.getParameter("productId");
@@ -156,7 +156,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/system/nodeaudit/nodeaudit_config_display", request);
 
@@ -178,7 +178,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute NodeAuditForm nodeAudit, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -207,7 +207,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute NodeAuditForm nodeAudit, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -233,7 +233,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -261,7 +261,7 @@ public class NodeAuditController implements JRadConstants {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveNodeControl.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap saveNodeControl(@ModelAttribute NodeAuditForm nodeAudit, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

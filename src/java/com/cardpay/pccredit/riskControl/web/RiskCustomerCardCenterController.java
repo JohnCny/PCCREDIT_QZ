@@ -43,7 +43,7 @@ public class RiskCustomerCardCenterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "cardcenterbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView cardCenterBrowse(@ModelAttribute RiskCustomerFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
         // 风险类型

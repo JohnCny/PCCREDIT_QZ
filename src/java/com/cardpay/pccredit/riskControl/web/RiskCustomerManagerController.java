@@ -47,7 +47,7 @@ public class RiskCustomerManagerController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "managerbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView managerBrowse(@ModelAttribute RiskCustomerFilter filter,HttpServletRequest request) {
         filter.setRequest(request);
         User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);

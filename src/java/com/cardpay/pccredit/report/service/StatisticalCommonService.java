@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cardpay.pccredit.common.PieJsonData;
+import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.report.dao.StatisticalCommonDao;
 import com.cardpay.pccredit.report.model.HomeTips;
 import com.cardpay.pccredit.report.model.NameValueRecord;
@@ -135,15 +136,15 @@ public class StatisticalCommonService {
 		return pList;
 	}
 
-	public List<HomeTips> getUsedCreditByUserId(String userId) {
-		return statisticalCommonDao.getUsedCreditByUserId(userId);
+	public List<HomeTips> getUsedCreditByUserId(CustomerApplicationProcessFilter filter) {
+		return statisticalCommonDao.getUsedCreditByUserId(filter);
 	}
 
-	public List<HomeTips> getExpiryClientNum(String userId) {
-		return statisticalCommonDao.getExpiryClientNum(userId);
+	public List<HomeTips> getExpiryClientNum(CustomerApplicationProcessFilter filter) {
+		return statisticalCommonDao.getExpiryClientNum(filter);
 	}
 
-	public List<HomeTips> getAlreadyExpiryClientNum(String userId) {
-		return statisticalCommonDao.getAlreadyExpiryClientNum(userId);
+	public List<HomeTips> getAlreadyExpiryClientNum(CustomerApplicationProcessFilter filter) {
+		return statisticalCommonDao.getAlreadyExpiryClientNum(filter);
 	}
 }

@@ -11,6 +11,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import com.cardpay.pccredit.QZBankInterface.model.ECIF;
 import com.cardpay.pccredit.QZBankInterface.service.CircleService;
 import com.cardpay.pccredit.QZBankInterface.service.ECIFService;
 import com.cardpay.pccredit.QZBankInterface.web.IESBForECIFReturnMap;
+import com.cardpay.pccredit.afterloan.filter.AfterLoanCheckFilter;
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
 import com.cardpay.pccredit.common.UploadFileTool;
 import com.cardpay.pccredit.customer.model.CustomerCareersInformation;
@@ -73,6 +77,8 @@ import com.cardpay.pccredit.intopieces.web.ApproveHistoryForm;
 import com.cardpay.pccredit.intopieces.web.QzApplnSxjcForm;
 import com.cardpay.pccredit.intopieces.web.QzDcnrUploadForm;
 import com.cardpay.pccredit.product.model.AddressAccessories;
+import com.cardpay.pccredit.report.filter.AccLoanCollectFilter;
+import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.system.model.Dict;
 import com.cardpay.pccredit.system.model.NodeAudit;
 import com.cardpay.pccredit.system.model.NodeControl;
@@ -88,7 +94,9 @@ import com.wicresoft.jrad.base.database.dao.common.CommonDao;
 import com.wicresoft.jrad.base.database.id.IDGenerator;
 import com.wicresoft.jrad.base.database.model.BusinessModel;
 import com.wicresoft.jrad.base.database.model.QueryResult;
+import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.spring.Beans;
 
 /**    
@@ -1730,7 +1738,7 @@ public class IntoPiecesService {
 	}
 	
 	public String getReturnUrl(String operate){
-		if(operate==null){
+		/*if(operate==null){
 			return null;
 		}
 		if(operate.equals(Constant.status_chushen)){
@@ -1751,21 +1759,42 @@ public class IntoPiecesService {
 			return "/intopieces/intopiecesqueryAll/browseAll.page";
 		}else if(operate.equals(Constant.status_anjudai)){
 			return "/intopieces/intopiecesqueryAll/browseAll.page";
+		}else if(operate.equals(Constant.status_dsh)){
+			return "/intopieces/intopiecesqueryAll/browseAll.page";
 		}else if(operate.equals(Constant.status_query)){
 			return "/intopieces/intopiecesquery/browse.page";
 		}else if(operate.equals(Constant.status_query_anjudai)){
+			return "/intopieces/intopiecesquery/browse.page";
+		}else if(operate.equals(Constant.status_query_dsh)){
 			return "/intopieces/intopiecesquery/browse.page";
 		}else if(operate.equals(Constant.status_onelevel)){
 			return "/intopieces/intopiecesonelevel/onelevel.page";
 		}else if(operate.equals(Constant.status_twolevel)){
 			return "/intopieces/intopiecestwolevel/twolevel.page";
-		}else if(operate.equals(Constant.status_dsh_10_onelevel)){
-			return "/intopieces/intopiecesdshonelevel/browse.page";
-		}else if(operate.equals(Constant.status_dsh_10_twolevel)){
-			return "/intopieces/intopiecesdshtwolevel/browse.page";
+		}else if(operate.equals(Constant.status_dsh_10_level1)){
+			return "/intopieces/intopiecesdsh10level1/browse.page";
+		}else if(operate.equals(Constant.status_dsh_10_level2)){
+			return "/intopieces/intopiecesdsh10level2/browse.page";
+		}else if(operate.equals(Constant.status_dsh_10_level3)){
+			return "/intopieces/intopiecesdsh10level3/browse.page";
+		}else if(operate.equals(Constant.status_dsh_10_level4)){
+			return "/intopieces/intopiecesdsh10level4/browse.page";
+		}else if(operate.equals(Constant.status_dsh_level1)){
+			return "/intopieces/intopiecesdshlevel1/browse.page";
+		}else if(operate.equals(Constant.status_dsh_level2)){
+			return "/intopieces/intopiecesdshlevel2/browse.page";
+		}else if(operate.equals(Constant.status_dsh_level3)){
+			return "/intopieces/intopiecesdshlevel3/browse.page";
+		}else if(operate.equals(Constant.status_dsh_level4)){
+			return "/intopieces/intopiecesdshlevel4/browse.page";
+		}else if(operate.equals(Constant.status_dsh_level5)){
+			return "/intopieces/intopiecesdshlevel5/browse.page";
+		}else if(operate.equals(Constant.status_dsh_level6)){
+			return "/intopieces/intopiecesdshlevel6/browse.page";
 		}else{
 			return "/intopieces/intopiecesxingzheng2/xingzhengend.page";
-		}
+		}*/
+		return "/intopieces/intopiecesapproveallinone/browse.page";
 	}
 	
 	public Boolean getDcnrList(String appId){
@@ -1985,8 +2014,37 @@ public class IntoPiecesService {
 		}
 	}
 
-	public List<Dict> findBelogCusMgr(String userId){
-		return intoPiecesDao.findBelogCusMgr(userId);
+	public JSONArray findBelongOrgCusJson(String orgId){
+		List<Dict> org_ls = intoPiecesDao.findBelongOrgs(orgId);
+		for(Dict obj : org_ls){
+			obj.setChildren(findOrgBelogCusMgr(obj.getTypeCode()));
+		}
+		return JSONArray.fromObject(org_ls);
+	}
+	
+	public List<Dict> findOrgBelogCusMgr(String orgId){
+		return intoPiecesDao.findOrgBelogCusMgr(orgId);
+	}
+	public JSONArray findTeamBelogCusJson(String userId){
+		List<Dict> center_ls = null;
+		if(StringUtils.isNotEmpty(userId)){
+			center_ls = intoPiecesDao.findBelongCenters(userId);
+		}
+		else{
+			center_ls = intoPiecesDao.findAllCenters();
+		}
+		for(Dict obj : center_ls){
+			List<Dict> team_ls = intoPiecesDao.findBelongTeams(obj.getTypeCode());
+			for(Dict obj2 : team_ls){
+				obj2.setChildren(intoPiecesDao.findTeamBelongCusMgr(obj2.getTypeCode()));
+			}
+			obj.setChildren(team_ls);
+		}
+		return JSONArray.fromObject(center_ls);
+	}
+	
+	public List<Dict> findTeamBelongCusMgr(String userId){
+		return intoPiecesDao.findTeamBelongCusMgr(userId);
 	}
 	public List<ApprovedInfo> getApprovedInfo() {
 		return intoPiecesDao.getApprovedInfo();
@@ -2081,4 +2139,225 @@ public class IntoPiecesService {
 			commonDao.updateObject(qzApplnDshJyd);
 			
 		}
+		
+		/** 
+		* @Title: threeLevelMenu 
+		* @Description: 中心-团队-客户经理 三级菜单-通用
+		* @param @param mv
+		* @param @param user    设定文件 
+		* @return void    返回类型 
+		* @throws 
+		*/ 
+		public void levelMenu(JRadModelAndView mv,User user,AccLoanCollectFilter filter){
+			//中心-团队-客户经理
+			String roleName = user.getRoles().get(0).getName();
+			mv.addObject("roleName", roleName);
+			/*//暂时只要是带管理权限的,都能增加团队作为筛选项,机构筛选暂不增加
+			if(roleName.equals(Constant.COMMON_USER_BRANCH) || roleName.equals(Constant.BRANCH_USER)){
+				filter.setFilterOrgId("1");
+				//查询自己所在的机构及下属客户经理
+				JSONArray blg_org_cus_json = this.findBelongOrgCusJson(user.getOrganization().getId());
+				mv.addObject("blg_org_cus_json", blg_org_cus_json.toString());
+			}
+			if(roleName.equals(Constant.TEAM_LEADER)){
+				filter.setFilterTeamLeader("1");
+				//查所在中心所在团队的下属客户经理
+				//JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(user.getId());
+				JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+				mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+			}
+			if(roleName.equals(Constant.CENTER_USER) || roleName.equals(Constant.QUERY_USER))
+			{
+				//查所在中心所在团队的下属客户经理
+				JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+				mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+
+				//查询自己所在的机构及下属客户经理
+				JSONArray blg_org_cus_json = this.findBelongOrgCusJson(null);
+				mv.addObject("blg_org_cus_json", blg_org_cus_json.toString());
+			}*/
+			JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+			mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+		}
+		
+		public List<String> getQueryUserIds(AccLoanCollectFilter filter){
+			if(StringUtils.isEmpty(filter.getCenterId()) 
+					|| StringUtils.isEmpty(filter.getTeamId())
+					|| StringUtils.isEmpty(filter.getCenterMgrId())){
+				return null;
+			}
+			List<String> userIds = new ArrayList<String>();
+			if(!filter.getCenterMgrId().equals("ALL")){
+				userIds.add(filter.getCenterMgrId());
+			}
+			else{
+				if(!filter.getTeamId().equals("ALL")){
+					List<Dict> tmp = intoPiecesDao.findTeamBelongCusMgr(filter.getTeamId());
+					for(Dict obj : tmp){
+						userIds.add(obj.getTypeCode());
+					}
+				}
+				else{
+					if(!filter.getCenterId().equals("ALL")){
+						List<Dict> tmp = intoPiecesDao.findBelongTeams(filter.getCenterId());
+						for(Dict obj : tmp){
+							List<Dict> tmp2 = intoPiecesDao.findTeamBelongCusMgr(obj.getTypeCode());
+							for(Dict obj2 : tmp2){
+								userIds.add(obj2.getTypeCode());
+							}
+						}
+					}
+				}
+			}
+			
+			if(userIds != null && userIds.size() >0){
+				return userIds;
+			}else{
+				return null;
+			}
+		}
+
+		public void levelMenu(JRadModelAndView mv, User user,
+				OClpmAccLoanFilter filter) {
+			//中心-团队-客户经理
+			String roleName = user.getRoles().get(0).getName();
+			mv.addObject("roleName", roleName);
+			/*//暂时只要是带管理权限的,都能增加团队作为筛选项,机构筛选暂不增加
+			if(roleName.equals(Constant.COMMON_USER_BRANCH) || roleName.equals(Constant.BRANCH_USER)){
+				filter.setFilterOrgId("1");
+				//查询自己所在的机构及下属客户经理
+				JSONArray blg_org_cus_json = this.findBelongOrgCusJson(user.getOrganization().getId());
+				mv.addObject("blg_org_cus_json", blg_org_cus_json.toString());
+			}
+			if(roleName.equals(Constant.TEAM_LEADER)){
+				filter.setFilterTeamLeader("1");
+				//查所在中心所在团队的下属客户经理
+				//JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(user.getId());
+				JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+				mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+			}
+			if(roleName.equals(Constant.CENTER_USER) || roleName.equals(Constant.QUERY_USER))
+			{
+				//查所在中心所在团队的下属客户经理
+				JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+				mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+
+				//查询自己所在的机构及下属客户经理
+				JSONArray blg_org_cus_json = this.findBelongOrgCusJson(null);
+				mv.addObject("blg_org_cus_json", blg_org_cus_json.toString());
+			}*/
+			JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+			mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+			
+		}
+		
+		public List<String> getQueryUserIds(OClpmAccLoanFilter filter) {
+			if(StringUtils.isEmpty(filter.getCenterId()) 
+					|| StringUtils.isEmpty(filter.getTeamId())
+					|| StringUtils.isEmpty(filter.getCenterMgrId())){
+				return null;
+			}
+			List<String> userIds = new ArrayList<String>();
+			if(!filter.getCenterMgrId().equals("ALL")){
+				userIds.add(filter.getCenterMgrId());
+			}
+			else{
+				if(!filter.getTeamId().equals("ALL")){
+					List<Dict> tmp = intoPiecesDao.findTeamBelongCusMgr(filter.getTeamId());
+					for(Dict obj : tmp){
+						userIds.add(obj.getTypeCode());
+					}
+				}
+				else{
+					if(!filter.getCenterId().equals("ALL")){
+						List<Dict> tmp = intoPiecesDao.findBelongTeams(filter.getCenterId());
+						for(Dict obj : tmp){
+							List<Dict> tmp2 = intoPiecesDao.findTeamBelongCusMgr(obj.getTypeCode());
+							for(Dict obj2 : tmp2){
+								userIds.add(obj2.getTypeCode());
+							}
+						}
+					}
+				}
+			}
+			
+			if(userIds != null && userIds.size() >0){
+				return userIds;
+			}else{
+				return null;
+			}
+		}
+
+		public List<String> getQueryUserIds(AfterLoanCheckFilter filter) {
+			if(StringUtils.isEmpty(filter.getCenterId()) 
+					|| StringUtils.isEmpty(filter.getTeamId())
+					|| StringUtils.isEmpty(filter.getCenterMgrId())){
+				return null;
+			}
+			List<String> userIds = new ArrayList<String>();
+			if(!filter.getCenterMgrId().equals("ALL")){
+				userIds.add(filter.getCenterMgrId());
+			}
+			else{
+				if(!filter.getTeamId().equals("ALL")){
+					List<Dict> tmp = intoPiecesDao.findTeamBelongCusMgr(filter.getTeamId());
+					for(Dict obj : tmp){
+						userIds.add(obj.getTypeCode());
+					}
+				}
+				else{
+					if(!filter.getCenterId().equals("ALL")){
+						List<Dict> tmp = intoPiecesDao.findBelongTeams(filter.getCenterId());
+						for(Dict obj : tmp){
+							List<Dict> tmp2 = intoPiecesDao.findTeamBelongCusMgr(obj.getTypeCode());
+							for(Dict obj2 : tmp2){
+								userIds.add(obj2.getTypeCode());
+							}
+						}
+					}
+				}
+			}
+			
+			if(userIds != null && userIds.size() >0){
+				return userIds;
+			}else{
+				return null;
+			}
+		}
+
+		public void levelMenu(JRadModelAndView mv, User user,
+				AfterLoanCheckFilter filter) {
+			//中心-团队-客户经理
+			String roleName = user.getRoles().get(0).getName();
+			mv.addObject("roleName", roleName);
+			/*//暂时只要是带管理权限的,都能增加团队作为筛选项,机构筛选暂不增加
+			if(roleName.equals(Constant.COMMON_USER_BRANCH) || roleName.equals(Constant.BRANCH_USER)){
+				filter.setFilterOrgId("1");
+				//查询自己所在的机构及下属客户经理
+				JSONArray blg_org_cus_json = this.findBelongOrgCusJson(user.getOrganization().getId());
+				mv.addObject("blg_org_cus_json", blg_org_cus_json.toString());
+			}
+			if(roleName.equals(Constant.TEAM_LEADER)){
+				filter.setFilterTeamLeader("1");
+				//查所在中心所在团队的下属客户经理
+				//JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(user.getId());
+				JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+				mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+			}
+			if(roleName.equals(Constant.CENTER_USER) || roleName.equals(Constant.QUERY_USER))
+			{
+				//查所在中心所在团队的下属客户经理
+				JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+				mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+
+				//查询自己所在的机构及下属客户经理
+				JSONArray blg_org_cus_json = this.findBelongOrgCusJson(null);
+				mv.addObject("blg_org_cus_json", blg_org_cus_json.toString());
+			}*/
+			JSONArray blg_center_team_cus_json = this.findTeamBelogCusJson(null);
+			mv.addObject("blg_center_team_cus_json", blg_center_team_cus_json.toString());
+			
+		}
+
+		
 }

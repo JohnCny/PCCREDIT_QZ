@@ -22,7 +22,12 @@ public interface IntoPiecesDao {
 	
 	public List<IntoPieces> findintoPiecesAllByFilter(IntoPiecesFilter filter);
 	public int findintoPiecesAllCountByFilter(IntoPiecesFilter filter);
-	public List<Dict> findBelogCusMgr(@Param("userId") String userId);
+	public List<Dict> findOrgBelogCusMgr(@Param("orgId") String orgId);
+	public List<Dict> findBelongOrgs(@Param("orgId") String orgId);
+	public List<Dict> findBelongCenters(@Param("userId") String userId);
+	public List<Dict> findBelongTeams(@Param("centerId") String centerId);
+	public List<Dict> findTeamBelongCusMgr(@Param("userId") String userId);
+	public List<Dict> findAllCenters();
 	public List<ApprovedInfo> getApprovedInfo();
 	
 	public LocalExcel findByApplication(@Param("applicationId") String applicationId);

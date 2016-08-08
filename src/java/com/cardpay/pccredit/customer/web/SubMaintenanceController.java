@@ -63,7 +63,7 @@ public class SubMaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute MaintenanceFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/viewsubmaintenance/submaintenance_plan_browse", request);
 		filter.setRequest(request);
@@ -99,7 +99,7 @@ public class SubMaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/viewsubmaintenance/submaintenance_plan_change", request);
 		String maintenanceId = RequestHelper.getStringValue(request, ID);
@@ -118,7 +118,7 @@ public class SubMaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/viewsubmaintenance/submaintenance_plan_display", request);
 		String maintenanceId = RequestHelper.getStringValue(request, ID);
@@ -138,7 +138,7 @@ public class SubMaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute MaintenanceForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -177,7 +177,7 @@ public class SubMaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "changeAction.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeAction(HttpServletRequest request) {
 		String id = RequestHelper.getStringValue(request, ID);
 		MaintenanceAction maintenanceAction = maintenanceService.findMaintenanceActionById(id);
@@ -193,7 +193,7 @@ public class SubMaintenanceController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateAction.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updateAction(@ModelAttribute MaintenanceForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {

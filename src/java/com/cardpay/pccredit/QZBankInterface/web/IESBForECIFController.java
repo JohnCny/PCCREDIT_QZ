@@ -77,7 +77,6 @@ public class IESBForECIFController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browse(@ModelAttribute CustomerInforFilter filter,HttpServletRequest request) {
 		filter.setRequest(request);
         IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);

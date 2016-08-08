@@ -1,0 +1,234 @@
+#parse ("common/iframe_page_header.htm")
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      
+      <div class="inquiry">
+<!-----------搜索------------------------------------------->  
+  
+        <div class="search_tag"></div>
+        <div class="search">
+          <form id="submitForm">
+            <ul>
+              <li>
+                <span>开始日期：<input type="text" name="startDate" value="$!filter.startDate" onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              <li>
+                <span>结束日期：<input type="text" name="endDate" value="$!filter.endDate" onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              <li>
+                <span>产品类型：<select id="productId" name="productId">
+                		<option value="">请选择...</option>
+	                   #dict("ProductName", $!filter.productId)
+	                </select>
+				</span>
+              </li>
+              <li class="search_button">
+                <input id="id_browse_button" type="button" value="筛选" class="search_button_inquiry"
+                  title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" />
+              </li>
+            </ul>
+          </form>
+        </div>
+       
+		<!-------------- 信息显示 ------------------------------------->      
+		<div id="topDiv" class="inquiry_list inquiry_top" >
+           <table style="overflow:ascroll">
+            <colgroup>
+              <col width="40"/>
+              <col width="100"/>
+              <col width="100"/>
+              <col width="100"/>
+              <col width="100"/>
+              <col width="100"/>
+              <col width="100"/>
+              <col width="100"/>
+              <col width="100"/>
+            </colgroup>
+            <tbody>
+            <tr class="title" align="center">
+              <td nowrap="nowrap" style="background:#6699FF">行号</td>
+              <td nowrap="nowrap" style="background:#6699FF">汇总列名</td>
+              <td nowrap="nowrap" style="background:#6699FF">统计值</td>
+              
+              <td nowrap="nowrap" style="background:#6699FF">汇总列名</td>
+              <td nowrap="nowrap" style="background:#6699FF">统计值</td>
+              
+              <td nowrap="nowrap" style="background:#6699FF">汇总列名</td>
+              <td nowrap="nowrap" style="background:#6699FF">统计值</td>
+              
+              <td nowrap="nowrap" style="background:#6699FF">汇总列名</td>
+              <td nowrap="nowrap" style="background:#6699FF">统计值</td>
+            </tr>
+            #foreach ($accloan in $list)
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>1</font></td>
+            	<td nowrap="nowrap" style="background:#99CCFF">1.累计授信客户数</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_1_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">1.累计授信余额</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_1_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            </tr>
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>2</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00" colspan="2">2.合同未到期 存量授信A1</td>
+            	<td nowrap="nowrap" colspan="2">$format.formatNumber(0,$!accloan.value_2_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00" colspan="2">2.合同未到期 存量授信金额A2</td>
+            	<td nowrap="nowrap" colspan="2">$format.formatNumber(2,$!accloan.value_2_2)</td>
+            </tr>
+            
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>3</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00" colspan="2">3.合同已到期且借据未到期 存量授信B1</td>
+            	<td nowrap="nowrap" colspan="2">$format.formatNumber(0,$!accloan.value_3_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00" colspan="2">3.合同已到期且借据未到期 存量授信金额B2</td>
+            	<td nowrap="nowrap" colspan="2">$format.formatNumber(0,$!accloan.value_3_2)</td>
+            </tr>
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>4</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00">4.存量授信金额A2+B2</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_4_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">4.当前用信金额</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_4_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">5.用信率 4/(A2+B2)</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_4_3)%</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">6.管户数A1+B1</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_4_4)</td>
+            </tr>
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>5</font></td>
+            	<td nowrap="nowrap" style="background:#99CCFF">7.激活客户数</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_5_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">8.新增用信客户</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_5_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">8.新增用信金额</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_5_3)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            </tr>
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>6</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00">9.当前用信客户数</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_5_2_end)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">9.当前用信金额</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_4_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">9.日均用信</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_6_3)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            </tr>
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>7</font></td>
+            	<td nowrap="nowrap" style="background:#99CCFF">10.新增逾期客户数</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_7_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">10.新增逾期余额</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_7_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            	
+            </tr>
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>8</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00">10.逾期M1</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_8_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">10.逾期M2</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_8_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">10.逾期M3</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_8_3)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">10.逾期M4及以上</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_8_14)</td>
+            </tr>
+            
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>9</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00">11.当前逾期客户</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_9_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">11.当前逾期金额</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_9_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            </tr>
+            
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>10</font></td>
+            	<td nowrap="nowrap" style="background:#99CCFF">12.实收利息</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_10_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">12.应收利息</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_10_2)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">12.收息率</td>
+            	<td nowrap="nowrap">$format.formatNumber(2,$!accloan.value_10_3)%</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            </tr>
+            
+            <tr>
+            	<td nowrap="nowrap"><font size='4'>11</font></td>
+            	<td nowrap="nowrap" style="background:#FF8C00">14.逾期率</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_11_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#FF8C00">14.不良贷款率</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_11_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF">15.活跃客户数</td>
+            	<td nowrap="nowrap">$format.formatNumber(0,$!accloan.value_11_1)</td>
+            	
+            	<td nowrap="nowrap" style="background:#99CCFF"></td>
+            	<td nowrap="nowrap"></td>
+            </tr>
+            </tbody>
+             #end
+          </table>
+        </div>  
+        
+      </div>		
+        <div class="clear"></div>
+      </div>
+    </div>
+</body>
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+
+	
+	$(document).ready(function() {
+		var opsObj = new Object();
+		opsObj.formObj = $("#submitForm");
+		opsObj.browseUrl = "${modulePath}/browse.page";
+
+		prepareOperations(opsObj);
+	});
+</script>
+#parse ("common/iframe_page_footer.htm")

@@ -4,12 +4,14 @@
     <resultMap id="ResultMap" type="com.cardpay.pccredit.intopieces.model.QzApplnZa">
         <result property="id" column="ID" />
 		<result property="originator" column="ORIGINATOR" />
+		<result property="originatorManager" column="ORIGINATOR_MANAGER" />
 		<result property="initiator" column="INITIATOR" />
 		<result property="initDate" column="INIT_DATE" />
 		<result property="name" column="NAME" />
 		<result property="address" column="ADDRESS" />
 		<result property="code" column="CODE" />
 		<result property="sug" column="SUG" />
+		<result property="branchSug" column="BRANCH_SUG" />
 		<result property="createdBy" column="CREATED_BY" />
 		<result property="createdTime" column="CREATED_TIME" />
 		<result property="serialnumber" column="SERIALNUMBER" />
@@ -29,6 +31,7 @@
 					 SELECT *
 					 FROM  qz_appln_za t
 					 WHERE 1=1
+					 order by code
 					 <if test="name != null and name != '' ">
 						<![CDATA[ and name like '%'||#{name}||'%']]>
 					 </if>

@@ -73,7 +73,7 @@ public class CustomerSubMarketingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView view(@ModelAttribute CustomerMarketingFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -111,7 +111,7 @@ public class CustomerSubMarketingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "viewChangePlan.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView viewChangePlan(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerMarketing/customerMarketingPlan_view_change", request);
 		String marketingId = RequestHelper.getStringValue(request, ID);
@@ -132,7 +132,7 @@ public class CustomerSubMarketingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "viewUpdate.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap viewUpdate(@ModelAttribute CustomerMarketingForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		String createWay = customerMarketingService.findMarketingPlanById(form.getId()).getCreateWay();
@@ -164,7 +164,7 @@ public class CustomerSubMarketingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "viewDisplay.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView ViewDisplay(HttpServletRequest request) { 
 		String id = RequestHelper.getStringValue(request, ID);
 		CustomerMarketingWeb customerMarketing = customerMarketingService.findCustomerMarketingById(id);
@@ -183,7 +183,7 @@ public class CustomerSubMarketingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "ViewChange.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView viewChange(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerMarketing/customerMarketing_view_change", request);
 		String marketingId = RequestHelper.getStringValue(request, ID);
@@ -201,7 +201,7 @@ public class CustomerSubMarketingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute CustomerMarketingPlanForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {

@@ -1,4 +1,5 @@
 #parse ("common/iframe_page_header.htm")
+<script src="${contextPath}/js/intopieces/threeLevelMenu.js" charset="utf-8"></script>
 <script type="text/javascript">
 </script>
 <body>
@@ -18,9 +19,16 @@
                <li>
                 <span>证件号码：<input type="text" id="cardId" name="cardId" value="$!result.filter.cardId" /></span>
               </li>
-               <li>
+               <!--  <li>
                 <span>客户编号：<input type="text" id="clientNo" name="clientNo" value="$!result.filter.clientNo" /></span>
-              </li>
+              </li>-->
+              <li style="width:65%">
+              	<span>中心-团队-客户经理：
+	            	<select id="centerId" name="centerId"></select>
+	               	<select id="teamId" name="teamId"></select>
+	               	<select id="centerMgrId" name="centerMgrId"></select>
+	         	</span>
+	          </li>
               <li>
                 <span>检查类型：
                 	<select id="checkType" name="checkType">
@@ -111,6 +119,9 @@
 	window.top.currentWindow.setLayout(layout);
 
 	$(document).ready(function() {
+		
+		threeLevelMenu('$!blg_center_team_cus_json');
+		
 		$("#id_display_button").click(function() {
 			if ($(".checkbox :checked").length == 1) {
 				var clientNo = getCurrentRowId().split("@")[0];

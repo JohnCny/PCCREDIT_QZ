@@ -103,60 +103,6 @@ public class IntoPiecesZhongxinControl extends BaseController {
 		return mv;
 	}
 	
-	
-	/**
-	 * 申请件审批通过 
-	 * 从中心负责岗--信贷岗
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "pass.json")
-	public JRadReturnMap pass(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("id");
-			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
-			request.setAttribute("serialNumber", process.getSerialNumber());
-			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
-			request.setAttribute("objection", "false");
-			//查找审批金额
-			Circle circle = circleService.findCircleByAppId(appId);
-			
-			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	
-	/**
-	 * 申请件退件
-	 * 从中心岗--授信岗
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "returnAppln.json")
-	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("appId");
-			//intoPiecesService.returnAppln(appId, request);
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	
 	/*
 	 * 调额
 	 * 

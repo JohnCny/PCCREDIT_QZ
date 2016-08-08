@@ -1,0 +1,303 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/customerInfor.htm")
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
+	<script type="text/javascript" src="jquery-1.js"></script>
+	<style type="text/css">
+		.dialog{position:absolute;top:0;left:0;z-index:10;width:100%;height:100%;background:rgba(229,229,229,0.5);display:none;}
+		.dialog .dialog-box{width:400px;background:#ffffff;border:1px solid #e5e5e5;border-radius:10px;margin:0 auto;margin-top:200px;padding:3px;}
+		.dialog .dialog-box .top{height:35px;background:url(${contextPath}/images/xm_appln/box_head_bg.png) repeat-x;line-height:35px;font-size:14px;padding-left:15px;font-weight:bold;}
+		.dialog .dialog-box .top span{display:inline-block;width:35px;height:35px;background:url(${contextPath}/images/xm_appln/box_delete_nor.png);float:right;}
+		.dialog .dialog-box .top span:hover{background:url(${contextPath}/images/xm_appln/box_delete_hov.png);}
+		.dialog .dialog-box .content{font-size:12px;color:#323232;padding-left:20px;}
+		.dialog .dialog-box .content p{line-height:25px;}
+		.dialog .dialog-box .content input,.dialog .dialog-box .content textarea{vertical-aling:middle;}
+		.dialog .dialog-box .bottom{border-top:1px solid #dddddd;height:45px;text-align:center;line-height:45px;}
+		.dialog .dialog-box .bottom .btn{width:70px;height:26px;margin:0 5px;background:url(/images/xm_appln/icon_button_qx_normal.png) repeat-x;border:1px solid #818181;border-radius:5px;}
+		.dialog .dialog-box .bottom .btn:hover{background:url(${contextPath}/images/xm_appln/icon_button_qx_hover.png) repeat-x;}
+		.dialog .dialog-box .bottom .btn-submit{background:url("${contextPath}/images/xm_appln/icon_button_normal.png") repeat-x;border:1px solid #2e84bb;}
+		.dialog .dialog-box .bottom .btn-submit:hover{background:url("${contextPath}/images/xm_appln/icon_button_hover.png") repeat-x;}
+	</style>
+</head>
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">进件审批</div>
+      </div>
+      <div class="inquiry">
+       <div class="search_tag">进件查询</div>
+        <div class="search">
+          <form id="submitForm" action="${contextPath}/intopieces/intopiecesapproveallinone/browse.page">
+          <ul>
+          	  <li>
+                <span>客户名称：<input type="text" name="chineseName" value="$!result.filter.chineseName" /></span>
+              </li>
+              <li>
+                <span>证件号码：<input type="text" name="cardId" value="$!result.filter.cardId" maxlength="30" /></span>
+              </li>
+              <li class="search_button">
+                <input type="button" value="筛选" class="search_button_inquiry" title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" onclick="javascript:this.form.submit();"/>
+              </li>
+          </ul>
+          </form>
+        </div>
+        <div id="topDiv" class="inquiry_list inquiry_top">
+          <table>
+            <colgroup>
+             <col width="50" />
+             <col width="100" />
+              <col width="100" />
+              <col width="100" />
+              <col width="150"/>
+              <col width="150"/>
+              <col width="150"/>
+              <col width="100"/>
+              <col width="200"/>
+              <col width="150"/>
+              <col width="50" />
+            </colgroup>
+            <tr class="title">
+              <th nowrap="nowrap"></th>
+              <th nowrap="nowrap">客户经理</th>
+              <th nowrap="nowrap">客户名称</th>
+              <th nowrap="nowrap">申请金额</th>
+              <th nowrap="nowrap">产品名称</th>
+              <th nowrap="nowrap">证件号码</th>
+              <th nowrap="nowrap">审核状态</th>
+              <th nowrap="nowrap">申请时间</th>
+              <th nowrap="nowrap">节点名称</th>
+              <th nowrap="nowrap">退回原因</th>
+              <th nowrap="nowrap">续授信</th>
+            </tr>
+          </table>
+        </div>
+        <div id="downDiv" class="inquiry_list inquiry_down">
+          <table>
+            <colgroup>
+             <col width="50" />
+             <col width="100" />
+              <col width="100" />
+              <col width="100" />
+              <col width="150"/>
+              <col width="150"/>
+              <col width="150"/>
+              <col width="100"/>
+              <col width="200"/>
+              <col width="150"/>
+              <col width="50" />
+            </colgroup>
+           #foreach ($wait in $result.items)
+            <tr>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!wait.applicationId@$!wait.customerId@$!wait.nodeName"/></td>
+              <td nowrap="nowrap">$!wait.displayName</td>
+              <td nowrap="nowrap">$!wait.chineseName</td>
+              <td nowrap="nowrap">$format.formatNumber($!wait.contractAmt, 2, 1)</td>
+              <td nowrap="nowrap">#dictVal("ProductName",$!wait.productId)</td>
+              <td nowrap="nowrap">$!wait.cardId</td>
+              <td nowrap="nowrap">#dictVal("applicationStatus",$!wait.status)</td>
+              <td nowrap="nowrap">$!date.format("yyyy-MM-dd HH:mm:ss",$!wait.auditTime)</td>
+              <td nowrap="nowrap">$!wait.nodeName</td>
+              #if($!wait.status=='RETURNAPPROVE')
+              <td nowrap="nowrap">$!wait.fallbackReason</td>
+              #else
+              <td nowrap="nowrap"></td>
+              #end
+              
+              <td nowrap="nowrap">
+               		#if($!wait.isContinue != $null)
+               			是
+               		#else
+               			否
+               		#end
+               </td>
+            </tr>
+            #end
+
+
+          </table>
+        </div>
+      </div>
+      <div class="pagebar">
+        <div class="controlbtn">
+        <a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录</a>
+        <a id="id_display_button" class="btn_g" href="javascript:void(0);" title="查看申请信息">查看申请信息</a>
+        <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> -->
+          <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>
+          <a id="id_redirectPs_button" class="btn_g" title="重新指定评审">重新指定评审</a>
+        </div>
+        #parse ("common/pagination.htm")
+        <div class="clear"></div>
+        	
+      </div>
+    </div>
+  </div>
+
+<div class="dialog">
+		<form id="checkForm1" class="dialog-box" style="height:200px;">
+			<div class="top">
+				重新指定评审 <span onclick="$('.dialog').hide();"></span>
+			</div>
+			<div class="content" style="height:100px;padding-top:15px;">
+				<p>
+					指定给:<font color="red">*</font>
+					<input type="hidden" name="appId" id="appId"/>
+					<select id="nodeName" name="nodeName">
+            			#foreach ($obj in $su_ls)
+						<option value="$obj.id">$obj.displayName</option>
+						#end
+					</select><br>
+				</p>
+			</div>
+			<div class="bottom">
+				<input id="id_re_button" type="button" class="btn btn-submit" value="确定" /> 
+				<input type="button" class="btn" value="关闭" onclick="$('.dialog').hide();" />
+			</div>
+		</form>
+	</div>
+
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+
+	$(document).ready(function() {
+		//查看调查模板
+		var opsObj = new Object();
+		opsObj.formObj = $("#submitForm");
+		$("#id_report_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				var url = "${contextPath}/intopieces/intopiecesapprove/report_khxx.page?appId=" + rowid.split("@")[0];
+				var isInRisk = false;
+  				$.ajax({
+						url : "${contextPath}/intopieces/intopiecesapprove/isInBlacklist.json?id="+rowid.split("@")[0],
+						type : "get",
+						async: false,
+						success : function(data) {
+							if (data.success) {
+								if(data.isInList){
+									isInRisk = true;
+								}
+							}else{
+								window.top.Dialog.message("系统出现异常,请联系管理员");
+					    	}
+						}
+			    });
+  				
+  				if(isInRisk){
+  				   window.top.Dialog.message("未导入调查模板");
+  				   return;
+  				}
+				if (opsObj.formObj) {
+	                // 回调URL
+	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+	                if (callBackUrlObj) {
+	                	if(url.indexOf("?")>=0){
+	                		url += "&" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}else{
+		                    url += "?" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}
+	                }
+	            }
+				window.location.href = url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    });
+		
+		$("#id_display_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowId = getCurrentRowId().split("@")[1];
+				var appId = getCurrentRowId().split("@")[0];
+				if(rowId!=null){
+					var url="${contextPath}/intopieces/intopiecesapproveallinone/iframe_approve.page?id="+rowId+"&appId="+appId;
+					window.location.href = url;
+				}
+			}else{
+				Dialog.message("请选择要进件的客户!");
+			}
+	    });
+		
+		$("#id_redirectPs_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowId = getCurrentRowId().split("@")[1];
+				var appId = getCurrentRowId().split("@")[0];
+				var nodeName = getCurrentRowId().split("@")[2];
+				$("#appId").val(appId);
+				if(nodeName != "授信审批"){
+					Dialog.message("无此权限!");
+					return;
+				}
+				$('.dialog').show();
+			}else{
+				Dialog.message("请选择要进件的客户!");
+			}
+	    });
+		//拒件
+		$("#id_re_button").click(function() {
+			Dialog.confirm("确定提交吗？", "提示",
+				    function() {
+						$('.dialog').hide();
+						#set ($formName = "'#checkForm1'")
+						var formjson = $($formName).serialize();
+						 $.get("${contextPath}/intopieces/intopiecesapproveallinone/redirectPs.json", formjson, function(data, textStatus, jqXhr) {
+				            if (data.success) {
+				            	topWin.Dialog.message("重新指定评审成功!");	
+				            	var url = "${contextPath}/intopieces/intopiecesapproveallinone/browse.page";
+				                window.location.href = url;
+				            }else{
+				            	topWin.Dialog.message(data.message);	
+				            }
+				          });
+			});
+		});
+		$('.dialog').hide();
+	});
+	
+	function viewIntoPicesApproveHistory(ifHideUser){
+		var id = null;
+		$("input[name='checkbox']:checked").each(function() {
+			id = $(this).val().split("@")[0];
+		});
+		if(id!=null){
+			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
+			Dialog.tablePage(url, "查看审批历史", "get", null, 700,800);
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	
+	var idTmr = "";
+	function startExcel(){
+		var appId = null;
+		$("input[name='checkbox']:checked").each(function() {
+			appId = $(this).val().split("@")[0];
+		});
+		if(appId!=null){
+			var OExcel;
+			var oWorkbook;
+			oExcel = new ActiveXObject("Excel.Application");
+			var url = "${url}/system/startexcel/startExcel.json?appId="+appId;
+			oExcel.Workbooks.Open(url);
+			oExcel.DisplayAlerts = false;
+			oExcel.Visible = true;
+			idTmr = window.setInterval("Cleanup();",1000);
+		
+		}else{
+			Dialog.message("请选择要被查看的进件!");
+		}
+	}
+	function Cleanup(){
+		window.clearInterval(idTmr);
+		CollectGarbage();
+	}
+</script>
+
+</body>
+</html>
+#parse ("common/iframe_page_footer.htm")

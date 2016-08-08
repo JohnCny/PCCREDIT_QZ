@@ -140,7 +140,7 @@ public class IntoPiecesXingzhengbeginControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveYxzl.json",method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public Map<String,Object> saveYxzl(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
@@ -159,67 +159,6 @@ public class IntoPiecesXingzhengbeginControl extends BaseController {
 			return map;
 		}
 		return map;
-	}
-	
-	/**
-	 * 申请件审批通过 
-	 * 从行政岗--授信审批岗
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "save_apply.json")
-	public JRadReturnMap saveApply(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("id");
-			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
-			request.setAttribute("serialNumber", process.getSerialNumber());
-			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
-			request.setAttribute("objection", "false");
-			//查找审批金额
-			Circle circle = circleService.findCircleByAppId(appId);
-			
-			request.setAttribute("examineAmount", circle.getContractAmt());
-			customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	
-	/**
-	 * 申请件退件
-	 * 从行政岗--初审
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "returnAppln.json")
-	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("appId");
-			String operate = request.getParameter("operate");
-			String nodeName = request.getParameter("nodeName");
-			//退回客户经理和其他岗位不一致
-			if("1".equals(nodeName)){
-				
-				intoPiecesService.checkDoNotToManager(appId,request);
-			}else{
-				intoPiecesService.returnAppln(appId, request,nodeName);
-			}
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
 	}
 	
 	/**

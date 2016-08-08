@@ -59,7 +59,7 @@ public class ProductAssociation extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insertCpfjqd.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insertCpfjqd(@ModelAttribute AccessoriesList acceList, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), acceList);
 		if (returnMap.isSuccess()) {
@@ -100,7 +100,7 @@ public class ProductAssociation extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert_cpsxgz.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert_cpsxgz(@ModelAttribute ProductFilterMap productFilterMap, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), productFilterMap);
 		if (returnMap.isSuccess()) {
@@ -144,7 +144,7 @@ public class ProductAssociation extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "marketing_insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap marketing_insert(@ModelAttribute ProductMarketingRulesForm productMarketingRulesForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), productMarketingRulesForm);
 		if (returnMap.isSuccess()) {
@@ -194,7 +194,7 @@ public class ProductAssociation extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "collection_rules_insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap collection_rules_insert(@ModelAttribute ProductCollectionRulesForm productCollectionRulesForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), productCollectionRulesForm);
 		if (returnMap.isSuccess()) {

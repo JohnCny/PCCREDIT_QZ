@@ -98,7 +98,7 @@ public class IntoPiecesUploadFtpControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "applyIntopiecesQuery.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView applyIntopiecesQuery(@ModelAttribute IntoPiecesFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -118,7 +118,7 @@ public class IntoPiecesUploadFtpControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		/* 客户信息 */
 		CustomerInfor customerInfor = null;

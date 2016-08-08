@@ -109,33 +109,30 @@
       ),
     loan as 
       (
-        select sum(CIRCLE.CONTRACT_AMT) as allCreditAmount,sum(loan.loan_balance) as usedCreditAmount,circle.manager_id 
+        select sum(CIRCLE.CONTRACT_AMT) as allCreditAmount,sum(loan.loan_balance) as usedCreditAmount,max(circle.manager_id) as manager_id,circle.customer_id
         from circle 
         left join 
         (select sum(loan_balance) as loan_balance,cont_no from O_CLPM_ACC_LOAN 
         where prd_id in ('100084','100085') and ACC_STATUS = '1' group by cont_no)loan 
         on circle.ret_contno = loan.cont_no
-        group by circle.manager_id 
-      ),
-    users as 
-      (
-        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
-        mbm.child_id 
-        FROM 
-        manager_belong_map mbm 
-        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-        WHERE 
-        amp.user_id = #{userId})
-        union select #{userId} as user_id from dual
+        group by circle.customer_id
       )
 
     select nvl(allCreditAmount,0) as allCreditAmount,nvl(usedCreditAmount,0)as usedCreditAmount,
       decode(usedCreditAmount,null,0,CAST (usedCreditAmount*100/loan.allCreditAmount as decimal (10,2))) as percent,
-      loan.manager_id as userId,su.display_name as userName
+      loan.manager_id as userId,su.display_name as userName,
+      bci.chinese_name as clientName
     from 
-      loan left join sys_user su on su.id = loan.manager_id
-    where 
-     loan.manager_id in (select user_id from users) 
+      loan 
+      left join sys_user su on su.id = loan.manager_id
+      left join basic_customer_information bci on loan.customer_id = bci.id
+    where 1=1
+    	<if test="userIds != null">
+			and loan.manager_id in
+          	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                  #{item}
+          	</foreach> 
+        </if>
 	</select>
 	
 	<select id="getExpiryClientNum" resultMap="ResultMapTips" >
@@ -147,27 +144,21 @@
 	        left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
 	        left join product_attribute pa on CAI.PRODUCT_ID = pa.id
 	        where CAI.STATUS = 'approved'
-	      ),
-		users as 
-	      (
-	        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
-	        mbm.child_id 
-	        FROM 
-	        manager_belong_map mbm 
-	        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-	        WHERE 
-	        amp.user_id = #{userId})
-	        union select #{userId} as user_id from dual
 	      )
       
-		select circle.client_name as clientName,loan.end_date as expiryDate
+		select circle.client_name as clientName,loan.end_date as expiryDate,loan.loan_amt as loanAmt
 		from o_clpm_acc_loan loan
 		left join circle on loan.cus_id = circle.client_no
 		where 
 		loan.prd_id in ('100084','100085')
 		and loan.acc_status = '1'
-		and circle.manager_id in (select user_id from users)
-		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ >= ]]> to_date(loan.end_date,'yyyy-MM-dd')-7
+		<if test="userIds != null">
+ 		    		and circle.manager_id in
+                	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                        #{item}
+                	</foreach> 
+                </if>
+		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ > ]]> to_date(loan.end_date,'yyyy-MM-dd')-14
 		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ <= ]]> to_date(loan.end_date,'yyyy-MM-dd')
 	</select>
 	
@@ -180,17 +171,6 @@
 	        left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
 	        left join product_attribute pa on CAI.PRODUCT_ID = pa.id
 	        where CAI.STATUS = 'approved'
-	      ),
-		users as 
-	      (
-	        select user_id from ACCOUNT_MANAGER_PARAMETER where id in (SELECT 
-	        mbm.child_id 
-	        FROM 
-	        manager_belong_map mbm 
-	        LEFT JOIN account_manager_parameter amp ON amp. ID = mbm.parent_id 
-	        WHERE 
-	        amp.user_id = #{userId})
-	        union select #{userId} as user_id from dual
 	      )
       
 		select circle.client_name as clientName,loan.end_date as expiryDate,loan.loan_amt as loanAmt
@@ -199,7 +179,12 @@
 		where 
 		loan.prd_id in ('100084','100085')
 		and loan.acc_status = '1'
-		and circle.manager_id in (select user_id from users)
+		<if test="userIds != null">
+   		and circle.manager_id in
+            	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                    #{item}
+            	</foreach> 
+            </if>
 		and to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd') <![CDATA[ > ]]> to_date(loan.end_date,'yyyy-MM-dd')
 	</select>
 </mapper>

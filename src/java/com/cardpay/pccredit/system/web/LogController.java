@@ -61,7 +61,7 @@ public class LogController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(HttpServletRequest request) throws IOException {
 		JRadModelAndView mv = new JRadModelAndView("/system/log/log_browse",request);
 		return mv;

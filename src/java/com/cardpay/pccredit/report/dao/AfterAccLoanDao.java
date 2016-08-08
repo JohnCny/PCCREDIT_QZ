@@ -14,11 +14,15 @@ import java.util.List;
 
 
 
+
+
 import org.apache.ibatis.annotations.Param;
 
+import com.cardpay.pccredit.intopieces.filter.CustomerApplicationProcessFilter;
 import com.cardpay.pccredit.report.filter.AccLoanCollectFilter;
 import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.report.model.AccLoanCollectInfo;
+import com.cardpay.pccredit.report.model.AccLoanCollectInfoNew;
 import com.cardpay.pccredit.report.model.AccLoanInfo;
 import com.cardpay.pccredit.report.model.AccLoanOverdueInfo;
 import com.cardpay.pccredit.report.model.HomeTips;
@@ -52,7 +56,8 @@ public interface AfterAccLoanDao {
      * @return
      */
 	public List<AccLoanOverdueInfo> getLoanOverdue(OClpmAccLoanFilter filter);
-	
+	public int getLoanOverdueCount(OClpmAccLoanFilter filter);
+	public List<AccLoanOverdueInfo> getLoanOverdueAll(OClpmAccLoanFilter filter);
 	/**
      * 客户汇总清单
      * @param filter
@@ -72,5 +77,7 @@ public interface AfterAccLoanDao {
 	public int getPsNormIntAmtCount(OClpmAccLoanFilter filter);
 	public List<PsNormIntAmt> getPsNormIntAmtList(OClpmAccLoanFilter filter);
 	
-	public List<HomeTips> getPsNormIntAmtListForHome(@Param("userId")String userId,@Param("endDate")Date endDate);
+	public List<HomeTips> getPsNormIntAmtListForHome(CustomerApplicationProcessFilter filter);
+	
+	public List<AccLoanCollectInfoNew> getAccLoanCollectNew(AccLoanCollectFilter filter);
 }

@@ -63,7 +63,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute RetrainingFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -84,7 +84,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("/manager/retraining/retraining_create", request);
@@ -100,7 +100,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/retraining/retraining_change", request);
 
@@ -122,7 +122,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/retraining/retraining_display", request);
 
@@ -144,7 +144,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute RetrainingForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -174,7 +174,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute RetrainingForm form, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
@@ -203,7 +203,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -249,7 +249,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "choosemanager.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView choosemanager(@ModelAttribute AccountManagerRetrainingFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		filter.setLimit(Integer.MAX_VALUE);
@@ -273,7 +273,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "createRetrainingMananger.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView createRetrainingMananger(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("/manager/retraining/accountmanagerretraining_create", request);
@@ -289,7 +289,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "changeRetrainingMananger.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeRetrainingMananger(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/retraining/accountmanagerretraining_change", request);
 
@@ -311,7 +311,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "displayRetrainingMananger.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView displayRetrainingMananger(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/accountmanagerretraining/accountmanagerretraining_display", request);
 
@@ -333,7 +333,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insertRetrainingMananger.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insertRetrainingMananger(@ModelAttribute AccountManagerRetrainingForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -360,7 +360,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateRetrainingMananger.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updateRetrainingMananger(@ModelAttribute AccountManagerRetrainingForm form, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation("manager.accountmanagerretraining", form);
@@ -387,7 +387,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "deleteRetrainingMananger.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap deleteRetrainingMananger(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -411,7 +411,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "findManagersByorgId.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap findManagersByorgId(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {
@@ -436,7 +436,7 @@ public class RetrainingController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "saveManagers.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap saveManagers(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		if (returnMap.isSuccess()) {

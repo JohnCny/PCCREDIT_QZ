@@ -64,7 +64,7 @@ window.onload=function(){
 	function oUlleft(){
 		oIcoUl.style.left=-aIcoLi[0].offsetWidth*iNowUlLeft+'px';
 	}
-	
+	/* 
 	function autoplay(){
 		iNow++;
 		if(iNow>=aIcoLi.length){
@@ -79,7 +79,7 @@ window.onload=function(){
 		oNext.className=iNowUlLeft==(aIcoLi.length-7)?'btn':'btn showBtn';
 		oUlleft();
 		tab();
-	}
+	} */
 	
 	//var time=setInterval(autoplay,3000);
 	//oDiv.onmouseover=function(){
@@ -98,7 +98,7 @@ window.onload=function(){
 <div id="box" style="width:1100px;height:560px;margin-top:20px;">
 	<ul id="pic_list">
 		#foreach ($obj in $result.items)
-			<li><a href="$!{obj.url}"><img width="660" height="330" src="$!{obj.url}" alt="" /></a></li>
+			<li onclick="browseFile()"><img width="1100px" src="$!{obj.url}" /></li>
 		#end
 	</ul>
 	
@@ -113,7 +113,7 @@ window.onload=function(){
 	<div id="ico_list">
 		<ul>
 			#foreach ($obj in $result.items)
-				<li><a href="javascript:void(0)"><img width="64" height="34" src="$!{obj.url}" alt="" /></a></li>
+				<li><a href="javascript:void(0)" onclick="getCurrentUrl('$!{obj.url}');"><img width="64" height="34" src="$!{obj.url}" alt="" /></a></li>
 			#end
 		</ul>
 	</div>
@@ -153,5 +153,19 @@ window.onload=function(){
 <div class="message" >
 <p><span>共<b>$result.totalCount</b>条数据，当前第<b>$dispPageNo</b>页</span></p>
 </div>
+<script>
+var currentUrl = "";
+//查看文件
+function browseFile(){
+	if(currentUrl == ""){
+		
+	}else{
+		window.open(currentUrl,"_blank");
+	}
+}
+function getCurrentUrl(url){
+	currentUrl = url;
+}
+</script>
 </body>
 #parse ("common/iframe_page_footer.htm")

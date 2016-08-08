@@ -37,18 +37,19 @@ import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 import com.wicresoft.util.web.RequestHelper;
 
+
 /**    
-* @Title: IntopiecesDshOnelevelControl.java  
+* @Title: IntopiecesDshTwolevelControl.java  
 * @Package com.cardpay.pccredit.intopieces.web  
-* @Description: 贷生活10万及以下 支行负责人
+* @Description: 贷生活10万及以下 支行审查岗 
 * @author tanwh    
-* @date 2016年6月21日 上午10:30:47  
+* @date 2016年6月21日 上午10:29:04  
 * @version V1.0    
 */
 @Controller
-@RequestMapping("/intopieces/intopiecesdshonelevel/*")
-@JRadModule("intopieces.intopiecesdshonelevel")
-public class IntopiecesDshOnelevelControl extends BaseController{
+@RequestMapping("/intopieces/intopiecesdshlevel6/*")
+@JRadModule("intopieces.intopiecesdshlevel6")
+public class Intopiecesdshlevel6Control extends BaseController{
 	
 	@Autowired
 	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
@@ -65,9 +66,10 @@ public class IntopiecesDshOnelevelControl extends BaseController{
 	@Autowired
 	private IntoPiecesService intoPiecesService;
 	
-	public static final  Logger logger = Logger.getLogger(IntopiecesDshOnelevelControl.class);
+	public static final  Logger logger = Logger.getLogger(Intopiecesdshlevel6Control.class);
+	
 	/**
-	 * 一级支行行长进件页面
+	 * 二级支行行长进件页面
 	 * 
 	 * @param filter
 	 * @param request
@@ -80,13 +82,13 @@ public class IntopiecesDshOnelevelControl extends BaseController{
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String loginId = user.getId();
 		filter.setLoginId(loginId);
-		filter.setFilterOrgId("1");//贷生活10万以下要过滤是否同一机构
-		filter.setNodeName(Constant.status_dsh_10_onelevel);
-		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.intopieceWaitFormByOrgId(filter);
+		//filter.setFilterOrgId("1");//贷生活10万以下要过滤是否同一机构
+		filter.setNodeName(Constant.status_dsh_level6);
+		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.recieveIntopieceWaitForm(filter);
 		JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm> pagedResult = new JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm>(filter, result);
 
 		JRadModelAndView mv = new JRadModelAndView(
-				"/intopieces/intopieces_wait/intopiecesApprove_onelevel", request);
+				"/intopieces/intopieces_wait/intopiecesApprove_dsh_level6", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("filter", filter);
 		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
@@ -106,84 +108,8 @@ public class IntopiecesDshOnelevelControl extends BaseController{
 			mv.addObject("customerInfor", customerInfor);
 			mv.addObject("customerId", customerInfor.getId());
 			mv.addObject("appId", appId);
-			mv.addObject("operate", Constant.status_dsh_10_onelevel);
+			mv.addObject("operate", Constant.status_dsh_level6);
 		}
 		return mv;
-	}
-	
-	/**
-	 * 申请件审批通过 
-	 * 从一级审核-到信管放款
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "save_apply.json")
-	public JRadReturnMap saveApply(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			String appId = request.getParameter("id");
-			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-			CustomerApplicationProcess process =  customerApplicationProcessService.findByAppId(appId);
-			request.setAttribute("serialNumber", process.getSerialNumber());
-			request.setAttribute("applicationId", process.getApplicationId());
-			request.setAttribute("applicationStatus", ApproveOperationTypeEnum.APPROVE.toString());
-			request.setAttribute("objection", "false");
-			//查找审批金额
-			Circle circle = circleService.findCircleByAppId(appId);
-			
-			request.setAttribute("examineAmount", circle.getContractAmt());
-			
-			//先开户 后通过applicationId查找circle并放款 
-			String rtn = circleService.updateCustomerInforCircle_ESB(circle,user);
-			if("放款成功".equals(rtn)){
-				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumberApplicationInfo1(request,circle);
-				returnMap.put(JRadConstants.SUCCESS, true);
-				returnMap.addGlobalMessage(CHANGE_SUCCESS);
-				returnMap.put("retMsg",rtn);
-			}
-			else{
-				returnMap.put(JRadConstants.SUCCESS, false);
-				returnMap.addGlobalMessage("保存失败");
-				returnMap.put("retMsg",rtn);
-			}
-			
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
-	}
-	
-	/**
-	 * 申请件退件
-	 * 
-	 * @param filter
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "returnAppln.json")
-	public JRadReturnMap returnAppln(HttpServletRequest request) throws SQLException {
-		JRadReturnMap returnMap = new JRadReturnMap();
-		try {
-			int nodeNo = 3;//内部审核
-			String appId = request.getParameter("appId");
-			String operate = request.getParameter("operate");
-			String nodeName = request.getParameter("nodeName");
-			//退回客户经理和其他岗位不一致
-			if("1".equals(nodeName)){
-				
-				intoPiecesService.checkDoNotToManager(appId,request);
-			}else{
-				intoPiecesService.returnAppln(appId, request,nodeName);
-			}
-			returnMap.addGlobalMessage(CHANGE_SUCCESS);
-		} catch (Exception e) {
-			returnMap.addGlobalMessage("保存失败");
-			e.printStackTrace();
-		}
-		return returnMap;
 	}
 }

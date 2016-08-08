@@ -36,9 +36,11 @@
             </tr>
              #if($!operate=="填写合同信息" || $!operate=="放款" )
             <tr>
-             #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
+             #elseif($!operate=="团队长")
             <tr>
-             #elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
+             #elseif($!operate=="行长")
+            <tr>
+            #elseif($!operate=="贷生活(支行审批)客户经理" || $!operate=="贷生活(中心审批)客户经理")
             <tr>
             #else
             <tr style="display: none;">
@@ -50,9 +52,11 @@
             </tr>
             #if($!operate=="填写合同信息" || $!operate=="放款" )
             <tr>
-             #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
+             #elseif($!operate=="团队长" )
             <tr>
-             #elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
+             #elseif($!operate=="行长")
+            <tr>
+            #elseif($!operate=="贷生活(支行审批)客户经理" || $!operate=="贷生活(中心审批)客户经理")
             <tr>
             #else
             <tr style="display: none;">
@@ -76,9 +80,11 @@
             </tr>
              #if($!operate=="填写合同信息" || $!operate=="放款" )
             <tr>
-             #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
+             #elseif($!operate=="团队长")
             <tr>
-             #elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
+             #elseif($!operate=="行长")
+            <tr>
+            #elseif($!operate=="贷生活(支行审批)客户经理" || $!operate=="贷生活(中心审批)客户经理")
             <tr>
             #else
             <tr style="display: none;">
@@ -107,7 +113,7 @@
             <tr>
               <td><label>还款期限:</label><font color="#ff0000">*</font></td>
               <td><select name="term">
-	                    	#dict("REPAYMENT_TERM",  $!circle.term)
+	                    	#dict("APPLY_DEADLINE",  $!circle.term)
 	                  	</select></td>
 			  <td><label>期限类型:</label></td>
               <td><select name="termType"  >#dict("TERM_TYPE", $!circle.termType)</select></td>
@@ -115,18 +121,23 @@
 			<tr>
 			  <td><label>业务类型:</label></td>
               <td><select id="bussType" name="bussType"  >#dict("BUSS_TYPE", $!circle.bussType)</select></td>
-              <td><label>合同金额(元):</label><font color="#ff0000">*</font></td>
+              #if($!operate=="贷生活(支行审批)申请" || $!operate=="贷生活(中心审批)申请")
+              	
+	            #else
+	            <td><label>合同金额(元):</label><font color="#ff0000">*</font></td>
               <td><input type="text" id="contractAmt" name="contractAmt" 
               	 #if($!operate=="填写合同信息" || $!operate=="放款" )
             	value="$!circle.contractAmt"
-            	 #elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
+            	 #elseif($!operate=="团队长")
             	value="$!circle.contractAmt"
-             	#elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
+             	#elseif($!operate=="行长")
             	value="$!circle.contractAmt"
             	#else
             	value="$!circle.contractAmt"
             	#end
                 /></td>
+	            #end
+              
             </tr>
 			<tr>
               <td><label>登记人:</label><font color="#ff0000">*</font></td>
@@ -143,25 +154,35 @@
 			<tr>
               <td><label>顺延标志:</label></td>
               <td><select name="deferFlag"  >#dict("IS_DELAY", $!circle.deferFlag)</select></td>
-			  <td><label>年执行利率(%):</label><font color="#ff0000">*</font></td>
+              #if($!operate=="贷生活(支行审批)申请" || $!operate=="贷生活(中心审批)申请")
+              	
+	            #else
+	            <td><label>年执行利率(%):</label><font color="#ff0000">*</font></td>
               <td><input type="text" name="actIntRate" 
               	#if($!operate=="填写合同信息" || $!operate=="放款" )
               		value="$!circle.actIntRate"
-              	#elseif($!operate=="团队长" || $!operate=="贷生活10万支行审查岗")
+              	#elseif($!operate=="团队长")
               	    value="$!circle.actIntRate"
-              	#elseif($!operate=="行长" || $!operate=="贷生活10万支行负责人")
+              	#elseif($!operate=="行长")
               	    value="$!circle.actIntRate"
               	#else        	
               		value="$!circle.actIntRate"
               	#end
                 /></td>
+	            #end
+			  
             </tr>
-			<tr>
-              <td><label>年逾期利率(%):</label><font color="#ff0000">*</font></td>
-              <td><input type="text" name="overdueIntRate" value="$!circle.overdueIntRate"  /></td>
-			  <td><label>年违约利率(%):</label><font color="#ff0000">*</font></td>
-              <td><input type="text" name="penaltyIntRate" value="$!circle.penaltyIntRate"  /></td>
-            </tr>
+            #if($!operate=="贷生活(支行审批)申请" || $!operate=="贷生活(中心审批)申请")
+              	
+	            #else
+	            <tr>
+	              <td><label>年逾期利率(%):</label><font color="#ff0000">*</font></td>
+	              <td><input type="text" name="overdueIntRate" value="$!circle.overdueIntRate"  /></td>
+				  <td><label>年违约利率(%):</label><font color="#ff0000">*</font></td>
+	              <td><input type="text" name="penaltyIntRate" value="$!circle.penaltyIntRate"  /></td>
+	            </tr>
+	            #end
+			
 			<tr>
               <td><label>还款方式:</label></td>
               <td><select name="repayType"  >#dict("REPAY_TYPE", $!circle.repayType)</select></td>
@@ -256,7 +277,7 @@
 			<tr>
               <td><label>客户号:</label></td>
               <td><input type="text" id="aClientNo" name="aClientNo" value="$!circle.aClientNo" readonly/>
-              #if($!operate=="填写合同信息" || $!operate=="放款" )
+              #if($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活(支行审批)客户经理" || $!operate=="贷生活(中心审批)客户经理")
               <input type="button" value="获取" onclick="checkClientNo()">
               #end</td>
 			  <td><label>客户名称:</label><font color="#ff0000">*</font></td>
@@ -425,10 +446,10 @@
 		
       <div class="submit controlbtn">
       	 <a id="id_save_button" class="btn_g" >保存</a>
-         #if(($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活10万支行负责人" || $!operate=="贷生活10万支行审查岗") && $!circle.acctNo1 != $null)
+         #if(($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活(支行审批)客户经理" || $!operate=="贷生活(中心审批)客户经理") && $!circle.acctNo1 != $null)
          <a class="btn_g" id="id_zx_in_button">通过</a>
          #end
-         #if($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活10万支行负责人" || $!operate=="贷生活10万支行审查岗")
+         #if($!operate=="填写合同信息" || $!operate=="放款" || $!operate=="贷生活(支行审批)客户经理" || $!operate=="贷生活(中心审批)客户经理")
          <a class="btn_g" id="id_zx_return_button">退件</a>
          <a class="btn_gr" onclick="parent.location.href='${contextPath}${returnUrl}'">返回</a>
          #else
@@ -701,33 +722,12 @@
 		$("#id_back_button").click(function() {
 			window.parent.location.href = "${contextPath}/intopieces/intopiecesapprove/approve.page";
 		});
-		//提交进件
-		$("#id_apply_button").click(function() {
-			var customerId = "${customerId}";
-			Dialog.confirm("确定提交申请吗？", "提示",
-                function() {
-					var url = "${contextPath}/intopieces/intopiecesapprove/save_apply.json?id="+customerId;
-	   	        	$.ajax({
-						url : url,
-						type : "get",
-						success : function(data) {
-							if (data.success) {
-								topWin.Dialog.message("保存成功！");
-								var url = "${contextPath}/intopieces/intopiecesapprove/approve.page";
-				                parent.location.href = url;
-							}
-							else{
-								topWin.Dialog.message(data.message);
-						    }
-						}
-					});
-                });
-	    });
+		
 		//通过
 		$("#id_zx_in_button").click(function() {
                 Dialog.confirm("确定提交吗？", "提示",
                 	    function() {
-               				url="${contextPath}/intopieces/intopiecesxindai/save_apply.json?id=${appId}";
+               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}&operate=${operate}";
 			                $.ajax({
 								url : url,
 								type : "get",
@@ -756,7 +756,7 @@
 					#set ($formName = "'#checkForm1'")
 					var formjson = $($formName).serialize();
 					 $.ajax({
-							url : "${contextPath}/intopieces/intopiecesxindai/returnAppln.json",
+							url : "${contextPath}/intopieces/intopiecesapprove/returnAppln.json",
 							type : "get",
 							data : formjson,
 							success : function(data) {
@@ -1105,7 +1105,7 @@
 			$("#endDate").val(res);
 		}
 		else{
-			Dialog.message("授信期限或开始日期未填写，无法自动计算!");
+			Dialog.message("决议单授信期限或开始日期未填写，无法自动计算!");
 		}
 	}
 	

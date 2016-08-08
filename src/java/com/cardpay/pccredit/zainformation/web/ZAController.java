@@ -94,6 +94,8 @@ public class ZAController extends BaseController {
 				qzApplnZa.setCreatedBy(user.getId());
 				qzApplnZa.setCreatedTime(new Date());
 				
+				qzApplnZa.setProcessStatus("approved");//吴晓斌要求 默认审核通过
+				
 				zaService.insert(qzApplnZa);
 				
 				returnMap.put(JRadConstants.SUCCESS, true);

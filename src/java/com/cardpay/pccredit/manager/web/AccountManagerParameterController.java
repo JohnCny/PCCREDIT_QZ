@@ -64,7 +64,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute AccountManagerParameterFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 
@@ -84,7 +84,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {
 
 		JRadModelAndView mv = new JRadModelAndView("manager/account_manager/manager_create", request);
@@ -139,7 +139,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute AccountManagerParameterForm accountManagerParameterForm, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), accountManagerParameterForm);
 		if (returnMap.isSuccess()) {
@@ -164,7 +164,7 @@ public class AccountManagerParameterController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "save.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView maintenanceAccountManagersave(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("manager/account_manager/manager_browse", request);
 		AccountManagerParameterFilter filter = new AccountManagerParameterFilter();
@@ -193,7 +193,7 @@ public class AccountManagerParameterController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "saveupdate.page", method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView maintenanceAccountManagerchange(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("manager/account_manager/manager_browse", request);
 		AccountManagerParameterFilter filter = new AccountManagerParameterFilter();
@@ -221,7 +221,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(@ModelAttribute AccountManagerParameterFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/account_manager/manager_display", request);
 		String managerId = RequestHelper.getStringValue(request, ID);
@@ -251,7 +251,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(@ModelAttribute AccountManagerParameterFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/account_manager/manager_change", request);
 
@@ -281,7 +281,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute AccountManagerParameterForm accountManagerParameterForm, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), accountManagerParameterForm);
@@ -307,7 +307,7 @@ public class AccountManagerParameterController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 

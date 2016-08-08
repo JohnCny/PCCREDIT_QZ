@@ -44,7 +44,7 @@ public class AfterLoanCheckApproveController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "approve.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView approve(@ModelAttribute AfterLoanCheckFilter filter,HttpServletRequest request){
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);

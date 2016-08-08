@@ -254,6 +254,7 @@ public class AttachmentListService {
 						}
 						
 						batch.setType((int)Math.pow(2, i)+"");
+						batch.setBussType(att.getBussType());
 						commonDao.insertObject(batch);
 					}
 				}
@@ -296,6 +297,7 @@ public class AttachmentListService {
 						
 						batch.setType((int)Math.pow(2, i)+"");
 						batch.setIsUpload("1");
+						batch.setBussType(att.getBussType());
 						if(StringUtils.isNotEmpty(batch.getId())){
 							commonDao.updateObject(batch);
 						}
@@ -346,21 +348,22 @@ public class AttachmentListService {
 				}
 				
 				batch.setType((int)Math.pow(2, i)+"");
+				batch.setBussType(qzApplnAttachmentList.getBussType());
 				commonDao.insertObject(batch);
 			}
 		}
 	}
 
 	public void update_page5(QzApplnAttachmentList qzApplnAttachmentList,HttpServletRequest request) throws SunTransEngineException{
-		//保存清单至调查内容表
-		commonDao.updateObject(qzApplnAttachmentList);
-		
 		String sql = "select * from QZ_APPLN_ATTACHMENT_BATCH where buss_type != '"+qzApplnAttachmentList.getBussType()+"' and att_id = '"+qzApplnAttachmentList.getId()+"'";
 		//删除 不同buss_type的批次
 		List<QzApplnAttachmentBatch> old_batch_ls = commonDao.queryBySql(QzApplnAttachmentBatch.class, sql, null);
 		for(QzApplnAttachmentBatch batch : old_batch_ls){
 			this.delete_batch(batch.getId());
 		}
+
+		//保存清单至调查内容表
+		commonDao.updateObject(qzApplnAttachmentList);
 		
 		//插入batch表
 		for(int i=0 ; i<=30 ; i++){
@@ -389,6 +392,7 @@ public class AttachmentListService {
 				}
 				
 				batch.setType((int)Math.pow(2, i)+"");
+				batch.setBussType(qzApplnAttachmentList.getBussType());
 				if(StringUtils.isNotEmpty(batch.getId())){
 					commonDao.updateObject(batch);
 				}

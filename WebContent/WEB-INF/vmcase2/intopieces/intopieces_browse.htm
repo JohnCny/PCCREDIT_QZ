@@ -49,15 +49,16 @@
         <div id="topDiv" class="inquiry_list inquiry_top">
           <table>
             <colgroup>
-              <col width="5%" />
-              <col width="10%" />
-              <col width="15%"/>
-              <col width="10%"/>
-              <col width="10%"/>
-              <col width="10%"/>
-              <col width="5%"/>
-              <col width="15%"/>
-              <col width="10%"/>
+              <col width="50" />
+              <col width="100" />
+              <col width="150"/>
+              <col width="150"/>
+              <col width="150"/>
+              <col width="100"/>
+              <col width="200" />
+              <col width="200" />
+              <col width="200" />
+              <col width="50" />
               <col />
             </colgroup>
             <tr class="title">
@@ -77,15 +78,16 @@
         <div id="downDiv" class="inquiry_list inquiry_down">
           <table>
             <colgroup>
-              <col width="5%" />
-              <col width="10%" />
-              <col width="15%"/>
-              <col width="10%"/>
-              <col width="10%"/>
-              <col width="10%"/>
-              <col width="5%"/>
-              <col width="15%"/>
-              <col width="10%"/>
+              <col width="50" />
+              <col width="100" />
+              <col width="150"/>
+              <col width="150"/>
+              <col width="150"/>
+              <col width="100"/>
+              <col width="200" />
+              <col width="200" />
+              <col width="200" />
+              <col width="50" />
               <col />
             </colgroup>
             #foreach ($intoPieces in $result.items)
@@ -129,8 +131,8 @@
           #btnpriv("import")<a class="btn_g" href="javascript:void(0);" title="导入" onclick="linkImport('${contextPath}/intopieces/intopiecesquery/importCustomerInfo.page')">导入</a>#end
           #btnpriv("approveloguser")<a class="btn_g" href="javascript:void(0);" title="查看审批记录(显示用户)" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录(显示用户)</a>#end
            -->
-          #btnpriv("approvelog")<a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录</a>#end
-          #btnpriv("approvelog")<a class="btn_g" href="javascript:void(0);" title="查看申请信息" onclick="viewIntoPicesApproveDisplay('YES')">查看申请信息</a>#end
+          <a class="btn_g" href="javascript:void(0);" title="查看审批记录" onclick="viewIntoPicesApproveHistory('YES')">查看审批记录</a>
+          <a class="btn_g" href="javascript:void(0);" title="查看申请信息" onclick="viewIntoPicesApproveDisplay('YES')">查看申请信息</a>
           <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> -->
           <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>
         </div>
@@ -212,7 +214,7 @@
 		});
 		if(id!=null){
 			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
-			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+			Dialog.tablePage(url, "查看审批历史", "get", null, 700, 800);
 		}else{
 			Dialog.message("请选择要被查看的进件!");
 		}
@@ -228,7 +230,7 @@
 			productName = $(this).val().split("_")[2];
 		});
 		if(rowId!=null){
-			var url="${contextPath}/intopieces/intopiecesxingzheng2/iframe_cardapprove.page?id="+rowId+"&appId="+appId+"&ifHideUser="+ifHideUser;
+			var url="${contextPath}/intopieces/intopiecesapprove/iframe_cardapprove.page?id="+rowId+"&appId="+appId+"&ifHideUser="+ifHideUser;
 			
 			window.location.href = url;
 		

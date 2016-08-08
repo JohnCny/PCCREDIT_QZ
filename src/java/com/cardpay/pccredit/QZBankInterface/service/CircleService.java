@@ -80,7 +80,70 @@ public class CircleService {
     //对接并存db
     public String updateCustomerInforCircle_ESB(Circle circle, IUser user) {
     	String returnMessage = "";
-    	
+    	//先查询核心
+		List<Circle_ACCT_INFO> acct_info_ls = new ArrayList<Circle_ACCT_INFO>();
+		//收息收款账号
+		CompositeData req1 = iesbForCore.createCoreRequest(circle.getAcctNo1());
+		CompositeData resp1 = client.sendMess(req1);
+		if(resp1 == null){
+			returnMessage = "账号查询接口调用失败";
+			return returnMessage;
+		}
+		try {
+			String retClientNo = iesbForCore.getClientNo(resp1);
+			if(StringUtils.isEmpty(retClientNo)){
+				returnMessage = "解析账号查询接口返回信息失败";
+				return returnMessage;
+			}
+			else{
+				if(!circle.getaClientNo().equals(retClientNo)){
+					returnMessage = "账号检验失败,请检查是否填写正确!";
+					return returnMessage;
+				}
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			logger.info("can't find clientno in esb response", e1);
+			e1.printStackTrace();
+		}
+		Circle_ACCT_INFO acct_Info1 = iesbForCore.parseCoreResponse(resp1,"03");
+		if(acct_Info1 == null){
+			returnMessage = "解析账号查询接口返回信息失败";
+			return returnMessage;
+		}
+		acct_Info1.setCircleId(circle.getId());
+		acct_info_ls.add(acct_Info1);
+		
+		//放款账号
+		CompositeData req2 = iesbForCore.createCoreRequest(circle.getAcctNo2());
+		CompositeData resp2 = client.sendMess(req2);
+		if(resp2 == null){
+			returnMessage = "账号查询接口调用失败";
+			return returnMessage;
+		}
+		Circle_ACCT_INFO acct_Info2 = iesbForCore.parseCoreResponse(resp2,"01");
+		if(acct_Info2 == null){
+			returnMessage = "解析账号查询接口返回信息失败";
+			return returnMessage;
+		}
+		acct_Info2.setCircleId(circle.getId());
+		acct_info_ls.add(acct_Info2);
+		
+		//费用账号，由于费用屏蔽后不用填写费用账号，所以现在默认费用账号是放款账号
+		CompositeData req3 = iesbForCore.createCoreRequest(circle.getAcctNo2());
+		CompositeData resp3 = client.sendMess(req3);
+		if(resp3 == null){
+			returnMessage = "账号查询接口调用失败";
+			return returnMessage;
+		}
+		Circle_ACCT_INFO fee_Acct_Info = iesbForCore.parseCoreResponse(resp3,"07");
+		if(fee_Acct_Info == null){
+			returnMessage = "解析账号查询接口返回信息失败";
+			return returnMessage;
+		}
+		fee_Acct_Info.setCircleId(circle.getId());
+		acct_info_ls.add(fee_Acct_Info);
+		
     	//先查询app看是否续授信操作
     	String appId = circle.getApplicationId();
     	CustomerApplicationInfo app = customerApplicationInfoService.findById(appId);
@@ -106,51 +169,6 @@ public class CircleService {
 				return e.getMessage();
 			}
     	}
-    	
-		//先查询核心
-		List<Circle_ACCT_INFO> acct_info_ls = new ArrayList<Circle_ACCT_INFO>();
-		//收息收款账号
-		CompositeData req1 = iesbForCore.createCoreRequest(circle.getAcctNo1());
-		CompositeData resp1 = client.sendMess(req1);
-		if(resp1 == null){
-			returnMessage = "查询收息收款账号接口调用失败";
-			return returnMessage;
-		}
-		Circle_ACCT_INFO acct_Info1 = iesbForCore.parseCoreResponse(resp1,"03");
-		if(acct_Info1 == null){
-			returnMessage = "解析ecif返回信息失败";
-			return returnMessage;
-		}
-		acct_Info1.setCircleId(circle.getId());
-		acct_info_ls.add(acct_Info1);
-		//放款账号
-		CompositeData req2 = iesbForCore.createCoreRequest(circle.getAcctNo2());
-		CompositeData resp2 = client.sendMess(req2);
-		if(resp2 == null){
-			returnMessage = "查询放款账号接口调用失败";
-			return returnMessage;
-		}
-		Circle_ACCT_INFO acct_Info2 = iesbForCore.parseCoreResponse(resp2,"01");
-		if(acct_Info2 == null){
-			returnMessage = "解析ecif返回信息失败";
-			return returnMessage;
-		}
-		acct_Info2.setCircleId(circle.getId());
-		acct_info_ls.add(acct_Info2);
-		//费用账号，由于费用屏蔽后不用填写费用账号，所以现在默认费用账号是放款账号
-		CompositeData req3 = iesbForCore.createCoreRequest(circle.getAcctNo2());
-		CompositeData resp3 = client.sendMess(req3);
-		if(resp3 == null){
-			returnMessage = "查询费用账号接口调用失败";
-			return returnMessage;
-		}
-		Circle_ACCT_INFO fee_Acct_Info = iesbForCore.parseCoreResponse(resp3,"07");
-		if(fee_Acct_Info == null){
-			returnMessage = "解析ecif返回信息失败";
-			return returnMessage;
-		}
-		fee_Acct_Info.setCircleId(circle.getId());
-		acct_info_ls.add(fee_Acct_Info);
 		
 		//组包
 		CompositeData req = iesbForCircleCredit.createCircleCreditRequest(circle,acct_info_ls);
@@ -230,6 +248,16 @@ public class CircleService {
 		}
 	}
 	
+	public Circle findLastPreCircle(String customerId) {
+		// TODO Auto-generated method stub
+		List<Circle> tmp = circleDao.findLastPreCircle(customerId);
+		if(tmp != null && tmp.size() > 0){
+			return tmp.get(0);
+		}
+		else{
+			return null;
+		}
+	}
 	
 	public List<Circle> findByCustomerId(String customerId) {
 		// TODO Auto-generated method stub

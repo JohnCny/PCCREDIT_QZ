@@ -112,7 +112,7 @@ public class CustomerApplicationIntopieceWaitController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute CustomerApplicationProcessFilter filter, HttpServletRequest request) throws SQLException {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -135,7 +135,7 @@ public class CustomerApplicationIntopieceWaitController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.APPROVE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/intopieces_wait/intopiecesApprove_approve", request);
 
@@ -225,7 +225,7 @@ public class CustomerApplicationIntopieceWaitController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.APPROVE)
+	
 	public JRadReturnMap update(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -246,7 +246,7 @@ public class CustomerApplicationIntopieceWaitController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "apply.json")
-	@JRadOperation(JRadOperation.APPLYAPPROVE)
+	
 	public JRadReturnMap apply(@ModelAttribute CustomerApplicationProcessFilter filter, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {

@@ -1,6 +1,7 @@
 package com.cardpay.pccredit.report.filter;
 
 import java.util.Date;
+import java.util.List;
 
 import com.wicresoft.jrad.base.web.filter.BaseQueryFilter;
 
@@ -20,7 +21,14 @@ public class AccLoanCollectFilter extends BaseQueryFilter{
 	private String userId;
 	
 	private String filterTeamLeader;
+	private String filterOrgId;//审核人的org_id 贷生活10万以下要过滤是否同一机构
 	private String loginId;
+	
+	private String centerId;
+	private String teamId;
+	private String centerMgrId;
+	
+	private List<String> userIds;//
 	
 	public String getUserId() {
 		return userId;
@@ -57,5 +65,35 @@ public class AccLoanCollectFilter extends BaseQueryFilter{
 	}
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
+	}
+	public String getFilterOrgId() {
+		return filterOrgId;
+	}
+	public void setFilterOrgId(String filterOrgId) {
+		this.filterOrgId = filterOrgId;
+	}
+	public String getCenterId() {
+		return centerId;
+	}
+	public void setCenterId(String centerId) {
+		this.centerId = centerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
+	public String getCenterMgrId() {
+		return centerMgrId;
+	}
+	public void setCenterMgrId(String centerMgrId) {
+		this.centerMgrId = centerMgrId;
+	}
+	public List<String> getUserIds() {
+		return userIds;
+	}
+	public void setUserIds(List<String> userIds) {
+		this.userIds = userIds;
 	}
 }

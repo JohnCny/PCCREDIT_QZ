@@ -48,6 +48,7 @@ public class QzApplnDshJydForm extends BaseForm{
 	private String repaymentTerm;
 	private String repayType;
 	private String guaranteeItems;
+	private String otherSug;
 	private String focusContent;
 	private String otherRequirement;
 	private String refuseReason;
@@ -55,6 +56,7 @@ public class QzApplnDshJydForm extends BaseForm{
 	private String checkManagerName;
 	private String subBranchManagerSug;
 	private String subBranchManagerId;
+	private String centerSug;
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -121,11 +123,11 @@ public class QzApplnDshJydForm extends BaseForm{
 	public void setLoanUseType(String loanUseType) {
 		this.loanUseType = loanUseType;
 	}
-	public String getRepayType() {
-		return repayType;
+	public String getSugRepayType() {
+		return sugRepayType;
 	}
-	public void setRepayType(String repayType) {
-		this.repayType = repayType;
+	public void setSugRepayType(String sugRepayType) {
+		this.sugRepayType = sugRepayType;
 	}
 	public String getCoborrower1Name() {
 		return coborrower1Name;
@@ -217,17 +219,23 @@ public class QzApplnDshJydForm extends BaseForm{
 	public void setRepaymentTerm(String repaymentTerm) {
 		this.repaymentTerm = repaymentTerm;
 	}
-	public String getSugRepayType() {
-		return sugRepayType;
+	public String getRepayType() {
+		return repayType;
 	}
-	public void setSugRepayType(String sugRepayType) {
-		this.sugRepayType = sugRepayType;
+	public void setRepayType(String repayType) {
+		this.repayType = repayType;
 	}
 	public String getGuaranteeItems() {
 		return guaranteeItems;
 	}
 	public void setGuaranteeItems(String guaranteeItems) {
 		this.guaranteeItems = guaranteeItems;
+	}
+	public String getOtherSug() {
+		return otherSug;
+	}
+	public void setOtherSug(String otherSug) {
+		this.otherSug = otherSug;
 	}
 	public String getFocusContent() {
 		return focusContent;
@@ -270,5 +278,11 @@ public class QzApplnDshJydForm extends BaseForm{
 	}
 	public void setSubBranchManagerId(String subBranchManagerId) {
 		this.subBranchManagerId = subBranchManagerId;
+	}
+	public String getCenterSug() {
+		return centerSug;
+	}
+	public void setCenterSug(String centerSug) {
+		this.centerSug = centerSug;
 	}
 }

@@ -72,7 +72,7 @@ public class DivisionalTransferController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute DivisionalFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -92,7 +92,7 @@ public class DivisionalTransferController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "transfer.json",method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String,Object> transfer(HttpServletRequest request) {
 		Map<String,Object> returnMap = new HashMap<String,Object>();
 		try {
@@ -121,7 +121,7 @@ public class DivisionalTransferController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "transfer_qz.json",method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String,Object> transfer_qz(HttpServletRequest request) {
 		Map<String,Object> returnMap = new HashMap<String,Object>();
 		try {
@@ -142,7 +142,7 @@ public class DivisionalTransferController extends BaseController{
 	//信贷客户移交-界面
 	@ResponseBody
 	@RequestMapping(value = "transfer_xd_qz.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView transfer_xd_qz(@ModelAttribute DivisionalFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -163,7 +163,7 @@ public class DivisionalTransferController extends BaseController{
 	//信贷客户移交-发起
 	@ResponseBody
 	@RequestMapping(value = "transfer_xd_qz.json",method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String,Object> transfer_xd_qz_json(HttpServletRequest request) {
 		Map<String,Object> returnMap = new HashMap<String,Object>();
 		try {

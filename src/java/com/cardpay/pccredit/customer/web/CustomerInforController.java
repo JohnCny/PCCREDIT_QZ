@@ -108,7 +108,7 @@ public class CustomerInforController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute CustomerInforFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -130,7 +130,7 @@ public class CustomerInforController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "intopiecesbrowse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView intopiecesbrowse(@ModelAttribute IntoPiecesFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);
@@ -158,7 +158,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor/customerinfor_create", request);
 		return mv;
@@ -173,7 +173,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "importCustomerInfo.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView importCustomerInfo(HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor/customer_import", request);
 		return mv;
@@ -188,7 +188,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "importSubmit.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView importSubmit(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException {        
 		response.setContentType("text/html;charset=utf-8");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -234,7 +234,7 @@ public class CustomerInforController extends BaseController{
 		
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor/customerinfor_display", request);
 
@@ -257,7 +257,7 @@ public class CustomerInforController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "displayclone.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView displayClone(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInforDisplay/customerinfor_display", request);
 		String applicationId = request.getParameter("applicationId");
@@ -281,7 +281,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -305,7 +305,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "transfer.json",method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public Map<String,Object> transfer(HttpServletRequest request) {
 		Map<String,Object> returnMap = new HashMap<String,Object>();
 		try {
@@ -336,7 +336,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor/customerinfor_change", request);
 		String customerInforId = RequestHelper.getStringValue(request, ID);
@@ -357,7 +357,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "changewh.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changewh(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInforUpdate/customerinfor_change", request);
 		String customerInforId = RequestHelper.getStringValue(request, ID);
@@ -379,7 +379,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute CustomerInforForm form, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
@@ -408,7 +408,6 @@ public class CustomerInforController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "displayaccountinfolist.page")
-	@JRadOperation(JRadOperation.DISPLAYACCOUNT)
 	public AbstractModelAndView displayCardInfomation(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor/customercardinfor_browse", request);
 		String customerId = request.getParameter("customerId");
@@ -429,7 +428,7 @@ public class CustomerInforController extends BaseController{
 	*/
 	@ResponseBody
 	@RequestMapping(value = "displayaccountinfo.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView displayCardInfo(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor/customeraccountinfo_display", request);
 		String id = request.getParameter("id");
@@ -451,7 +450,7 @@ public class CustomerInforController extends BaseController{
 	 
 	@ResponseBody
 	@RequestMapping(value = "create_yxzl.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView createYxzl(@ModelAttribute VideoAccessoriesFilter filter,HttpServletRequest request) {
 		filter.setCustomerId(request.getParameter(ID));
 		filter.setRequest(request);
@@ -472,7 +471,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "saveYxzl.json",method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView saveYxzl(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
@@ -508,7 +507,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "deleteYxzl.json",method = { RequestMethod.POST })
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView deleteYxzlById(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
@@ -537,7 +536,7 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "downLoadYxzl.json",method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.EXPORT)
+	
 	public AbstractModelAndView downLoadYxzlById(HttpServletRequest request,HttpServletResponse response) throws IOException{
 		try {
 			customerInforservice.downLoadYxzlById(response,request.getParameter(ID));
@@ -556,7 +555,6 @@ public class CustomerInforController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value = "viewPicture.page",method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.QUERY)
 	public AbstractModelAndView viewPicture(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		try {

@@ -91,7 +91,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView query(@ModelAttribute DepartmentFilter filter, HttpServletRequest request) {
 		String departmentJson = departmentManager.getAllOrganizationAndDepartment(filter);
 		JRadModelAndView mv = new JRadModelAndView("/modules/privilege/user/department_user", request);
@@ -107,7 +107,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "displayUserList.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView displayUserList(@ModelAttribute UserFilter userFilter, HttpServletRequest request) {
 		userFilter.setRequest(request);
 		String deptId = request.getParameter("deptId");
@@ -133,7 +133,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(@ModelAttribute UserFilter userFilter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/modules/privilege/user/user_create", request);
 		List<Role> list = roleManager.getAllRoles();
@@ -152,7 +152,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute User user, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), user);
 		if (returnMap.isSuccess()) {
@@ -195,7 +195,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/modules/privilege/user/user_change", request);
 
@@ -222,7 +222,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute User user, HttpServletRequest request) {
 
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), user);
@@ -269,7 +269,6 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "config.json")
-	@JRadOperation(JRadOperation.CONFIG)
 	public JRadReturnMap config(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -291,7 +290,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -314,7 +313,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/modules/privilege/user/user_display", request);
 		String userId = RequestHelper.getStringValue(request, ID);
@@ -335,7 +334,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "modifyOnwerPasswordSubmit.json", method = { RequestMethod.POST })
-	//@JRadOperation(JRadOperation.CHANGE)
+	//
 	public JRadReturnMap modifyOnwerPasswordSubmit(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		JRadReturnMap returnMap = new JRadReturnMap();
@@ -361,7 +360,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkOnwerOldPassword.json", method = { RequestMethod.POST })
-	//@JRadOperation(JRadOperation.CHANGE)
+	//
 	public JRadReturnMap checkOnwerOldPassword(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		JRadReturnMap returnMap = new JRadReturnMap();

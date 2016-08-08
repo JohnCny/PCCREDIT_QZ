@@ -80,7 +80,7 @@ public class IntoPiecesSearchControl extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "search.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView search(@ModelAttribute IntoPiecesFilter filter,
 			HttpServletRequest request) {
 		filter.setRequest(request);

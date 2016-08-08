@@ -115,7 +115,7 @@
 	</div>
 </form>
 	 <div class="dialog2">
-			<form id="checkForm1" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesshouxin/returnAppln.json">
+			<form id="checkForm1" class="dialog-box" style="height:200px;" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="${appId}" />
 				<div class="top">
 					退件 <span onclick="$('.dialog2').hide();"></span>
@@ -211,7 +211,7 @@
             Dialog.confirm("确定提交吗？", "提示",
             	    function() {
 		                $.ajax({
-							url : "${contextPath}/intopieces/intopiecesshouxin/pass.json?id=${appId}",
+							url : "${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}",
 							type : "get",
 							success : function(data) {
 								if (data.success) {

@@ -51,6 +51,7 @@ import com.wicresoft.jrad.base.web.controller.BaseController;
 import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.result.JRadReturnMap;
 import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 
@@ -91,10 +92,16 @@ public class sxInfo2Control extends BaseController{
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
 	public AbstractModelAndView browse(@ModelAttribute QuotaFreezeOrThawFilter filter, HttpServletRequest request) throws SQLException {
 		filter.setRequest(request);
-		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
 		String loginId = user.getId();
 		filter.setUserId(loginId);
-		filter.setFilterTeamLeader("1");
+		String rolename = user.getRoles().get(0).getName();
+		if(rolename.equals(Constant.COMMON_USER_BRANCH) || rolename.equals(Constant.BRANCH_USER)){
+			filter.setFilterOrgId("1");//支行权限
+		}
+		if(rolename.equals(Constant.TEAM_LEADER)){
+			filter.setFilterTeamLeader("1");//团队长
+		}
 		QueryResult<QuotaFreezeInfo> result = sxInfoService.getQzIesbForCircleWFByFilter(filter);
 		JRadPagedQueryResult<QuotaFreezeInfo> pagedResult = new JRadPagedQueryResult<QuotaFreezeInfo>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/sxinfo2_browse",

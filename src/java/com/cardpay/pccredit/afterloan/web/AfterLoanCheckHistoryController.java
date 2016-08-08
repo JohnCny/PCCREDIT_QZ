@@ -1,5 +1,6 @@
 package com.cardpay.pccredit.afterloan.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentDetail;
 import com.cardpay.pccredit.intopieces.service.AttachmentListService;
+import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.intopieces.web.PicPojo;
 import com.cardpay.pccredit.intopieces.web.QzApplnYwsqbForm;
 import com.cardpay.pccredit.ipad.util.SundsException;
@@ -47,6 +49,7 @@ import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.result.JRadReturnMap;
 import com.wicresoft.jrad.base.web.security.LoginManager;
 import com.wicresoft.jrad.base.web.utility.WebRequestHelper;
+import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 import com.wicresoft.util.web.RequestHelper;
@@ -70,6 +73,8 @@ public class AfterLoanCheckHistoryController extends BaseController{
 	private AttachmentListService attachmentListService;
 	@Autowired
 	private ECIFService eCIFService;
+	@Autowired
+	private IntoPiecesService intoPiecesService;
 	
 	private static final Logger logger = Logger.getLogger(AfterLoanCheckHistoryController.class);
 	
@@ -82,12 +87,13 @@ public class AfterLoanCheckHistoryController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })	
-	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browse(@ModelAttribute AfterLoanCheckFilter filter,HttpServletRequest request){
 		filter.setRequest(request);
-		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		User user = (User)Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
-		filter.setUserId(userId);
+		List<String> userIds = new ArrayList<String>();
+		userIds.add(userId);
+		filter.setUserIds(userIds);
 		QueryResult<AfterLoaninfo> result = afterloanCheckService.findAfterLoanHistoryTaskByFilter(filter);
 		JRadPagedQueryResult<AfterLoaninfo> pagedResult = new JRadPagedQueryResult<AfterLoaninfo>(
 				filter, result);
@@ -98,6 +104,26 @@ public class AfterLoanCheckHistoryController extends BaseController{
 		return mv;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "browseAll.page", method = { RequestMethod.GET })	
+	public AbstractModelAndView browseAll(@ModelAttribute AfterLoanCheckFilter filter,HttpServletRequest request){
+		filter.setRequest(request);
+		User user = (User)Beans.get(LoginManager.class).getLoggedInUser(request);
+		
+		//根据三级菜单筛选出userIds
+		filter.setUserIds(intoPiecesService.getQueryUserIds(filter));
+		
+		QueryResult<AfterLoaninfo> result = afterloanCheckService.findAfterLoanHistoryTaskByFilter(filter);
+		JRadPagedQueryResult<AfterLoaninfo> pagedResult = new JRadPagedQueryResult<AfterLoaninfo>(
+				filter, result);
+		JRadModelAndView mv = new JRadModelAndView(
+				"/afterloan/afterloanhistory_browse_all", request);
+		mv.addObject(PAGED_RESULT, pagedResult);
+
+		intoPiecesService.levelMenu(mv, user,filter);
+		
+		return mv;
+	}
 	/**
 	 * 检查进入
 	 * page0.page

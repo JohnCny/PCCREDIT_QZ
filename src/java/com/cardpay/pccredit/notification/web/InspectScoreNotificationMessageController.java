@@ -61,7 +61,7 @@ public class InspectScoreNotificationMessageController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute NotificationMessageFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		User u = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -85,7 +85,7 @@ public class InspectScoreNotificationMessageController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.CHECKED)
+	
 	public JRadReturnMap delete(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 
@@ -111,7 +111,7 @@ public class InspectScoreNotificationMessageController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.DISPLAY)
+	
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/notification/notification_display", request);
 		String messageId = RequestHelper.getStringValue(request, ID);

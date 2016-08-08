@@ -53,7 +53,7 @@ public class DictController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute DictFilter filter, HttpServletRequest request) {
         filter.setRequest(request);
 		QueryResult<Dict> result = dictService.findDictByFilter(filter);
@@ -71,7 +71,7 @@ public class DictController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(@ModelAttribute DictFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/system/dict/dict_create", request);
 		return mv;
@@ -85,7 +85,7 @@ public class DictController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute Dict dict, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), dict);
 		if (returnMap.isSuccess()) {
@@ -125,7 +125,7 @@ public class DictController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(@ModelAttribute DictFilter filter, HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/system/dict/dict_change", request);
 		String id = request.getParameter("id");
@@ -144,7 +144,7 @@ public class DictController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute Dict dict, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		try {
@@ -168,7 +168,7 @@ public class DictController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "delete.json")
-	@JRadOperation(JRadOperation.DELETE)
+	
 	public JRadReturnMap delete(@ModelAttribute Dict dict, HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		String id = request.getParameter("id");

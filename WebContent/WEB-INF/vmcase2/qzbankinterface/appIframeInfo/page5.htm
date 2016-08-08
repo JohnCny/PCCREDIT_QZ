@@ -14,18 +14,19 @@
 					<td>借贷类型</td>
 					<td>
 						<select name="bussType" id="jdlx" onchange="lxSelect()">
-							<option value="1">工薪类</option>
-							<option value="2">经营类</option>
 							<option value="3">工薪类(新版)</option>
 							<option value="4">经营类(新版)</option>
+							<option value="1">工薪类</option>
+							<option value="2">经营类</option>
 						</select>
 						<input type="hidden" id="chkValue" name="chkValue" value="0">
+						<input type="hidden" name="shopName" value="$!qzApplnJyxx.bussName" />
 					</td>
 				</tr>
 			</table>	
 		</div><!--/content-->
 	<!--*************************************************************工薪类*************************************************************-->
-		<div name="content" id="gxl">
+		<div name="content" id="gxl" style="display:none;">
 			<table class="myTable">
 				<colgroup>
 					<col width="10%">
@@ -38,11 +39,9 @@
 				</tr>
 				<tr>
 					<td class="table-label">借款人姓名：</td>
-					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
-						<input type="hidden" name="clientName" value="$!customerInfo.chineseName"/></td>
+					<td><input type="text" value="$!customerInfo.chineseName" readonly/></td>
 					<td class="table-label">身份证号码：</td>
-					<td><input type="text" value="$!customerInfo.cardId" readonly/>
-						<input type="hidden" name="globalId" value="$!customerInfo.cardId"/></td>			
+					<td><input type="text" value="$!customerInfo.cardId" readonly/></td>			
 				</tr>
 			</table>
 			<table class="myTable" style="text-align:center;">
@@ -174,11 +173,9 @@
 				</tr>
 				<tr>
 					<td class="table-label">借款人姓名：</td>
-					<td><input type="text" value="$!customerInfo.chineseName" readonly/>
-						<input type="hidden" name="clientName_new" value="$!customerInfo.chineseName"/></td>
+					<td><input type="text" value="$!customerInfo.chineseName" readonly/></td>
 					<td class="table-label">身份证号码：</td>
-					<td><input type="text" value="$!customerInfo.cardId" readonly/>
-						<input type="hidden" name="globalId_new" value="$!customerInfo.cardId"/></td>			
+					<td><input type="text" value="$!customerInfo.cardId" readonly/></td>			
 				</tr>
 			</table>
 			<table class="myTable" style="text-align:center;">
@@ -279,10 +276,10 @@
 				<tr>
 					<td>1</td>	
 					<td>其他</td>	
-					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false" value="16384" checked/></td>						
-					<td></td>	
-					<td></td>	
-					<td></td>			
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false" value="16384" checked/></td>	
+					<td>2</td>	
+					<td>合同相关材料</td>	
+					<td><input type="checkbox" class="mustCheck" name="checkbox3" onclick="return false" value="32768" checked/></td>			
 				</tr>
 			</table>
 		</div>
@@ -300,8 +297,7 @@
 				</tr>
 				<tr>
 					<td class="table-label">公司名称：</td>
-					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/>
-						<input type="hidden" name="shopName" value="$!qzApplnJyxx.bussName" /></td>
+					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/></td>
 					<td class="table-label">营业执照号：</td>
 					<td><input type="text" id="shopId" name="shopId"/></td>			
 					
@@ -452,10 +448,9 @@
 				</tr>
 				<tr>
 					<td class="table-label">公司名称：</td>
-					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/>
-						<input type="hidden" name="shopName" value="$!qzApplnJyxx.bussName" /></td>
+					<td><input type="text" value="$!qzApplnJyxx.bussName" readonly/></td>
 					<td class="table-label">营业执照号：</td>
-					<td><input type="text" id="shopId" name="shopId"/></td>			
+					<td><input type="text" id="shopId" name="shopIdNew"/></td>			
 					
 				</tr>
 			</table>
@@ -587,7 +582,7 @@
 				<tr>
 					<td>5</td>	
 					<td>借款合同</td>	
-					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16777216" checked/></td>						
+					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="16777216" checked/></td>					
 					<td>6</td>	
 					<td>其他</td>	
 					<td><input type="checkbox" class="mustCheck" name="checkbox4" onclick="return false" value="1073741824" checked/></td>			

@@ -61,25 +61,29 @@
               <col width="120"/>
               <col width="120"/>
               <col width="120"/>
+              <col width="120"/>
+              <col width="120"/>
+              <col width="120"/>
             </colgroup>
             <tr class="title" align="center">
               <th nowrap="nowrap">序号</th>
               <th nowrap="nowrap">客户经理号</th>
-              
               <th nowrap="nowrap">所属机构</th>
                <th nowrap="nowrap">借据号</th>
               <th nowrap="nowrap">账户名称</th>
               <th nowrap="nowrap">利率</th>
-              <th nowrap="nowrap">贷款日期</th>
-              
-              <th nowrap="nowrap">到期日期</th>
+              <th nowrap="nowrap">授信日期</th>
+              <th nowrap="nowrap">授信到期日</th>
               <th nowrap="nowrap">授信金额</th>
-              <th nowrap="nowrap">贷款金额</th>
+              <th nowrap="nowrap">贷款余额</th>
               <th nowrap="nowrap">欠息总额</th>
-              <th nowrap="nowrap">起息日期</th>
+              <th nowrap="nowrap">贷款日期</th>
+              <th nowrap="nowrap">贷款到期日</th>
               <th nowrap="nowrap">贷款状态</th>
               <th nowrap="nowrap">累计逾期金额</th>
               <th nowrap="nowrap">逾期期数</th>
+              <th nowrap="nowrap">逾期余额</th>
+              <th nowrap="nowrap">逾期天数</th>
             </tr>
           </table>
         </div>  
@@ -97,13 +101,16 @@
               <col width="120"/>
               <col width="120"/>
               <col width="120"/>
-               <col width="120"/>
+              <col width="120"/>
+              <col width="120"/>
+              <col width="120"/>
+              <col width="120"/>
               <col width="120"/>
               <col width="120"/>
               <col width="120"/>
               <col width="120"/>
             </colgroup>
-            #foreach ($accloan in $list)
+            #foreach ($accloan in $result.items)
             	<tr id="$!accloan.rowIndex">
 	              <td nowrap="nowrap">$!accloan.rowIndex</td>
 	              <td nowrap="nowrap">$!accloan.managerId</td>
@@ -114,18 +121,22 @@
 	              <td nowrap="nowrap">$!accloan.contStartDate</td>
 	              <td nowrap="nowrap">$!accloan.contEndDate</td>
 	              <td nowrap="nowrap">$format.formatNumber(2,$!accloan.contAmt)</td>
-	              <td nowrap="nowrap">$format.formatNumber(2,$!accloan.loanAmt)</td>
+	              <td nowrap="nowrap">$format.formatNumber(2,$!accloan.loanBalance)</td>
 	              <td nowrap="nowrap">$format.formatNumber(2,$!accloan.intAccum)</td>
 	              <td nowrap="nowrap">$!accloan.qixiDate</td>
+	              <td nowrap="nowrap">$!accloan.distrDate</td>
 	              <td nowrap="nowrap">#dictVal("LOAN_STATUS", $!accloan.accStatus)</td>
 	              <td nowrap="nowrap">$format.formatNumber(2,$!accloan.overdueMoney)</td>
 	              <td nowrap="nowrap">$!accloan.overdue</td>
+	              <td nowrap="nowrap">$format.formatNumber(2,$!accloan.overdueBalance)</td>
+	              <td nowrap="nowrap">$!accloan.overdueDayCnt</td>
 	            </tr>
             #end
           </table>
         </div>
       </div>		
         <div class="pagebar">	
+       #parse ("common/pagination.htm")		
         <div class="clear"></div>
       </div>
     </div>

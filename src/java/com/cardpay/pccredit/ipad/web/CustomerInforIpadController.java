@@ -43,7 +43,7 @@ public class CustomerInforIpadController extends BaseController{
 
 	@ResponseBody
 	@RequestMapping(value = "/ipad/customerInfor/insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public String insert(@ModelAttribute CustomerInforForm customerinfoForm, HttpServletRequest request) {
 		Map<String,Object> map = new LinkedHashMap<String,Object>();
 		CustomerInfor customerInfor = customerinfoForm.createModel(CustomerInfor.class);
@@ -74,7 +74,7 @@ public class CustomerInforIpadController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/ipad/customerInfor/getCustomer.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public String getCustomerInforByUserId(HttpServletRequest request) {
 		Map<String,Object> map = new LinkedHashMap<String,Object>();
 		String userId = request.getParameter("userId");

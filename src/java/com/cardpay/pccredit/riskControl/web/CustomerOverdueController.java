@@ -58,7 +58,7 @@ public class CustomerOverdueController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute CustomerOverdueFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -79,7 +79,6 @@ public class CustomerOverdueController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.COLLECTIONTRANSFER)
 	public AbstractModelAndView change(HttpServletRequest request) {
 		String customerId = RequestHelper.getStringValue(request, ID);
 		if (StringUtils.isNotEmpty(customerId)) {

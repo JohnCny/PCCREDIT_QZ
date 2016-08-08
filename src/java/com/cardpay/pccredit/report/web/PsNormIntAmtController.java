@@ -3,6 +3,7 @@ package com.cardpay.pccredit.report.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.afterloan.model.AfterLoaninfo;
+import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.report.filter.StatisticalFilter;
 import com.cardpay.pccredit.report.model.AccLoanInfo;
@@ -37,6 +39,7 @@ import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
 import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.security.LoginManager;
+import com.wicresoft.jrad.modules.privilege.model.User;
 import com.wicresoft.util.date.DateHelper;
 import com.wicresoft.util.spring.Beans;
 import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
@@ -51,6 +54,8 @@ public class PsNormIntAmtController extends BaseController{
 	
 	@Autowired
 	private AferAccLoanService aferAccLoanService;
+	@Autowired
+	private IntoPiecesService intoPiecesService;
 	
 	private static final Logger logger = Logger.getLogger(PsNormIntAmtController.class);
 	/**
@@ -69,7 +74,10 @@ public class PsNormIntAmtController extends BaseController{
 		}
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
-		filter.setUserId(userId);
+
+		List<String> userIds = new ArrayList<String>();
+		userIds.add(userId);
+		filter.setUserIds(userIds);
 		
 		QueryResult<PsNormIntAmt> accloanList = aferAccLoanService.getPsNormIntAmt(filter);
 		JRadPagedQueryResult<PsNormIntAmt> pagedResult = new JRadPagedQueryResult<PsNormIntAmt>(filter, accloanList);
@@ -98,7 +106,60 @@ public class PsNormIntAmtController extends BaseController{
 		}
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
-		filter.setUserId(userId);
+		List<String> userIds = new ArrayList<String>();
+		userIds.add(userId);
+		filter.setUserIds(userIds);
+		
+		List<PsNormIntAmt> list = aferAccLoanService.getPsNormIntAmtList(filter);
+		create(list,response,filter);
+		//下载完成，返回页面
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "browseAll.page", method = { RequestMethod.GET })
+	public AbstractModelAndView browseAll(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request) {
+		filter.setRequest(request);
+		if(filter.getEndDate()==null){
+			filter.setEndDate(new Date());
+		}
+		User user = (User)Beans.get(LoginManager.class).getLoggedInUser(request);
+		
+		filter.setUserIds(intoPiecesService.getQueryUserIds(filter));
+		
+		QueryResult<PsNormIntAmt> accloanList = aferAccLoanService.getPsNormIntAmt(filter);
+		JRadPagedQueryResult<PsNormIntAmt> pagedResult = new JRadPagedQueryResult<PsNormIntAmt>(filter, accloanList);
+		JRadModelAndView mv = new JRadModelAndView("/report/psNormIntAmt/manager_browse_all", request);
+		mv.addObject(PAGED_RESULT, pagedResult);
+		
+		mv.addObject("filter", filter);
+		
+		intoPiecesService.levelMenu(mv, user,filter);
+		return mv;
+		
+	}
+	
+	/**
+	 * 贷款借据计息清单导出
+	 * 
+	 * @param filter
+	 * @param request
+	 * @param excel
+	 * @return
+	 * @throws IOException 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "exportAll.page", method = { RequestMethod.GET })
+	public void exportAll(@ModelAttribute OClpmAccLoanFilter filter, HttpServletRequest request,HttpServletResponse response) {
+		JRadModelAndView mv;
+		filter.setRequest(request);
+		if(filter.getEndDate()==null){
+			filter.setEndDate(new Date());
+		}
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+
+		filter.setUserIds(intoPiecesService.getQueryUserIds(filter));
+		
 		List<PsNormIntAmt> list = aferAccLoanService.getPsNormIntAmtList(filter);
 		create(list,response,filter);
 		//下载完成，返回页面

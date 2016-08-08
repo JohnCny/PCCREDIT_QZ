@@ -32,12 +32,12 @@
   <div class="content_main">
     <div class="contentinner">
       <div class="place">
-        <div class="title">(贷生活10万)</div>
+        <div class="title">支行行长(贷生活中心审批)</div>
       </div>
       <div class="inquiry">
        <div class="search_tag">进件查询</div>
         <div class="search">
-          <form id="submitForm" action="${contextPath}/intopieces/intopiecesonelevel/onelevel.page">
+          <form id="submitForm" action="${contextPath}/intopieces/intopiecesdshlevel2/browse.page">
           <ul>
           	  <li>
                 <span>客户名称：<input type="text" name="chineseName" value="$!result.filter.chineseName" /></span>
@@ -116,7 +116,7 @@
           </table>
         </div>
          <div class="dialog">
-			<form id="checkForm1" class="dialog-box" action="${contextPath}/intopieces/intopiecesonelevel/returnAppln.json">
+			<form id="checkForm1" class="dialog-box" action="${contextPath}/intopieces/intopiecesapprove/returnAppln.json">
 				<input type="hidden" name="appId" id="appId" value="${appId}" />
 				<div class="top">
 					退件 <span onclick="$('.dialog').hide();"></span>
@@ -163,8 +163,8 @@
 		<a id="id_reject_button" class="btn_g" title="拒件">拒件</a>
         <a id="id_return_to_cu_button" class="btn_g" href="javascript:void(0);"  title="补充上会">补充上会</a>-->
         <!--  <a id="id_chureject_button" class="btn_g" title="初审拒件记录">初审拒件记录</a>-->
-         <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> -->
-          <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>
+         <!-- <a class="btn_g" id ="id_report_button" title="调查模板" >调查模板</a> 
+          <a class="btn_g" id ="" title="调查模板" onclick="startExcel()">调查模板</a>-->
         </div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -233,6 +233,7 @@
 					Dialog.message("请选择一行!");
 				}
 		    });
+		
 		$('.dialog').hide();
 		$("#id_return_button").click(function() {
 			$('.dialog').show();
@@ -246,7 +247,7 @@
 				var rowId = getCurrentRowId().split("@")[1];
 				var appId = getCurrentRowId().split("@")[0];
 				if(rowId!=null){
-					var url="${contextPath}/intopieces/intopiecesonelevel/iframe_approve.page?id="+rowId+"&appId="+appId;
+					var url="${contextPath}/intopieces/intopiecesdshlevel2/iframe_approve.page?id="+rowId+"&appId="+appId;
 					window.location.href = url;
 				}
 			}else{
@@ -280,7 +281,6 @@
 		window.clearInterval(idTmr);
 		CollectGarbage();
 	}
-	
 </script>
 
 </body>

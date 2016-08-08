@@ -117,47 +117,6 @@
 
           </table>
         </div>
-        <div class="dialog">
-					<form id="checkForm" class="dialog-box" action="${contextPath}/intopieces/intopiecesrecieve/checkDo.json">
-						<input type="hidden" name="applicationId" id="applicationId" value="" />
-						<div class="top">
-							三性检测 <span onclick="$('.dialog').hide();"></span>
-						</div>
-						<div class="content">
-							<p>
-								材料正确性:<font color="red">*</font> <label><input
-									type="radio" name="reality" value="1" checked />通过</label> <label><input
-									type="radio" name="reality" value="2" />不通过</label>
-							</p>
-							<p>
-								材料完整性:<font color="red">*</font> <label><input
-									type="radio" name="complete" value="1" checked />通过</label> <label><input
-									type="radio" name="complete" value="2" />不通过</label>
-							</p>
-							<p>
-								材料合规性:<font color="red">*</font> <label><input
-									type="radio" name="standard" value="1" checked />通过</label> <label><input
-									type="radio" name="standard" value="2" />不通过</label>
-							</p>
-							<p>
-								是&nbsp;否&nbsp;拒&nbsp;件:&nbsp; <label><input
-									type="radio" name="reject" value="1" onclick="$('#jjyy').removeAttr('readonly')" />是</label>&nbsp;&nbsp;&nbsp; <label><input
-									type="radio" name="reject" value="2" onclick="$('#jjyy').attr('readonly','readonly')" checked />否</label>
-							</p>
-							<p>
-								拒&nbsp;件&nbsp;原&nbsp;因:&nbsp;
-									<textarea id="jjyy" name="jjyy" rows="2" style="width:200px;" readonly></textarea>
-							</p>
-							
-						</div>
-						<div class="bottom">
-							<input id="id_in_button" type="button" class="btn btn-submit" value="通过" /> <input
-								id="id_out_button" type="button" class="btn btn-submit" value="退回" /><input
-								id="id_reject_button" type="button" class="btn btn-submit" value="拒件" /><input
-								 type="button" class="btn btn-submit" value="关闭" onclick="$('.dialog').hide();"/>
-						</div>
-					</form>
-				</div>
       </div>
       <div class="pagebar">
         <div class="controlbtn">
@@ -228,87 +187,6 @@
 			}
 	    });
 		
-		$('.dialog').hide();
-		$("#id_apply_button").click(function() {
-			if ($(".checkbox :checked").length != 1) {
-				Dialog.message("请选择一条记录!");
-				return;
-			}
-			var id = null;
-			$("input[name='checkbox']:checked").each(function() {
-				id = $(this).val().split("@")[0];
-			});
-			$("#applicationId").val(id);
-			$('.dialog').show();
-      });
-		
-		//通过
-		$("#id_in_button").click(function() {
-			Dialog.confirm("确定提交吗？", "提示",
-                function() {
-					$('.dialog').hide();
-					#set ($formName = "'#checkForm'")
-					var formjson = $($formName).serialize();
-					 $.get($($formName).attr("action"), formjson, function(data, textStatus, jqXhr) {
-			            if (data.success) {
-			            	Dialog.message("保存成功!");	
-			            	var url = "${contextPath}/intopieces/intopiecesrecieve/chushen.page";
-			                window.location.href = url;
-			            }
-			          });
-                });
-		});
-		//退回
-		$("#id_out_button").click(function() {
-			Dialog.confirm("确定提交吗？", "提示",
-                function() {
-					$('.dialog').hide();
-					#set ($formName = "'#checkForm'")
-					var formjson = $($formName).serialize();
-					 $.get("${contextPath}/intopieces/intopiecesrecieve/checkDoNot.json", formjson, function(data, textStatus, jqXhr) {
-			            if (data.success) {
-			            	Dialog.message("保存成功!");	
-			            	window.location.reload(true);
-			            }
-			          });
-			});
-		});
-		
-		//拒件
-		$("#id_reject_button").click(function() {
-			var remark = $("#jjyy").val();
-			if(remark==""){
-				Dialog.message("请输入拒件原因!");	
-				return;
-			}
-			Dialog.confirm("确定提交吗？", "提示",
-	                function() {
-					$('.dialog').hide();
-					#set ($formName = "'#checkForm'")
-					var formjson = $($formName).serialize();
-					 $.get("${contextPath}/intopieces/intopiecesrecieve/reject.json", formjson, function(data, textStatus, jqXhr) {
-			            if (data.success) {
-			            	Dialog.message("保存成功!");	
-			            	window.location.reload(true);
-			            }
-			          });
-			});
-		});
-		
-		//查看申请信息
-		$("#id_display_button").click(function() {
-			if ($(".checkbox :checked").length == 1) {
-				var rowId = getCurrentRowId().split("@")[0];
-				var customerId = getCurrentRowId().split("@")[1];
-				if(rowId!=null){
-					var url="${contextPath}/intopieces/circle/display.page?id="+customerId;
-					window.location.href = url;
-				}
-			}else{
-				Dialog.message("请选择一条记录!");
-			}
-	    });
-		
 		$("#id_display_button").click(function() {
 			if ($(".checkbox :checked").length == 1) {
 				var rowId = getCurrentRowId().split("@")[1];
@@ -330,7 +208,7 @@
 		});
 		if(id!=null){
 			var url = contextPath+"/intopieces/intopiecesquery/findApproveHistoryById.page?id="+id+"&ifHideUser="+ifHideUser+"&dataType=application";
-			Dialog.table(url, "查看审批历史", "get", null, 800, 400);
+			Dialog.tablePage(url, "查看审批历史", "get", null, 700,800);
 		}else{
 			Dialog.message("请选择要被查看的进件!");
 		}

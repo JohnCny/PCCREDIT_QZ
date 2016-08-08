@@ -65,7 +65,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "browse.page", method = { RequestMethod.GET })
-	@JRadOperation(JRadOperation.BROWSE)
+	
 	public AbstractModelAndView browse(@ModelAttribute InformationOfficerFilter filter, HttpServletRequest request) {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
@@ -86,7 +86,6 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "display.page")
-	@JRadOperation(JRadOperation.RELEVANCECUSTOMER)
 	public AbstractModelAndView display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/information_officer/information_officer_display", request);
 		String informationOfficerId = RequestHelper.getStringValue(request, ID);
@@ -112,7 +111,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "create.page")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public AbstractModelAndView create(HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/manager/information_officer/information_officer_create", request);
 		return mv;
@@ -124,7 +123,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "changeInfor.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView changeInfor(HttpServletRequest request) {        
 		JRadModelAndView mv = new JRadModelAndView("/manager/information_officer/information_officer_changeInfor", request);
 		String id = RequestHelper.getStringValue(request, ID);
@@ -142,7 +141,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "updateInfor.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap updateInfor(@ModelAttribute InformationOfficerForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -165,7 +164,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "insert.json")
-	@JRadOperation(JRadOperation.CREATE)
+	
 	public JRadReturnMap insert(@ModelAttribute InformationOfficerForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -199,7 +198,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "change.page")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public AbstractModelAndView change(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/information_officer/information_officer_change", request);
 		String messengerId = RequestHelper.getStringValue(request, ID);
@@ -224,7 +223,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "update.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap update(@ModelAttribute ManagerInformationClientForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
@@ -256,7 +255,6 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "evaluate.page")
-	@JRadOperation(JRadOperation.ASSESS)
 	public AbstractModelAndView evaluate(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/manager/information_officer/information_officer_evaluate", request);
 		String messengerId = RequestHelper.getStringValue(request, ID);
@@ -274,7 +272,7 @@ public class InformationOfficerController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "evaluate.json")
-	@JRadOperation(JRadOperation.CHANGE)
+	
 	public JRadReturnMap evaluate(@ModelAttribute InformationOfficerEvaluateForm form, HttpServletRequest request) {
 		JRadReturnMap returnMap = WebRequestHelper.requestValidation(getModuleName(), form);
 		if (returnMap.isSuccess()) {
