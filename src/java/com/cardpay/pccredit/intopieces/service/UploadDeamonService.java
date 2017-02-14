@@ -29,7 +29,7 @@ public class UploadDeamonService{
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutorUpload;
 	
-	private int MAX_THREAD = 5;//最大线程数量
+	private int MAX_THREAD = 3;//最大线程数量
 	
 	//上传
 	public void doUpload(){

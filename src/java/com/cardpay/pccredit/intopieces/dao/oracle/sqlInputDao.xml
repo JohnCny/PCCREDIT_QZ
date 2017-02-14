@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.intopieces.dao.SqlInputDao" >
+    <resultMap id="ResultMap" type="com.cardpay.pccredit.intopieces.model.SqlInputPojo">
+    	<result property="rowindex" column="rowindex" />
+        <result property="owner" column="owner" />
+		<result property="tableName" column="table_name" />
+		<result property="tablespaceName" column="tablespace_name" />
+	</resultMap>
+	
+	<select id="getTableNames" resultMap="ResultMap">
+		 select ROWNUM as rowindex,owner,table_name,tablespace_name from all_tables where owner = 'PCCREDIT_QZ'
+	</select>
+	
+</mapper>

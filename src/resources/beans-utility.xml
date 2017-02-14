@@ -486,11 +486,11 @@
 				<ref bean="addDownLevelAdjustmentTigger"/>
 				<ref bean="addManagerAssmentScoreTigger"/> 
 				<ref bean="addManagerLevelAdjustmentTigger"/>
+				-->
 				<ref bean="uploadJobTigger"/>
 				<ref bean="updateJobTigger"/>
 				<ref bean="uploadPspCheckJobTigger"/>
 				<ref bean="updatePspCheckJobTigger"/>
-				-->
             </list>
         </property>
     </bean>
@@ -518,6 +518,12 @@
 	    <property name="corePoolSize" value="5"></property>
 	    <property name="keepAliveSeconds" value="300"></property>
 	    <property name="maxPoolSize" value="5"></property>
+	    <property name="queueCapacity" value="25"></property>
+	</bean>
+	<bean id="dmpDB" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	    <property name="corePoolSize" value="1"></property>
+	    <property name="keepAliveSeconds" value="300"></property>
+	    <property name="maxPoolSize" value="1"></property>
 	    <property name="queueCapacity" value="25"></property>
 	</bean>
 </beans>

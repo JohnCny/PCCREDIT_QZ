@@ -727,13 +727,32 @@
 		<if test="chineseName!=null and chineseName!=''">
 			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
 		</if>
-
+		<if test="nodeName!=null and nodeName!=''">
+			and N.node_name=#{nodeName}
+		</if>
 		<if test="filterOrgId!=null and filterOrgId!=''">
 			and exists (select 1 from user_org where user_id =
 			#{loginId} and org_id = (select org_id from user_org where user_id =
 			u.user_id))
 		</if>
-		
+		<if test="filterAmount20!=null and filterAmount20!=''">
+			<if test='filterAmount20=="1"'>
+				and (
+						(circle.CONTRACT_AMT is not null and to_number(circle.CONTRACT_AMT) <![CDATA[<= ]]>200000)
+						or
+						circle.CONTRACT_AMT is null
+					)
+			</if>
+		</if>
+		<if test="filterAmount20Above!=null and filterAmount20Above!=''">
+			<if test='filterAmount20Above=="1"'>
+				and (
+						(circle.CONTRACT_AMT is not null and to_number(circle.CONTRACT_AMT) > 200000)
+						or
+						circle.CONTRACT_AMT is null
+					)
+			</if>
+		</if>
 		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
 			<if test='filterTeamLeader=="1"'>
 				and u.user_id in (
@@ -792,6 +811,9 @@
 			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
 		</if>
 		
+		<if test="nodeName!=null and nodeName!=''">
+			and N.node_name=#{nodeName}
+		</if>
 		<![CDATA[		
 				) ROW_
 			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -854,7 +876,27 @@
 			#{loginId} and org_id = (select org_id from user_org where user_id =
 			u.user_id))
 		</if>
-
+		<if test="filterAmount20!=null and filterAmount20!=''">
+			<if test='filterAmount20=="1"'>
+				and (
+						(circle.CONTRACT_AMT is not null and to_number(circle.CONTRACT_AMT) <![CDATA[<= ]]>200000)
+						or
+						circle.CONTRACT_AMT is null
+					)
+			</if>
+		</if>
+		<if test="filterAmount20Above!=null and filterAmount20Above!=''">
+			<if test='filterAmount20Above=="1"'>
+				and (
+						(circle.CONTRACT_AMT is not null and to_number(circle.CONTRACT_AMT) > 200000)
+						or
+						circle.CONTRACT_AMT is null
+					)
+			</if>
+		</if>
+		<if test="nodeName!=null and nodeName!=''">
+			and N.node_name=#{nodeName}
+		</if>
 		<if test="filterTeamLeader!=null and filterTeamLeader!=''">
 			<if test='filterTeamLeader=="1"'>
 				and u.user_id in (
@@ -911,6 +953,10 @@
 		</if>
 		<if test="chineseName!=null and chineseName!=''">
 			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		
+		<if test="nodeName!=null and nodeName!=''">
+			and N.node_name=#{nodeName}
 		</if>
 		)
 	</select>

@@ -9,7 +9,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,6 +30,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cardpay.pccredit.intopieces.dao.SqlInputDao;
+import com.cardpay.pccredit.intopieces.model.SqlInputPojo;
 import com.cardpay.pccredit.report.filter.OClpmAccLoanFilter;
 import com.cardpay.pccredit.report.model.AccLoanInfo;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
@@ -36,28 +42,29 @@ public class SqlInputService {
 	Logger logger = Logger.getLogger(SqlInputService.class);
 	@Autowired
 	private CommonDao commonDao;
+	@Autowired
+	private SqlInputDao sqlInputDao;
 
 	/*
 	 * /* 执行sql语句
 	 */
-	public boolean changeDatabase(String sql) {
-		boolean flag = false;
+	public int changeDatabase(String sql) {
 		Connection conn = commonDao.getSqlSession().getConnection();
 		Statement st = null;
 
 		if (conn == null) {
 			logger.error("获取数据库连接失败 ！");
-			return false;
+			return 0;
 		}
 		try {
 			st = conn.createStatement();
 			st.execute(sql);
 			int num = st.getUpdateCount();
-			flag = true;
 			logger.info("更新记录数 ： " + num);
+			return num;
 		} catch (SQLException e) {
-
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(),e);
+			return 0;
 		} finally {
 			try {
 				if (st != null) {
@@ -68,7 +75,6 @@ public class SqlInputService {
 				Log.error(e1.getMessage());
 			}
 		}
-		return flag;
 	}
 
 	/** 
@@ -214,5 +220,87 @@ public class SqlInputService {
             }
         } 
 		
+	}
+	
+	public List<SqlInputPojo> getTableNames(){
+		return sqlInputDao.getTableNames();
+	}
+
+	public void executeQuery(String sql,List result) {
+		Connection conn = commonDao.getSqlSession().getConnection();
+		Statement st = null;
+		List<String> metaList = new ArrayList<String>();
+		
+		if (conn == null) {
+			logger.error("获取数据库连接失败 ！");
+		}
+		try {
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			ResultSetMetaData metaData = rs.getMetaData();
+			int colCount = metaData.getColumnCount();
+			for (int i = 0; i < colCount; i++) {
+				metaList.add(metaData.getColumnName(i+1));
+			}
+			result.add(metaList);
+			
+			while (rs.next()) {
+				Map<String,String> map = new HashMap<String, String>();
+				for (int i = 0; i < colCount; i++) {
+					String colLabel = metaData.getColumnName(i+1);
+					String colValue = rs.getString(colLabel);
+					map.put(colLabel, colValue);
+				}
+				result.add(map);
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(),e);
+		} finally {
+			try {
+				if (st != null) {
+					st.close();
+				}
+
+			} catch (SQLException e1) {
+				Log.error(e1.getMessage());
+			}
+		}
+	}
+	
+	/**
+	 * 返回数据的总条数
+	 * @param sql
+	 * @return
+	 */
+	public int getTotalCount(String sql){
+		sql = "select count(1) from (" + sql + ")";
+		int recordCount = 0;
+		Connection conn = commonDao.getSqlSession().getConnection();
+		Statement st = null;
+
+		if (conn == null) {
+			logger.error("获取数据库连接失败 ！");
+		}
+		try {
+			st = conn.createStatement();
+			ResultSet resultSet = st.executeQuery(sql);
+			if (resultSet.next()) 
+			{
+				recordCount = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(),e);
+		} finally {
+			try {
+				if (st != null) {
+					st.close();
+				}
+
+			} catch (SQLException e1) {
+				Log.error(e1.getMessage());
+			}
+		}
+
+		return recordCount;
 	}
 }

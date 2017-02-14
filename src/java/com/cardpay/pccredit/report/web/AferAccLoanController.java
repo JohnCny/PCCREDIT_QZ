@@ -235,42 +235,39 @@ public class AferAccLoanController extends BaseController{
 		cell.setCellValue("借据号");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 5);
-		cell.setCellValue("存款账户");
-		cell.setCellStyle(style);
-		cell = row.createCell((short) 6);
 		cell.setCellValue("账户名称");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 7);
+		cell = row.createCell((short) 6);
 		cell.setCellValue("利率");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 8);
+		cell = row.createCell((short) 7);
 		cell.setCellValue("授信日期");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 9);
+		cell = row.createCell((short) 8);
 		cell.setCellValue("授信到期日");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 10);
+		cell = row.createCell((short) 9);
 		cell.setCellValue("授信金额");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 11);
+		cell = row.createCell((short) 10);
 		cell.setCellValue("贷款金额");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 12);
+		cell = row.createCell((short) 11);
 		cell.setCellValue("贷款余额");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 13);
+		cell = row.createCell((short) 12);
 		cell.setCellValue("欠息总额");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 14);
+		cell = row.createCell((short) 13);
 		cell.setCellValue("贷款日期");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 15);
+		cell = row.createCell((short) 14);
 		cell.setCellValue("贷款到期日");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 16);
+		cell = row.createCell((short) 15);
 		cell.setCellValue("结清日期");
 		cell.setCellStyle(style);
-		cell = row.createCell((short) 17);
+		cell = row.createCell((short) 16);
 		cell.setCellValue("贷款状态");
 		cell.setCellStyle(style);
 		
@@ -285,44 +282,43 @@ public class AferAccLoanController extends BaseController{
 			row.createCell((short) 2).setCellValue(loan.getProductName());
 			row.createCell((short) 3).setCellValue(loan.getOrgName());
 			row.createCell((short) 4).setCellValue(loan.getBillNo());
-			row.createCell((short) 5).setCellValue(loan.getAcctNo());
-			row.createCell((short) 6).setCellValue(loan.getAcctName());
-			row.createCell((short) 7).setCellValue(df.format(loan.getRealityIrY()));
-			row.createCell((short) 8).setCellValue(loan.getContStartDate());
-			row.createCell((short) 9).setCellValue(loan.getContEndDate());
-			row.createCell((short) 10).setCellValue(df1.format(loan.getContAmt()));
-			row.createCell((short) 11).setCellValue(df1.format(loan.getLoanAmt()));
-			row.createCell((short) 12).setCellValue(df1.format(loan.getLoanBalance()));
-			row.createCell((short) 13).setCellValue(loan.getIntAccum()==null ? 0:loan.getIntAccum());
-			row.createCell((short) 14).setCellValue(loan.getQixiDate());
-			row.createCell((short) 15).setCellValue(loan.getDistrDate());
-			row.createCell((short) 16).setCellValue(loan.getSettlDate());
+			row.createCell((short) 5).setCellValue(loan.getAcctName());
+			row.createCell((short) 6).setCellValue(df.format(loan.getRealityIrY()));
+			row.createCell((short) 7).setCellValue(loan.getContStartDate());
+			row.createCell((short) 8).setCellValue(loan.getContEndDate());
+			row.createCell((short) 9).setCellValue(df1.format(loan.getContAmt()));
+			row.createCell((short) 10).setCellValue(df1.format(loan.getLoanAmt()));
+			row.createCell((short) 11).setCellValue(df1.format(loan.getLoanBalance()));
+			row.createCell((short) 12).setCellValue(loan.getIntAccum()==null ? 0:loan.getIntAccum());
+			row.createCell((short) 13).setCellValue(loan.getQixiDate());
+			row.createCell((short) 14).setCellValue(loan.getDistrDate());
+			row.createCell((short) 15).setCellValue(loan.getSettlDate());
 			if("0".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("出帐未确认");
+				row.createCell((short) 16).setCellValue("出帐未确认");
 			}else if("1".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("正常");
+				row.createCell((short) 16).setCellValue("正常");
 			}else if("2".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("正回购卖出");
+				row.createCell((short) 16).setCellValue("正回购卖出");
 			}else if("3".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("逆回购买入");
+				row.createCell((short) 16).setCellValue("逆回购买入");
 			}else if("4".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("逆回购到期");
+				row.createCell((short) 16).setCellValue("逆回购到期");
 			}else if("5".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("正回购到期");
+				row.createCell((short) 16).setCellValue("正回购到期");
 			}else if("6".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("垫款");
+				row.createCell((short) 16).setCellValue("垫款");
 			}else if("7".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("已扣款");
+				row.createCell((short) 16).setCellValue("已扣款");
 			}else if("8".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("退回未用");
+				row.createCell((short) 16).setCellValue("退回未用");
 			}
 			else if("9".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("结清/核销");	
+				row.createCell((short) 16).setCellValue("结清/核销");	
 			}else if("10".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("闭卷");	
+				row.createCell((short) 16).setCellValue("闭卷");	
 			}
 			else if("11".equals(loan.getAccStatus())){
-				row.createCell((short) 17).setCellValue("撤销");
+				row.createCell((short) 16).setCellValue("撤销");
 			}
 		}
 		String fileName = "贷款借据清单";

@@ -129,20 +129,24 @@
 	<select id="getAfterAccLoan" resultMap="ResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
 	    
-	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
 left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
 where CAI.STATUS = 'approved')
 
 	    SELECT * FROM
 			(SELECT ROW_.*,ROWNUM row_index
 			FROM (
-	    select distinct su.display_name as managerId,
-       		sd.name as orgName,
+	    select 
+			circle.managerId,
+	circle.orgName,
        		loan.bill_no as billNo,
-       		acct.acct_no as acctNo,
-       		acct.acct_name as acctName,
+	  		circle.chinese_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
        		circle.START_DATE as contStartDate,
        		circle.END_DATE as contEndDate,
@@ -155,29 +159,26 @@ where CAI.STATUS = 'approved')
        		loan.ACC_STATUS as accStatus,
        		circle.PRODUCT_ID as productId,
        		circle.product_name as productName,
-       		circle.client_name as clientName
+       		circle.chinese_name as clientName
   		from O_CLPM_ACC_LOAN_HISTORY loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		left join sys_user su on circle.user_id = su.id
-  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
-  		and acct.acct_attr = '03'
   		and  (loan.prd_id='100084' or loan.prd_id='100085')
   		and to_date(loan.data_dt,'yyyy-mm-dd') = #{endDate}
   		<if test="userId != null and userId != '' ">
-			and circle.user_id = #{userId}
+			and circle.manager_id = #{userId}
  		</if>
  		<if test="orgId != null and orgId != '' ">
 			and circle.regist_org_no = #{orgId}
  		</if>
  		<if test="clientName != null and clientName != '' ">
-			and circle.client_name = #{clientName}
+			and circle.chinese_name = #{clientName}
  		</if>
  		<if test="productId != null and productId != '' ">
 			and circle.PRODUCT_ID = #{productId}
  		</if>
+order by circle.managerId
  		<![CDATA[		
 				) ROW_
 			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -188,18 +189,23 @@ where CAI.STATUS = 'approved')
 	<select id="getAfterAccLoanCount" resultType="int"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
  		
-	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
 where CAI.STATUS = 'approved')
 
  		SELECT count(*)
 			FROM (
-	    select distinct su.display_name as managerId,
-       		sd.name as orgName,
+	    select 
+			circle.managerId,
+	circle.orgName,
        		loan.bill_no as billNo,
-       		acct.acct_no as acctNo,
-       		acct.acct_name as acctName,
+	  		circle.chinese_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
        		circle.START_DATE as contStartDate,
        		circle.END_DATE as contEndDate,
@@ -209,47 +215,51 @@ where CAI.STATUS = 'approved')
        		loan.DISTR_DATE as qixiDate,
        		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
-       		circle.client_name as clientName
+       		circle.chinese_name as clientName
   		from O_CLPM_ACC_LOAN_history loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		left join sys_user su on circle.user_id = su.id
-  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
-  		and acct.acct_attr = '03'
   		and  (loan.prd_id='100084' or loan.prd_id='100085')
   		and to_date(loan.data_dt,'yyyy-mm-dd') = #{endDate}
   		<if test="userId != null and userId != '' ">
-			and circle.user_id = #{userId}
+			and circle.manager_id = #{userId}
  		</if>
  		<if test="orgId != null and orgId != '' ">
 			and circle.regist_org_no = #{orgId}
  		</if>
  		<if test="clientName != null and clientName != '' ">
-			and circle.client_name = #{clientName}
+			and circle.chinese_name = #{clientName}
  		</if>
  		<if test="productId != null and productId != '' ">
 			and circle.PRODUCT_ID = #{productId}
  		</if>
+
+order by circle.managerId
  		) ROW_
    </select>		
 	<select id="getLoanOverdue" resultMap="OverResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
  		
-	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
 where CAI.STATUS = 'approved')
 	    
 	    SELECT * FROM
 			(SELECT ROW_.*,ROWNUM row_index
 			FROM (
-	    select distinct 
-	    	su.display_name as managerId,
-       		sd.name as orgName,
+	    select 
+			circle.managerId,
+	circle.orgName,
        		loan.bill_no as billNo,
-       		acct.acct_name as acctName,
+       		
+	  		circle.chinese_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
        		circle.START_DATE as contStartDate,
        		circle.END_DATE as contEndDate,
@@ -259,32 +269,30 @@ where CAI.STATUS = 'approved')
        		loan.DISTR_DATE as qixiDate,
        		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
-       		circle.client_name as clientName,
+       		circle.chinese_name as clientName,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
        		loan.overdue as overdue,
        		loan.overdue_balance as overdueBalance,
        		to_date(loan.DATA_DT,'yyyy-mm-dd')-to_date(nvl(loan.OVERDUE_DATE,loan.DATA_DT),'yyyy-mm-dd') as overdueDayCnt
   		from O_CLPM_ACC_LOAN_HISTORY loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		left join sys_user su on circle.user_id = su.id
-  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
-  		and acct.acct_attr = '03'
   		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
   		and loan.prd_id in('100084','100085')
   		and OVERDUE_BALANCE >0
   		and loan.CONT_NO in (select lmt_cont_no from O_CCH_LM_LMT_CONT_T)
       <if test="userId != null and userId != '' ">
-      and circle.user_id = #{userId}
-     </if>
+			and circle.manager_id = #{userId}
+ 		</if>
      <if test="orgId != null and orgId != '' ">
       and circle.regist_org_no = #{orgId}
      </if>
      <if test="clientName != null and clientName != '' ">
-      and circle.client_name = #{clientName}
+      and circle.chinese_name = #{clientName}
      </if>
+
+order by circle.managerId
      <![CDATA[		
 				) ROW_
 			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -294,18 +302,24 @@ where CAI.STATUS = 'approved')
  		<select id="getLoanOverdueCount" resultType="int"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
  		
-	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
 where CAI.STATUS = 'approved')
 	    
 	    SELECT count(*)
 			FROM (
-	    select distinct 
-	    	su.display_name as managerId,
-       		sd.name as orgName,
+	    select
+			circle.managerId,
+	circle.orgName,
        		loan.bill_no as billNo,
-       		acct.acct_name as acctName,
+       		
+	  		circle.chinese_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
        		circle.START_DATE as contStartDate,
        		circle.END_DATE as contEndDate,
@@ -315,47 +329,51 @@ where CAI.STATUS = 'approved')
        		loan.DISTR_DATE as qixiDate,
        		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
-       		circle.client_name as clientName,
+       		circle.chinese_name as clientName,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
        		loan.overdue as overdue,
        		loan.overdue_balance as overdueBalance,
        		to_date(loan.DATA_DT,'yyyy-mm-dd')-to_date(nvl(loan.OVERDUE_DATE,loan.DATA_DT),'yyyy-mm-dd') as overdueDayCnt
   		from O_CLPM_ACC_LOAN_HISTORY loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		left join sys_user su on circle.user_id = su.id
-  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
-  		and acct.acct_attr = '03'
   		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
   		and loan.prd_id in('100084','100085')
   		and OVERDUE_BALANCE >0
   		and loan.CONT_NO in (select lmt_cont_no from O_CCH_LM_LMT_CONT_T)
       <if test="userId != null and userId != '' ">
-      and circle.user_id = #{userId}
-     </if>
+			and circle.manager_id = #{userId}
+ 		</if>
      <if test="orgId != null and orgId != '' ">
       and circle.regist_org_no = #{orgId}
      </if>
      <if test="clientName != null and clientName != '' ">
-      and circle.client_name = #{clientName}
+      and circle.chinese_name = #{clientName}
      </if>
+
+order by circle.managerId
      ) ROW_
  	</select>
  	<select id="getLoanOverdueAll" resultMap="OverResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
  		
-	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
 where CAI.STATUS = 'approved')
 	    
-	    select distinct 
-	    	su.display_name as managerId,
-       		sd.name as orgName,
+	    select 
+			circle.managerId,
+	circle.orgName,
        		loan.bill_no as billNo,
-       		acct.acct_name as acctName,
+       		
+	  		circle.chinese_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
        		circle.START_DATE as contStartDate,
        		circle.END_DATE as contEndDate,
@@ -365,32 +383,30 @@ where CAI.STATUS = 'approved')
        		loan.DISTR_DATE as qixiDate,
        		loan.ORI_END_DATE as distrDate,
        		loan.ACC_STATUS as accStatus,
-       		circle.client_name as clientName,
+       		circle.chinese_name as clientName,
        		(loan.Rec_Int_Accum - loan.recv_int_accum) as overdueMoney,
        		loan.overdue as overdue,
        		loan.overdue_balance as overdueBalance,
        		to_date(loan.DATA_DT,'yyyy-mm-dd')-to_date(nvl(loan.OVERDUE_DATE,loan.DATA_DT),'yyyy-mm-dd') as overdueDayCnt
   		from O_CLPM_ACC_LOAN_HISTORY loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		left join sys_user su on circle.user_id = su.id
-  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
-  		and acct.acct_attr = '03'
   		and to_date(loan.DATA_DT,'yyyy-mm-dd') = #{endDate}
   		and loan.prd_id in('100084','100085')
   		and OVERDUE_BALANCE >0
   		and loan.CONT_NO in (select lmt_cont_no from O_CCH_LM_LMT_CONT_T)
       <if test="userId != null and userId != '' ">
-      and circle.user_id = #{userId}
-     </if>
+			and circle.manager_id = #{userId}
+ 		</if>
      <if test="orgId != null and orgId != '' ">
       and circle.regist_org_no = #{orgId}
      </if>
      <if test="clientName != null and clientName != '' ">
-      and circle.client_name = #{clientName}
+      and circle.chinese_name = #{clientName}
      </if>
+
+order by circle.managerId
  	</select>
  	
 	<select id="getAccLoanCollect" resultMap="CollectResultMap"
@@ -949,20 +965,24 @@ select t1.*,
  		
  		<select id="getAfterAccLoanAll" resultMap="ResultMap"
 			parameterType="com.cardpay.pccredit.report.filter.OClpmAccLoanFilter">
-                           with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name from CUSTOMER_APPLICATION_INFO cai 
+                           with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
 left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
 left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
 left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
 where CAI.STATUS = 'approved')
 
 	    SELECT ROW_.*,ROWNUM row_index
 			FROM (
 			
-	    select distinct su.display_name as managerId,
-       		sd.name as orgName,
+	    select
+circle.managerId,
+	circle.orgName,
        		loan.bill_no as billNo,
-       		acct.acct_no as acctNo,
-       		acct.acct_name as acctName,
+	  		circle.chinese_name as acctName,
        		loan.REALITY_IR_Y as realityIrY,
        		circle.START_DATE as contStartDate,
        		circle.END_DATE as contEndDate,
@@ -976,40 +996,39 @@ where CAI.STATUS = 'approved')
        		loan.ACC_STATUS as accStatus,
        		circle.PRODUCT_ID as product_id,
        		circle.product_name as productName,
-       		circle.client_name as clientName
+       		circle.chinese_name as clientName
   		from O_CLPM_ACC_LOAN_history loan
   		left join circle on loan.cont_no = circle.RET_CONTNO
-  		left join O_CLPM_IQP_CUS_ACCT acct on loan.cont_no = acct.cont_no
   		left join O_CLPM_CTR_LOAN_CONT cont on loan.cont_no = cont.cont_no
-  		left join sys_user su on circle.user_id = su.id
-  		left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
  	  where 1 = 1
-  		and acct.acct_attr = '03'
   		and (loan.prd_id='100084' or loan.prd_id='100085')
   		and to_date(loan.data_dt,'yyyy-mm-dd') = #{endDate}
   		<if test="userId != null and userId != '' ">
-			and circle.user_id = #{userId}
+			and circle.manager_id = #{userId}
  		</if>
  		<if test="orgId != null and orgId != '' ">
 			and circle.regist_org_no = #{orgId}
  		</if>
  		<if test="clientName != null and clientName != '' ">
-			and circle.client_name = #{clientName}
- 		</if>
- 		<if test="userId != null and userId != '' ">
-			and su.id = #{userId}
- 		</if>		
+			and circle.chinese_name = #{clientName}
+ 		</if>	
  		<if test="productId != null and productId != '' ">
 			and circle.PRODUCT_ID = #{productId}
  		</if>
+ 		order by circle.managerId
 				) ROW_
 	</select>
 	
  		<select id="getPsNormIntAmt" resultMap="PsNormIntAmtResultMap">
- 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
-				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
-				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved'
+ 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+where CAI.STATUS = 'approved'
 				<if test="productId != null and productId != '' ">
                 and CAI.product_id = #{productId}
                 </if>
@@ -1028,7 +1047,7 @@ where CAI.STATUS = 'approved')
  		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,sum(PS_NORM_INT_AMT) as PS_NORM_INT_AMT,sum(PS_OD_INT_AMT) as PS_OD_INT_AMT,
  		    	sum(SETL_NORM_INT) as SETL_NORM_INT,sum(SETL_OD_INT_AMT) as SETL_OD_INT_AMT,
  		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ps_amt,
- 		    	loan.CUS_ID as cus_id,circle.client_name as client_name
+ 		    	loan.CUS_ID as cus_id,circle.chinese_name as client_name
  		    from O_CLPM_ACC_LOAN loan 
  		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
  		    	inner join circle on loan.CUS_ID = circle.client_no
@@ -1037,7 +1056,7 @@ where CAI.STATUS = 'approved')
  		    	and loan.ACC_STATUS = '1'
  		    	and shd.SETL_IND = 'N'
  		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
- 		    group by loan.CUS_ID,circle.client_name
+ 		    group by loan.CUS_ID,circle.chinese_name
  		    <![CDATA[		
 				) ROW_
 			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -1046,15 +1065,20 @@ where CAI.STATUS = 'approved')
  		</select>
  		
  		<select id="getPsNormIntAmtCount" resultType="int">
- 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
-				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
-				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved'
+ 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+where CAI.STATUS = 'approved'
 				<if test="productId != null and productId != '' ">
                 and CAI.product_id = #{productId}
                 </if>
                 <if test="userIds != null">
-                	and circle.user_id in 
+                	and circle.user_id in  
                 	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
                         #{item}
                 	</foreach> 
@@ -1065,7 +1089,7 @@ where CAI.STATUS = 'approved')
 	 		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,sum(PS_NORM_INT_AMT) as PS_NORM_INT_AMT,sum(PS_OD_INT_AMT) as PS_OD_INT_AMT,
 	 		    	sum(SETL_NORM_INT) as SETL_NORM_INT,sum(SETL_OD_INT_AMT) as SETL_OD_INT_AMT,
 	 		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ps_amt,
-	 		    	loan.CUS_ID as cus_id,circle.client_name as client_name
+	 		    	loan.CUS_ID as cus_id,circle.chinese_name as client_name
 	 		    from O_CLPM_ACC_LOAN loan 
 	 		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
 	 		    	inner join circle on loan.CUS_ID = circle.client_no
@@ -1074,15 +1098,20 @@ where CAI.STATUS = 'approved')
 	 		    	and loan.ACC_STATUS = '1'
 	 		    	and shd.SETL_IND = 'N'
 	 		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
-	 		    group by loan.CUS_ID,circle.client_name
+	 		    group by loan.CUS_ID,circle.chinese_name
 			)
  		</select>
  		
  		<select id="getPsNormIntAmtList" resultMap="PsNormIntAmtResultMap">
- 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
-				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
-				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved'
+ 		    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+where CAI.STATUS = 'approved'
 				<if test="productId != null and productId != '' ">
                 and CAI.product_id = #{productId}
                 </if>
@@ -1100,7 +1129,7 @@ where CAI.STATUS = 'approved')
  		    	to_char(#{endDate},'yyyy-MM-dd') as pstime,sum(PS_NORM_INT_AMT) as PS_NORM_INT_AMT,sum(PS_OD_INT_AMT) as PS_OD_INT_AMT,
  		    	sum(SETL_NORM_INT) as SETL_NORM_INT,sum(SETL_OD_INT_AMT) as SETL_OD_INT_AMT,
  		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ps_amt,
- 		    	loan.CUS_ID as cus_id,circle.client_name as client_name
+ 		    	loan.CUS_ID as cus_id,circle.chinese_name as client_name
  		    from O_CLPM_ACC_LOAN loan 
  		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
  		    	inner join circle on loan.CUS_ID = circle.client_no
@@ -1109,16 +1138,21 @@ where CAI.STATUS = 'approved')
  		    	and loan.ACC_STATUS = '1'
  		    	and shd.SETL_IND = 'N'
  		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
- 		    group by loan.CUS_ID,circle.client_name
+ 		    group by loan.CUS_ID,circle.chinese_name
 
 				) ROW_
  		</select>
  		
  		<select id="getPsNormIntAmtListForHome" resultMap="ResultMapTips">
-	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
-			left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
-			left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-			where CAI.STATUS = 'approved')
+	    with circle as (select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+where CAI.STATUS = 'approved')
 
 	    SELECT ROW_.*,ROWNUM row_index
 			FROM (
@@ -1128,7 +1162,7 @@ where CAI.STATUS = 'approved')
  		    	(to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))) as psAmt,
  		    	(to_number(sum(SETL_NORM_INT))+to_number(sum(SETL_OD_INT_AMT))) as setlAmt,
  		    	to_number(sum(PS_NORM_INT_AMT))+to_number(sum(PS_OD_INT_AMT))-to_number(sum(SETL_NORM_INT))-to_number(sum(SETL_OD_INT_AMT)) as ownAmt,
- 		    	loan.CUS_ID as cus_id,circle.client_name as clientName
+ 		    	loan.CUS_ID as cus_id,circle.chinese_name as clientName
  		    from O_CLPM_ACC_LOAN loan 
  		    	inner join O_CCH_LM_PM_SHD shd on loan.BILL_NO = shd.LOAN_NO
  		    	inner join circle on loan.CUS_ID = circle.client_no
@@ -1138,12 +1172,12 @@ where CAI.STATUS = 'approved')
  		    	and shd.SETL_IND = 'N'
  		    	and to_date(shd.PS_DUE_DT,'yyyy-mm-dd') <![CDATA[ <=  ]]> #{endDate}
  		    	<if test="userIds != null">
- 		    		and circle.manager_id in
+ 		    		and circle.user_id in 
                 	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
                         #{item}
                 	</foreach> 
                 </if>
- 		    group by loan.CUS_ID,circle.client_name
+ 		    group by loan.CUS_ID,circle.chinese_name
 
 				) ROW_
  		</select>
@@ -1152,15 +1186,20 @@ where CAI.STATUS = 'approved')
 			parameterType="com.cardpay.pccredit.report.filter.AccLoanCollectFilter">
 			with 
 			circle as 
-				(select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id from CUSTOMER_APPLICATION_INFO cai 
-				left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
-				left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
-				where CAI.STATUS = 'approved'
+				(select CIRCLE.*,CAI.PRODUCT_ID,bci.user_id as manager_id,pa.product_name ,
+sd.name as orgName,su.display_name as managerId,bci.chinese_name
+from CUSTOMER_APPLICATION_INFO cai 
+left join QZ_IESB_FOR_CIRCLE circle on CAI.id = CIRCLE.APPLICATION_ID
+left join BASIC_CUSTOMER_INFORMATION bci on cai.customer_id = bci.id
+left join product_attribute pa on CAI.PRODUCT_ID = pa.id
+left join sys_user su on circle.user_id = su.id
+left join SYS_ORGANIZATION sd on circle.regist_org_no = sd.id
+where CAI.STATUS = 'approved'
 				<if test="productId != null and productId != '' ">
                 and CAI.product_id = #{productId}
                 </if>
                 <if test="userIds != null">
-                	and circle.user_id in 
+                	and circle.user_id in  
                 	<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
                         #{item}
                 	</foreach> 

@@ -72,8 +72,22 @@ public class CircleService {
      * 更新数据
      * @param circle
      * @return
+     * @throws Exception 
      */
-    public void updateCustomerInforCircle(Circle circle) {
+    public void updateCustomerInforCircle(Circle circle) throws Exception {
+    	//收息收款账号
+    	if(StringUtils.isNotEmpty(circle.getAcctNo1())){
+        	CompositeData req1 = iesbForCore.createCoreRequest(circle.getAcctNo1());
+        	CompositeData resp1 = client.sendMess(req1);
+    		if(resp1 != null){
+    			Circle_ACCT_INFO acct_Info1 = iesbForCore.parseCoreResponse(resp1,"03");
+    			if(acct_Info1 != null){
+    				if(!acct_Info1.getAcctchrt2().equals("1") && !acct_Info1.getAcctchrt2().equals("2")){
+    					throw new Exception("非一、二类账户，不允许放款");
+        			}
+    			}
+    		}
+    	}
     	commonDao.updateObject(circle);
 	}
     
@@ -111,6 +125,10 @@ public class CircleService {
 			returnMessage = "解析账号查询接口返回信息失败";
 			return returnMessage;
 		}
+		if(!acct_Info1.getAcctchrt2().equals("1") && !acct_Info1.getAcctchrt2().equals("2")){
+			returnMessage = "非一、二类账户，不允许放款";
+			return returnMessage;
+		}
 		acct_Info1.setCircleId(circle.getId());
 		acct_info_ls.add(acct_Info1);
 		
@@ -126,6 +144,10 @@ public class CircleService {
 			returnMessage = "解析账号查询接口返回信息失败";
 			return returnMessage;
 		}
+		if(!acct_Info2.getAcctchrt2().equals("1") && !acct_Info2.getAcctchrt2().equals("2")){
+			returnMessage = "非一、二类账户，不允许放款";
+			return returnMessage;
+		}
 		acct_Info2.setCircleId(circle.getId());
 		acct_info_ls.add(acct_Info2);
 		
@@ -139,6 +161,10 @@ public class CircleService {
 		Circle_ACCT_INFO fee_Acct_Info = iesbForCore.parseCoreResponse(resp3,"07");
 		if(fee_Acct_Info == null){
 			returnMessage = "解析账号查询接口返回信息失败";
+			return returnMessage;
+		}
+		if(!fee_Acct_Info.getAcctchrt2().equals("1") && !fee_Acct_Info.getAcctchrt2().equals("2")){
+			returnMessage = "非一、二类账户，不允许放款";
 			return returnMessage;
 		}
 		fee_Acct_Info.setCircleId(circle.getId());

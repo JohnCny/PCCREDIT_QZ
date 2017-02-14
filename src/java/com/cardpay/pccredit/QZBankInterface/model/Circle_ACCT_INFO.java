@@ -28,6 +28,8 @@ public class Circle_ACCT_INFO extends BusinessModel{
 	private String cInterbankId;
 	private String ownBranchFlag;
 	
+	private String acctchrt2;
+	
 	public String getCircleId() {
 		return circleId;
 	}
@@ -99,5 +101,11 @@ public class Circle_ACCT_INFO extends BusinessModel{
 	}
 	public void setcInterbankId(String cInterbankId) {
 		this.cInterbankId = cInterbankId;
+	}
+	public String getAcctchrt2() {
+		return acctchrt2;
+	}
+	public void setAcctchrt2(String acctchrt2) {
+		this.acctchrt2 = acctchrt2;
 	}
 }

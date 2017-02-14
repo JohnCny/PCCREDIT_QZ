@@ -36,9 +36,9 @@ public class SundsHelper{
 	public SimpleDateFormat formatter8 = new SimpleDateFormat("yyyyMMdd");
 	
 	//测试环境
-	private String ip = "168.168.241.75";
+	//private String ip = "168.168.241.75";
 	//生产环境
-	//private String ip = "168.168.214.57";
+	private String ip = "168.168.214.57";
 	private String port = "8023";
 	private String username = "admin";
 	private String password = "111";

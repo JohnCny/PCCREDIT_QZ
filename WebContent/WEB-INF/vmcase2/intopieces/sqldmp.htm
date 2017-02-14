@@ -1,0 +1,96 @@
+#parse ("common/iframe_page_header6.htm")
+<body>
+<div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">数据维护</div>
+      </div>
+		<form id="id_module_form">
+			<div class="forms" id="formsId">
+			<!--*************************************************************专案信息*************************************************************-->
+				<table class="rule" bordercolor="#CCCCCC" border="1">
+					<caption><input type="checkbox" id="checkbox" onclick="selectAll();"/>全选</caption>
+					<tr>
+						<td>
+							<div>
+								<ul id="table_tree" class="ztree" style="height:300px;witdh:1000px;overflow:auto;border:1px solid #94c1dc;"></ul>
+							</div>
+						</td>		
+					</tr>
+				</table>
+				选择已备份的文件: <select id="dmpFile">
+					#foreach ($obj in $dmpFiles)
+						<option value="$!obj">$!obj</option>
+					#end
+				</select>
+			</div>
+			<div class="submit">
+		      	<input id="id_dmp_button" type="button" value="备份" class="current" />
+		      	<input id="id_download_button" type="button" value="导出" class="current" />
+	      	</div>
+		</form>	
+	</div>
+  </div>
+	<script type="text/javascript">			
+	var tree_setting = {
+		data: {
+			simpleData: {
+				enable: true
+			},
+			key: {
+				name: "tablespaceName"
+			}
+		},
+		check: {
+			enable: true,
+			chkboxType:{ "Y":"ps", "N":"ps"}
+		}
+	};
+	
+	$(document).ready(function() {	
+		$.fn.zTree.init($("#table_tree"), tree_setting,eval('$!znodes'));
+		
+		//保存
+		$("#id_dmp_button").click(function() {
+			var treeObj=$.fn.zTree.getZTreeObj("table_tree");
+            nodes = {'nodesJsonStr':$.toJSON(treeObj.getCheckedNodes(true))}
+			var url = "${contextPath}/intopieces/sqldmp/insert.json";
+			$.ajax({
+				url : url,
+				type : "post",
+				data : nodes,
+				success : function(data) {
+					if (data.success) {
+						topWin.Dialog.message("已提交到后台执行");
+						window.location.href = "${contextPath}/intopieces/sqldmp/create.page";
+					}
+					else{
+						topWin.Dialog.message("保存失败！");
+				    }
+				}
+			});
+		});
+		
+		//下载
+		$("#id_download_button").click(function() {
+			var url = "${contextPath}/intopieces/sqldmp/download.json?dmpFile="+$("#dmpFile").val().split("_")[0];
+			window.location.href = url;
+		});
+		
+	});
+	
+	function selectAll(){
+		var treeObj = $.fn.zTree.getZTreeObj("table_tree");
+		var hasChk = $('#checkbox').is(':checked');
+		if(hasChk){
+			treeObj.checkAllNodes(true);
+		}else{
+			treeObj.checkAllNodes(false);
+		}
+		
+        
+	}
+	</script>	
+</body>
+</html>
+

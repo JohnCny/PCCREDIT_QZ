@@ -210,8 +210,8 @@
 		<servlet-class>com.dcfs.esb.server.ESBServer</servlet-class>
 		<init-param>
 			<param-name>EAI_HOME</param-name>
-			<param-value>E:\workspace_qkjr\PCCREDIT_QZ\src\java\</param-value>
-			<!-- <param-value>/home/pccredit/pccredit_esb/</param-value>
+			<param-value>/home/pccredit/pccredit_esb/</param-value>
+			<!-- <param-value>E:\workspace_qkjr\PCCREDIT_QZ\src\java\</param-value>
 			<param-value>/usr/cardpay/esb/</param-value>-->
 			
 		</init-param>
