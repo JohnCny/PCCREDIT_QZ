@@ -25,6 +25,7 @@ public class Constant {
 	
 	/* 影像资料上传路径 */
 	public static String FILE_PATH = "/home/pccredit/pccredit_upload/";
+	public static String FILE_DMP_PATH = "D:/pccredit_dmp/";
 	
 	/* 保存进件*/
 	public static String SAVE_INTOPICES = "save";//泉州用到(进件)
@@ -145,6 +146,8 @@ public class Constant {
 	//角色名称定义--不可随意修改,利用名称来判断数据权限
 	public static String COMMON_USER="普通用户";
 	public static String COMMON_USER_BRANCH="普通用户+支行审查审批";
+	public static String CENTER_MANAGER="中心经理";//新增角色 用来审批20万以下的贷成长
+	public static String GENERAL_MANAGER="总经理";//新增角色 王海斌负责20万以上的贷成长
 	public static String TEAM_LEADER="团队长";
 	public static String BRANCH_USER="支行审查审批";
 	public static String CENTER_USER="中心审查审批";

@@ -159,10 +159,10 @@
 			<menu id="100040" name="afterLoancollectAll" title="贷款汇总查询(管理岗)" url="/report/afterLoancollect/browseAll.page" img="" operations="browse"/>
 			<menu id="100050" name="psNormIntAmt" title="利息计算" url="/report/psNormIntAmt/browse.page" img="" operations="browse"/>
 			<menu id="100080" name="psNormIntAmtAll" title="利息计算(管理岗)" url="/report/psNormIntAmt/browseAll.page" img="" operations="browse"/>
-			
+			<!-- 
 			<menu id="100060" name="afterLoancollectNew" title="汇总查询-测试" url="/report/afterLoancollect/browseNew.page" img="" operations="browse"/>
 			<menu id="100070" name="afterLoancollectNewAll" title="汇总查询(管理岗)-测试" url="/report/afterLoancollect/browseNewAll.page" img="" operations="browse"/>
-			<!-- <menu id="100041" name="intelligentcustomerreport" title="客户信息智能报表" url="/report/intelligentcustomerreport/browse.page" img="" operations="create|change|delete|display|browse"/>
+			<menu id="100041" name="intelligentcustomerreport" title="客户信息智能报表" url="/report/intelligentcustomerreport/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100042" name="intelligentaccountreport" title="客户账户智能报表" url="/report/intelligentaccountreport/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100043" name="postloanmanagementdata" title="贷后管理数据" url="/report/postloanmanagementdata/browse.page" img="" operations="create|change|delete|display|browse"/>
 			<menu id="100050" name="creditpaymentmanagerdim" title="客户经理用信还款情况统计" url="/report/creditpaymentmanagerdim/browse.page" img="" operations="browse"/>

@@ -1,60 +1,56 @@
-#parse ("common/iframe_page_header.htm")
-<script src="${contextPath}/js/json2html.js" charset="utf-8"></script>
+﻿#parse ("common/iframe_page_header7.htm")
 
-<body>
-<div class="content_main">
-    <div class="contentinner">
-      <div class="place">
-        <div class="title">数据维护</div>
-      </div>
-		<form id="id_module_form" action="${modulePath}/insert.json" method="post">
-			<div class="forms" id="formsId">
-			<!--*************************************************************专案信息*************************************************************-->
-				<table class="rule" bordercolor="#CCCCCC" border="1">
-					<caption>数据维护</caption>
-					<colgroup>
-						<col width="15%">
-						<col width="85%">
-					</colgroup>
-					<tr>
-						<td class="table-label">输入sql语句：<font color="#ff0000">*</font></td>
-						<td><textarea id="sqltext" name="sqltext" >请输入sql语句</textarea></td>		
-					</tr>
-					
-				</table>	
-			</div>
-			<div class="submit">
-		      	<input id="id_save_button" type="button" value="#i18n("button.save")" class="current" />
-	      	</div>
-		</form>	
-		<!-- <table>
-			<script>
-				var test_data = eval('$!rs');
-				
-				var transform = eval("$!transform");
-				var html = json2html.transform(test_data, transform);
-				document.write('<h1>Escape HTML Test</h1>'+ html);
-			</script>
-		</table> -->
+	
+	<link rel="stylesheet" type="text/css" href="${contextPath}/css/tip-yellowsimple.css" />
+    <script type="text/javascript" src="${contextPath}/common/js/common/jquery.poshytip.min.js"></script>
+    <script type="text/javascript" src="${contextPath}/common/js/common/tips.js"></script>
+    <script type="text/javascript" src="${contextPath}/common/js/common/page.js"></script>
+    <script type="text/javascript" src="${contextPath}/common/js/common/dbRead2.js"></script>
+    
+	<style type="text/css">
+	.scrollbar{
+	overflow-x: auto;
+	overflow-y: auto;
+	width:100%; 
+	border :1px solid #c1d7ff;
+	scrollbar-face-color:#DEDEDE;
+	scrollbar-base-color:#F5F5F5;
+	scrollbar-arrow-color:black;
+	scrollbar-track-color:#F5F5F5;
+	scrollbar-shadow-color:#EBF5FF;
+	scrollbar-highlight-color:#F5F5F5;
+	scrollbar-3dlight-color:#C3C3C3;
+	scrollbar-darkshadow-Color:#9D9D9D;
+	}
+	.selected{
+	cursor:hand;
+	padding:3px;
+	margin:3px;
+	background-color: #3399FF;
+	border-right:1px solid  gray;
+	border-left:1px solid  gray
+	}
+	.unselected{
+	cursor:hand;
+	padding:3px;
+	margin:3px;
+	background-color: #D1EEEE
+	}
+	</style>
+	
+  </head>
+  
+  <body class="body_css" bgcolor="#ffffff">
+  	 <div id="divPage1">
+		<div id="divPage3">
+			<font class="gray"> 数据库查看</font></div>
 	</div>
-  </div>
-	<script type="text/javascript">			
-
-	#set ($formName = "'#id_module_form'")
-
-	$(document).ready(function() {	
-		//保存
-		$("#id_save_button").click(function() {
-			$("#id_module_form").submit();  
-		});
-		
-		$("#id_back_button").click(function() {
-			var url = "${contextPath}/intopieces/intopiecesapprove/approve.page";
-            parent.location.href = url;
-		})
-		
-	});
-	</script>	
-</body>
+	<br/>
+		<textarea id="sqlText" rows="10" cols="100" style="font-family: Consolas;font-size: 15px;" onkeyup="DbRead.ctrlenterEvent(event)"></textarea>
+			<input id="todo" type="button" value="查询" class="btn_width11113" onclick="DbRead.toDo(1);" />
+			<input id="toupdate" type="button" value="更新" class="btn_width11113" onclick="DbRead.toDo(0);" />
+    <br/>
+    <table width="450px" id='selectTable' border='0' cellpadding='0' cellspacing='0' style='margin-bottom: 3px'>
+    </table>
+  </body>
 </html>
-

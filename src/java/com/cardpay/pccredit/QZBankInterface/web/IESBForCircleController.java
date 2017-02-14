@@ -446,7 +446,30 @@ public class IESBForCircleController extends BaseController{
 				}
 				
 				//
-				iesbForCircleForm.setLoanDirection(iesbForCircleForm.getLoanDirection_4().split("_")[1]);
+				if(iesbForCircleForm.getLoanDirection_1() != null){
+					iesbForCircleForm.setLoanDirection(iesbForCircleForm.getLoanDirection_1().split("_")[1]);
+				}
+				else{
+					iesbForCircleForm.setLoanDirection_1("");
+				}
+				if(iesbForCircleForm.getLoanDirection_2() != null){
+					iesbForCircleForm.setLoanDirection(iesbForCircleForm.getLoanDirection_2().split("_")[1]);
+				}
+				else{
+					iesbForCircleForm.setLoanDirection_2("");
+				}
+				if(iesbForCircleForm.getLoanDirection_3() != null){
+					iesbForCircleForm.setLoanDirection(iesbForCircleForm.getLoanDirection_3().split("_")[1]);
+				}
+				else{
+					iesbForCircleForm.setLoanDirection_3("");
+				}
+				if(iesbForCircleForm.getLoanDirection_4() != null){
+					iesbForCircleForm.setLoanDirection(iesbForCircleForm.getLoanDirection_4().split("_")[1]);
+				}
+				else{
+					iesbForCircleForm.setLoanDirection_4("");
+				}
 				
 				//
 				if(iesbForCircleForm.getLoanBelong1_1() != null){
@@ -504,9 +527,9 @@ public class IESBForCircleController extends BaseController{
 //				returnMap.put(RECORD_ID, id);
 				returnMap.addGlobalMessage(CREATE_SUCCESS);
 			}catch (Exception e) {
-				returnMap.put(JRadConstants.MESSAGE, DataPriConstants.SYS_EXCEPTION_MSG);
+				returnMap.put(JRadConstants.MESSAGE, e.getMessage());
 				returnMap.put(JRadConstants.SUCCESS, false);
-				return WebRequestHelper.processException(e);
+				return returnMap;
 			}
 		}else{
 			returnMap.setSuccess(false);

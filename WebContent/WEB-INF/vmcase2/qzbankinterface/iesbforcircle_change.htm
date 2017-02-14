@@ -46,7 +46,7 @@
             <tr style="display: none;">
             #end
             	<td><label>收息收款账号:</label><font color="#ff0000">*</font></td>
-              	<td><input type="text" name="acctNo1" value="$!circle.acctNo1"  /></td>
+              	<td><input type="text" id="acctNo1" name="acctNo1" value="$!circle.acctNo1"  /></td>
               	<td><label>放款账号:</label><font color="#ff0000">*</font></td>
               	<td><input type="text" name="acctNo2" value="$!circle.acctNo2"  /></td>
             </tr>
@@ -520,14 +520,14 @@
 				if($("#ccy1").val() != "CNY" && $("#exchangeRate").val() == ""){
 					$("input[name='exchangeRate']").after("<label class='error' id='cardIde' name='exchangeRate_check' generated='true'>外币时需要换算不能为空</label>");
 				}
-				//bussType业务类型 经营贷额度需控制在5-50万元，个人消费类额度控制在1-30万元
+				//bussType业务类型 经营贷额度需控制在0-50万元，个人消费类额度控制在0-30万元
 				$("label[name='contractAmt_check']").remove();
 				var contractAmt_value = parseInt($("#contractAmt").val(),10);
-				if($("#bussType").val() == "001" && (contractAmt_value>300000 || contractAmt_value<10000)){
-					$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>个人消费类额度控制在1-30万元</label>");
+				if($("#bussType").val() == "001" && (contractAmt_value>300000 || contractAmt_value<1)){
+					$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>个人消费类额度控制在0-30万元</label>");
 				}
-				else if($("#bussType").val() == "002" && (contractAmt_value>500000 || contractAmt_value<50000)){
-					$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>经营贷额度需控制在5-50万元</label>");
+				else if($("#bussType").val() == "002" && (contractAmt_value>500000 || contractAmt_value<1)){
+					$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>经营贷额度需控制在0-50万元</label>");
 				}
 				
 				var leng = $("#cardIde").length;
@@ -551,7 +551,7 @@
 									window.location.reload(true);
 								}
 								else{
-									topWin.Dialog.message("保存失败！");
+									topWin.Dialog.message(data.message);
 							    }
 							}
 						});
@@ -598,26 +598,26 @@
 				$("input[name='exchangeRate']").after("<label class='error' id='cardIde' name='exchangeRate_check' generated='true'>外币时需要换算不能为空</label>");
 			}
 		});
-		//bussType业务类型 经营贷额度需控制在5-50万元，个人消费类额度控制在1-30万元
+		//bussType业务类型 经营贷额度需控制在0-50万元，个人消费类额度控制在0-30万元
 		$("#bussType").click(function() {
 			$("label[name='contractAmt_check']").remove();
 			var contractAmt_value = parseInt($("#contractAmt").val(),10);
 
-			if($("#bussType").val() == "001" && (contractAmt_value>300000 || contractAmt_value<10000)){
-				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>个人消费类额度控制在1-30万元</label>");
+			if($("#bussType").val() == "001" && (contractAmt_value>300000 || contractAmt_value<1)){
+				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>个人消费类额度控制在0-30万元</label>");
 			}
-			else if($("#bussType").val() == "002" && (contractAmt_value>500000 || contractAmt_value<50000)){
-				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>经营贷额度需控制在5-50万元</label>");
+			else if($("#bussType").val() == "002" && (contractAmt_value>500000 || contractAmt_value<1)){
+				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>经营贷额度需控制在0-50万元</label>");
 			}
 		});
 		$("#contractAmt").change(function() {
 			$("label[name='contractAmt_check']").remove();
 			var contractAmt_value = parseInt($("#contractAmt").val(),10);
-			if($("#bussType").val() == "001" && (contractAmt_value>300000 || contractAmt_value<10000)){
-				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>个人消费类额度控制在1-30万元</label>");
+			if($("#bussType").val() == "001" && (contractAmt_value>300000 || contractAmt_value<1)){
+				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>个人消费类额度控制在0-30万元</label>");
 			}
-			else if($("#bussType").val() == "002" && (contractAmt_value>500000 || contractAmt_value<50000)){
-				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>经营贷额度需控制在5-50万元</label>");
+			else if($("#bussType").val() == "002" && (contractAmt_value>500000 || contractAmt_value<1)){
+				$("input[name='contractAmt']").after("<label class='error' id='cardIde' name='contractAmt_check' generated='true'>经营贷额度需控制在0-50万元</label>");
 			}
 		});
 		//级联菜单
@@ -725,9 +725,10 @@
 		
 		//通过
 		$("#id_zx_in_button").click(function() {
+				var acctNo1 = $("#acctNo1").val();
                 Dialog.confirm("确定提交吗？", "提示",
                 	    function() {
-               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}&operate=${operate}";
+               				url="${contextPath}/intopieces/intopiecesapprove/save_apply.json?id=${appId}&operate=${operate}"+"&acctNo1="+acctNo1;
 			                $.ajax({
 								url : url,
 								type : "get",

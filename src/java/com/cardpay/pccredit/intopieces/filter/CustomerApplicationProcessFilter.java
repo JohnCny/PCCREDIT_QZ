@@ -35,6 +35,10 @@ public class CustomerApplicationProcessFilter extends BusinessFilter {
 	private String filterOrgId;//审核人的org_id 贷生活10万以下要过滤是否同一机构
 	
 	private String filterApprovalMeeting;//判断是否需要过滤审贷会成员
+	
+	private String filterAmount20;//判断金额是否小于20万
+	private String filterAmount20Above;//判断金额是否超过20万
+	
 	private List<String> userIds;
 	private Date endDate;
 	private String remindTime;
@@ -207,5 +211,20 @@ public class CustomerApplicationProcessFilter extends BusinessFilter {
 	public void setUserIds(List<String> userIds) {
 		this.userIds = userIds;
 	}
-	
+
+	public String getFilterAmount20() {
+		return filterAmount20;
+	}
+
+	public void setFilterAmount20(String filterAmount20) {
+		this.filterAmount20 = filterAmount20;
+	}
+
+	public String getFilterAmount20Above() {
+		return filterAmount20Above;
+	}
+
+	public void setFilterAmount20Above(String filterAmount20Above) {
+		this.filterAmount20Above = filterAmount20Above;
+	}
 }

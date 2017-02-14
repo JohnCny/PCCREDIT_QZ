@@ -2099,4 +2099,23 @@
 		<item name="11" title="17:30-18:00" />
 	</dictionary>
 	
+	<dictionary name="NODENAME" title="节点名称">
+		<item name="初审进件" title="初审进件" />
+		<item name="内部审查" title="内部审查" />
+		<item name="授信审批" title="授信审批" />
+		<item name="中心复核" title="中心复核" />
+		<item name="中心终审" title="中心终审" />
+		<item name="填写合同信息" title="填写合同信息" />
+		<item name="放款" title="放款" />
+		<item name="支行审查(贷生活支行审批)" title="支行审查(贷生活支行审批)" />
+		<item name="支行行长(贷生活支行审批)" title="支行行长(贷生活支行审批)" />
+		<item name="客户经理(贷生活支行审批)" title="客户经理(贷生活支行审批)" />
+		<item name="中心行政(贷生活支行审批)" title="中心行政(贷生活支行审批)" />
+		<item name="支行审查(贷生活中心审批)" title="支行审查(贷生活中心审批)" />
+		<item name="支行行长(贷生活中心审批)" title="支行行长(贷生活中心审批)" />
+		<item name="中心审查(贷生活中心审批)" title="中心审查(贷生活中心审批)" />
+		<item name="中心终审(贷生活中心审批)" title="中心终审(贷生活中心审批)" />
+		<item name="客户经理(贷生活中心审批)" title="客户经理(贷生活中心审批)" />
+		<item name="中心行政(贷生活中心审批)" title="中心行政(贷生活中心审批)" />
+	</dictionary>
 </dictionaries>

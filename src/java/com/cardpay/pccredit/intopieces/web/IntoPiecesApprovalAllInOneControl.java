@@ -111,6 +111,12 @@ public class IntoPiecesApprovalAllInOneControl extends BaseController {
 		if(rolename.equals(Constant.TEAM_LEADER)){
 			filter.setFilterTeamLeader("1");//团队长
 		}
+		if(rolename.equals(Constant.CENTER_MANAGER)){
+			filter.setFilterAmount20("1");//中心经理
+		}
+		if(rolename.equals(Constant.GENERAL_MANAGER)){
+			filter.setFilterAmount20Above("1");//总经理
+		}
 		QueryResult<CustomerApplicationIntopieceWaitForm> result = customerApplicationIntopieceWaitService.recieveIntopieceWaitFormAllInOne(filter);
 		JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm> pagedResult = new JRadPagedQueryResult<CustomerApplicationIntopieceWaitForm>(filter, result);
 

@@ -363,9 +363,8 @@ public class QuotaFreezeOrThawService{
 			String sql = "delete from quota_process where SERIAL_NUMBER = '"+circle.getSerialnumberQuota()+"' and circle_id = '"+circleId+"'";
 			commonDao.queryBySql(sql, null);
 			
-			circle.setSerialnumberQuota(null);
-			circle.setProcessStatus(null);
-			commonDao.updateObject(circle);
+			sql = "update qz_iesb_for_circle set SERIALNUMBER_QUOTA = null,PROCESS_STATUS=null where id='"+circleId+"'";
+			commonDao.queryBySql(sql, null);
 		}
 		
 	}

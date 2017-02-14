@@ -100,6 +100,8 @@ public class IESBForCore {
             String GL_CODE = body.getField("GL_CODE").strValue();//科目号
             String OPEN_ACCT_DATE = body.getField("OPEN_ACCT_DATE").strValue();//开户日期
             
+            String ACCTCHRT2 = body.getField("ACCT_CHRT").strValue();//二三类账户
+            
             //更新circle
             circle_ACCT_INFO.setAcctNo(ACCT_NO);
             circle_ACCT_INFO.setAcctName(ACCT_NAME);
@@ -112,6 +114,7 @@ public class IESBForCore {
             circle_ACCT_INFO.setcInterbankId(C_INTERBANK_ID);
             circle_ACCT_INFO.setOwnBranchFlag("1");
             circle_ACCT_INFO.setOpenAcctDate(OPEN_ACCT_DATE);
+            circle_ACCT_INFO.setAcctchrt2(ACCTCHRT2);
             
             String id = IDGenerator.generateID();
             circle_ACCT_INFO.setId(id);

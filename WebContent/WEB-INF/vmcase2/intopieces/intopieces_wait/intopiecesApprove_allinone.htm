@@ -36,6 +36,14 @@
               <li>
                 <span>证件号码：<input type="text" name="cardId" value="$!result.filter.cardId" maxlength="30" /></span>
               </li>
+              <li>
+                <span>节点名称：
+                	<select type="text" id="nodeName" name="nodeName">
+	                	<option value="">请选择...</option>
+	                    #dict("NODENAME", $!result.filter.nodeName)
+                	</select>
+                </span>
+              </li>
               <li class="search_button">
                 <input type="button" value="筛选" class="search_button_inquiry" title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" onclick="javascript:this.form.submit();"/>
               </li>

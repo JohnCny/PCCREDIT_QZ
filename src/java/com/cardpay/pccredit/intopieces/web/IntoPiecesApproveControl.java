@@ -1595,19 +1595,23 @@ public class IntoPiecesApproveControl extends BaseController {
 	@RequestMapping(value = "sunds_ocx_display.page")
 	public AbstractModelAndView sunds_ocx_display(HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/qzbankinterface/appIframeInfo/sunds_ocx_display", request);
-		String appId = RequestHelper.getStringValue(request, "appId");
-		mv.addObject("appId", appId);
-		//查找sunds_ocx信息
-		List<QzApplnAttachmentBatch> batch_ls = attachmentListService.findAttachmentBatchByAppId(appId);
-		//如果batch_ls为空 说明这是以前录得件 根据chk_value增加batch记录
-		if(batch_ls == null || batch_ls.size() == 0){
-			attachmentListService.addBatchInfo(appId);
-			batch_ls = attachmentListService.findAttachmentBatchByAppId(appId);
+		try {
+			String appId = RequestHelper.getStringValue(request, "appId");
+			mv.addObject("appId", appId);
+			//查找sunds_ocx信息
+			List<QzApplnAttachmentBatch> batch_ls = attachmentListService.findAttachmentBatchByAppId(appId);
+			//如果batch_ls为空 说明这是以前录得件 根据chk_value增加batch记录
+			if(batch_ls == null || batch_ls.size() == 0){
+				attachmentListService.addBatchInfo(appId);
+				batch_ls = attachmentListService.findAttachmentBatchByAppId(appId);
+			}
+			Circle circle = circleService.findCircleByAppId(appId);
+			ECIF ecif = eCIFService.findEcifByCustomerId(circle.getCustomerId());
+			mv.addObject("batch_ls", batch_ls);
+			mv.addObject("ecif", ecif);
+		} catch (Exception e) {
+			logger.info(e.getMessage(),e);
 		}
-		Circle circle = circleService.findCircleByAppId(appId);
-		ECIF ecif = eCIFService.findEcifByCustomerId(circle.getCustomerId());
-		mv.addObject("batch_ls", batch_ls);
-		mv.addObject("ecif", ecif);
 		return mv;
 	}	
 		
@@ -2257,7 +2261,7 @@ public class IntoPiecesApproveControl extends BaseController {
 			returnMap.put(JRadConstants.MESSAGE, "删除成功");
 			returnMap.put(JRadConstants.SUCCESS, true);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.info(e.getMessage(),e);
 			returnMap.put(JRadConstants.MESSAGE, "删除失败");
 			returnMap.put(JRadConstants.SUCCESS, false);
 		}
@@ -2468,6 +2472,8 @@ public class IntoPiecesApproveControl extends BaseController {
 		public JRadReturnMap save_apply(HttpServletRequest request) throws SQLException {
 			JRadReturnMap returnMap = new JRadReturnMap();
 			try {
+				String acctNo1 = request.getParameter("acctNo1"); 
+				
 				IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 				String appId = request.getParameter("id");
 				
@@ -2478,7 +2484,14 @@ public class IntoPiecesApproveControl extends BaseController {
 				request.setAttribute("objection", "false");
 				
 				Circle circle = circleService.findCircleByAppId(appId);
-
+				
+				if(StringUtils.isNotEmpty(circle.getAcctNo1()) && StringUtils.isNotEmpty(acctNo1)){
+					if(!circle.getAcctNo1().equals(acctNo1)){
+						returnMap.setSuccess(false);
+						returnMap.put("message", "账号修改未保存，请先保存或撤销修改！");
+						return returnMap;
+					}
+				}
 				//查找审批金额
 				ProductAttribute product = productService.findProductAttributeById(customerApplicationInfoService.findById(appId).getProductId());
 				if(!product.getDefaultType().equals("5") && !product.getDefaultType().equals("6")){
